@@ -32,9 +32,11 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - chroma_data:/chroma/chroma
+      # Chroma 1.x persists to /data (older images used /chroma/chroma)
+      - chroma_data:/data
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8000/api/v1/heartbeat || exit 1"]
+      # The image ships without curl/wget; v1 API returns 410 on Chroma 1.x
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/8000 && printf 'GET /api/v2/heartbeat HTTP/1.0\\r\\n\\r\\n' >&3 && head -1 <&3 | grep -q 200"]
       interval: 5s
       timeout: 5s
       retries: 10
