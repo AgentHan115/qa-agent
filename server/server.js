@@ -25,6 +25,14 @@ const queryLatency = new client.Histogram({
 });
 register.registerMetric(queryLatency);
 
+// Resolves fn() and records its wall-clock duration on the result's meta.
+const timed = async (fn) => {
+  const t = Date.now();
+  const result = await fn();
+  result.meta = { ...result.meta, path_ms: Date.now() - t };
+  return result;
+};
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -108,14 +116,16 @@ app.get("/chat", async (req, res) => {
   const t0 = Date.now();
   try {
     const [ragResp, mcpResp] = await Promise.all([
-      queryDocument(question, documentId),
-      chatMCP(question),
+      timed(() => queryDocument(question, documentId)),
+      timed(() => chatMCP(question)),
     ]);
 
-    queryLatency.observe({ endpoint: "/chat" }, Date.now() - t0);
+    const totalMs = Date.now() - t0;
+    queryLatency.observe({ endpoint: "/chat" }, totalMs);
     res.json({
       ragAnswer: ragResp.text,
       mcpAnswer: mcpResp.text,
+      meta: { total_ms: totalMs, doc: ragResp.meta, web: mcpResp.meta },
     });
   } catch (err) {
     console.error("[chat] error:", err.message);
@@ -144,30 +154,42 @@ app.get("/chat/stream", async (req, res) => {
   res.flushHeaders();
 
   const t0 = Date.now();
+  const docMeta = {};
+  let ttftMs;
 
   // Start MCP in parallel — it isn't streamed, arrives as a final event.
   // Timeout after 8s so a slow/hanging MCP call never blocks the done event.
   const MCP_TIMEOUT_MS = 8000;
   const mcpPromise = Promise.race([
-    chatMCP(question).catch((err) => {
+    timed(() => chatMCP(question)).catch((err) => {
       console.error("[stream] MCP error:", err.message);
-      return { text: "" };
+      return { text: "", meta: { status: "error", error: err.message } };
     }),
     new Promise((resolve) =>
       setTimeout(() => {
         console.warn("[stream] MCP timed out");
-        resolve({ text: "" });
+        resolve({ text: "", meta: { status: "timeout" } });
       }, MCP_TIMEOUT_MS)
     ),
   ]);
 
   try {
-    for await (const token of streamQueryDocument(question, documentId)) {
+    for await (const token of streamQueryDocument(question, documentId, docMeta)) {
+      if (ttftMs === undefined) ttftMs = Date.now() - t0;
       res.write(`data: ${JSON.stringify({ token })}\n\n`);
     }
+    const docDoneMs = Date.now() - t0;
     const mcpResp = await mcpPromise;
-    queryLatency.observe({ endpoint: "/chat/stream" }, Date.now() - t0);
-    res.write(`data: ${JSON.stringify({ done: true, mcpAnswer: mcpResp.text })}\n\n`);
+    const totalMs = Date.now() - t0;
+    queryLatency.observe({ endpoint: "/chat/stream" }, totalMs);
+    const meta = {
+      ttft_ms: ttftMs, // first token written, measured from request arrival
+      doc_done_ms: docDoneMs, // RAG stream finished
+      total_ms: totalMs, // done event (includes waiting on the web path)
+      doc: docMeta,
+      web: mcpResp.meta,
+    };
+    res.write(`data: ${JSON.stringify({ done: true, mcpAnswer: mcpResp.text, meta })}\n\n`);
   } catch (err) {
     console.error("[stream] RAG error:", err.message);
     res.write(`event: apierror\ndata: ${JSON.stringify({ error: err.message })}\n\n`);

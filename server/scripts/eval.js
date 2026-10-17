@@ -23,6 +23,8 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+import { mkdirSync, writeFileSync } from "fs";
+
 import { OpenAIEmbeddings, ChatOpenAI } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { z } from "zod";
@@ -175,7 +177,7 @@ async function runCase(c, embeddings, judgeModel) {
     };
   }
 
-  const { ragAnswer } = await res.json();
+  const { ragAnswer, meta } = await res.json();
   const answer = ragAnswer || "";
 
   const [refVec, ansVec] = await embeddings.embedDocuments([
@@ -185,10 +187,10 @@ async function runCase(c, embeddings, judgeModel) {
   const similarity = cosineSimilarity(refVec, ansVec);
 
   if (similarity >= HIGH_CONFIDENCE_SIM) {
-    return { passed: true, method: "embedding", similarity, answer, latencyMs };
+    return { passed: true, method: "embedding", similarity, answer, latencyMs, meta };
   }
   if (similarity <= LOW_CONFIDENCE_SIM) {
-    return { passed: false, method: "embedding", similarity, answer, latencyMs };
+    return { passed: false, method: "embedding", similarity, answer, latencyMs, meta };
   }
 
   // Ambiguous zone — escalate to the LLM judge
@@ -200,6 +202,7 @@ async function runCase(c, embeddings, judgeModel) {
     similarity,
     answer,
     latencyMs,
+    meta,
   };
 }
 
@@ -224,10 +227,12 @@ let passed = 0;
 let embeddingDecided = 0;
 let judgeEscalated = 0;
 const latencies = [];
+const records = [];
 
 for (const c of CASES) {
   const result = await runCase(c, embeddings, judgeModel);
   latencies.push(result.latencyMs);
+  records.push({ id: c.id, question: c.question, ...result });
 
   if (result.method === "embedding") embeddingDecided++;
   if (result.method === "llm-judge") judgeEscalated++;
@@ -262,3 +267,27 @@ console.log(
 );
 console.log(`Avg latency per question: ${avgLatency}ms`);
 console.log("─".repeat(72));
+
+// Persist raw per-case results (answers, grading, server-side stage timings
+// and token usage) so runs can be compared later.
+const runAt = new Date().toISOString();
+mkdirSync("results", { recursive: true });
+const outPath = `results/eval-${runAt.replace(/[:.]/g, "-")}.json`;
+writeFileSync(
+  outPath,
+  JSON.stringify(
+    {
+      runAt,
+      server: SERVER_URL,
+      documentId,
+      model: process.env.OPENAI_MODEL || "gpt-4o",
+      judgeModel: JUDGE_MODEL,
+      grading: { low: LOW_CONFIDENCE_SIM, high: HIGH_CONFIDENCE_SIM },
+      summary: { passed, total: CASES.length, avgLatencyMs: avgLatency },
+      cases: records,
+    },
+    null,
+    2
+  )
+);
+console.log(`Raw results written to ${outPath}`);

@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import { ChatOpenAI } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
+import { usageFrom } from "./lib/usage.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -61,12 +62,17 @@ const ensureConnected = async () => {
 
 const chatMCP = async (query) => {
   const apiKey = process.env.OPENAI_API_KEY;
+  const meta = {};
 
   try {
-    // Ensure client is connected (reuse existing connection)
+    // Ensure client is connected (reuse existing connection).
+    // connect_ms is ~0 when warm; on the first request it includes spawning mcp-server.js.
+    let t = Date.now();
     await ensureConnected();
+    meta.connect_ms = Date.now() - t;
 
     // Always perform web search
+    t = Date.now();
     const toolResult = await client.callTool({
       name: "search_web",
       arguments: {
@@ -75,11 +81,15 @@ const chatMCP = async (query) => {
       },
     });
 
+    // search_ms covers the MCP round-trip plus the SerpAPI call
+    meta.search_ms = Date.now() - t;
+
     let searchResults = "";
 
     if (toolResult.content && toolResult.content.length > 0) {
       searchResults = toolResult.content[0].text;
     }
+    meta.search_payload_chars = searchResults.length;
 
     // Use the LLM to answer the question based on search results
     const model = new ChatOpenAI({
@@ -99,10 +109,13 @@ Helpful Answer:`;
       searchResults: searchResults || "No search results available",
     });
 
+    t = Date.now();
     const response = await model.invoke(formattedPrompt);
+    meta.llm_ms = Date.now() - t;
+    meta.usage = usageFrom(response);
     const finalAnswer = response.content;
 
-    return { text: finalAnswer };
+    return { text: finalAnswer, meta };
   } catch (error) {
     // If connection error, reset client to allow reconnection on next request
     if (client) {
