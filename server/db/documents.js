@@ -39,3 +39,19 @@ export const findDocumentByFilename = async (filename) => {
   );
   return rows[0] || null;
 };
+
+// Reset a document for re-ingestion (e.g. its vectors went missing).
+export const markProcessing = async (id) => {
+  await pool.query(
+    `UPDATE documents SET status = 'processing', chunk_count = NULL, error = NULL WHERE id = $1`,
+    [id]
+  );
+};
+
+export const listDocumentsByStatus = async (status) => {
+  const { rows } = await pool.query(
+    `SELECT * FROM documents WHERE status = $1 ORDER BY created_at`,
+    [status]
+  );
+  return rows;
+};

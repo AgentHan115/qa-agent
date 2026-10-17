@@ -6,6 +6,7 @@ import { OpenAIEmbeddings } from "@langchain/openai";
 import { ChatOpenAI } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { usageFrom } from "./lib/usage.js";
+import { VectorsMissingError } from "./lib/vectors.js";
 
 const CHROMA_URL = process.env.CHROMA_URL || "http://localhost:8000";
 const TOP_K = 5;
@@ -31,6 +32,12 @@ const retrieveContext = async (question, documentId, meta) => {
   const results = await vectorStore.similaritySearchVectorWithScore(queryVector, TOP_K);
   meta.chroma_ms = Date.now() - t;
   meta.chunks = results.length;
+
+  // A ready document always has at least one chunk, so zero hits means the
+  // vectors are gone (the wrapper's getOrCreateCollection hides a missing
+  // collection by creating an empty one). Fail loudly instead of answering
+  // from empty context.
+  if (results.length === 0) throw new VectorsMissingError(documentId);
 
   return results.map(([doc]) => doc.pageContent).join("\n\n");
 };

@@ -4,10 +4,18 @@ import dotenv from "dotenv";
 import multer from "multer";
 import { randomUUID } from "crypto";
 import { initDb } from "./db/postgres.js";
-import { insertDocument, markReady, markFailed, findDocument, findDocumentByFilename } from "./db/documents.js";
-import { ingestDocument } from "./ingest.js";
+import {
+  insertDocument,
+  markFailed,
+  markProcessing,
+  findDocument,
+  findDocumentByFilename,
+  listDocumentsByStatus,
+} from "./db/documents.js";
 import { queryDocument, streamQueryDocument } from "./query.js";
-import { ingestionQueue } from "./lib/queue.js";
+import { enqueueIngestion } from "./lib/queue.js";
+import { countVectors, VectorsMissingError } from "./lib/vectors.js";
+import { reconcileReadyDocuments, vectorsMissingReason } from "./lib/reconcile.js";
 import chatMCP from "./chat-mcp.js";
 import client from "prom-client";
 
@@ -24,6 +32,15 @@ const queryLatency = new client.Histogram({
   buckets: [500, 1000, 3000, 5000, 10000, 15000, 20000, 30000],
 });
 register.registerMetric(queryLatency);
+
+// A query found no vectors for a "ready" document: record why, so the status
+// endpoint and later queries report it instead of answering from empty context.
+const handleVectorsMissing = async (documentId) => {
+  const reason = vectorsMissingReason(null, 0);
+  console.error(`[chat] ${documentId}: ${reason}`);
+  await markFailed(documentId, reason);
+  return reason;
+};
 
 // Resolves fn() and records its wall-clock duration on the result's meta.
 const timed = async (fn) => {
@@ -57,7 +74,7 @@ app.post("/upload", upload.single("file"), async (req, res) => {
   await insertDocument(documentId, filename, filePath);
 
   // Enqueue ingestion — BullMQ worker processes it with retries and crash recovery
-  await ingestionQueue.add("ingest", { documentId, filePath, filename });
+  await enqueueIngestion(documentId, filePath, filename);
 
   res.status(202).json({ documentId, status: "processing", filename });
 });
@@ -82,6 +99,20 @@ app.get("/documents/:documentId", async (req, res) => {
   // Strip internal file_path before sending to client
   const { file_path, ...safe } = doc;
   res.json(safe);
+});
+
+// POST /documents/:documentId/reingest
+// Re-embeds a document from its stored file (e.g. after its vectors went
+// missing). Explicit rather than automatic because it costs embedding calls.
+app.post("/documents/:documentId/reingest", async (req, res) => {
+  const doc = await findDocument(req.params.documentId);
+  if (!doc) return res.status(404).json({ error: "Document not found" });
+  if (doc.status === "processing") {
+    return res.status(409).json({ error: "Document is already being processed" });
+  }
+  await markProcessing(doc.id);
+  await enqueueIngestion(doc.id, doc.file_path, doc.filename);
+  res.status(202).json({ documentId: doc.id, status: "processing", filename: doc.filename });
 });
 
 // GET /metrics — Prometheus scrape endpoint
@@ -128,6 +159,10 @@ app.get("/chat", async (req, res) => {
       meta: { total_ms: totalMs, doc: ragResp.meta, web: mcpResp.meta },
     });
   } catch (err) {
+    if (err instanceof VectorsMissingError) {
+      const reason = await handleVectorsMissing(documentId);
+      return res.status(422).json({ error: "Document ingestion failed", detail: reason });
+    }
     console.error("[chat] error:", err.message);
     res.status(500).json({ error: "Failed to generate answer", detail: err.message });
   }
@@ -191,8 +226,10 @@ app.get("/chat/stream", async (req, res) => {
     };
     res.write(`data: ${JSON.stringify({ done: true, mcpAnswer: mcpResp.text, meta })}\n\n`);
   } catch (err) {
-    console.error("[stream] RAG error:", err.message);
-    res.write(`event: apierror\ndata: ${JSON.stringify({ error: err.message })}\n\n`);
+    const message =
+      err instanceof VectorsMissingError ? await handleVectorsMissing(documentId) : err.message;
+    console.error("[stream] RAG error:", message);
+    res.write(`event: apierror\ndata: ${JSON.stringify({ error: message })}\n\n`);
   } finally {
     res.end();
   }
@@ -200,12 +237,20 @@ app.get("/chat/stream", async (req, res) => {
 
 const PORT = process.env.PORT || 5001;
 
-// Ingest the default PDF on startup if it hasn't been ingested yet.
+// Ingest the default PDF on startup if it hasn't been ingested yet, or retry
+// it (once per boot) if its last ingestion failed — e.g. after reconcile found
+// its vectors missing. Other failed documents are re-ingested only on request.
 const seedDefaultDocument = async () => {
   const DEFAULT_FILENAME = "hbs-lean-startup.pdf";
   const DEFAULT_PATH = "uploads/hbs-lean-startup.pdf";
 
   const existing = await findDocumentByFilename(DEFAULT_FILENAME);
+  if (existing?.status === "failed") {
+    console.log(`[seed] default document failed previously (${existing.error}); re-ingesting`);
+    await markProcessing(existing.id);
+    await enqueueIngestion(existing.id, existing.file_path, existing.filename);
+    return;
+  }
   if (existing) {
     console.log(`[seed] default document already in DB (status: ${existing.status})`);
     return;
@@ -215,14 +260,20 @@ const seedDefaultDocument = async () => {
   await insertDocument(documentId, DEFAULT_FILENAME, DEFAULT_PATH);
   console.log("[seed] ingesting default document...");
 
-  await ingestionQueue.add("ingest", { documentId, filePath: DEFAULT_PATH, filename: DEFAULT_FILENAME });
+  await enqueueIngestion(documentId, DEFAULT_PATH, DEFAULT_FILENAME);
 };
 
-// Initialize DB schema then start the server
+// Initialize DB schema, reconcile Postgres status with Chroma, then start.
 initDb()
-  .then(() => {
+  .then(async () => {
+    const { checked, drifted } = await reconcileReadyDocuments({
+      listDocumentsByStatus,
+      countVectors,
+      markFailed,
+    });
+    console.log(`[reconcile] checked ${checked} ready documents, ${drifted.length} missing vectors`);
     app.listen(PORT, () => console.log(`server running on port ${PORT}`));
-    seedDefaultDocument();
+    await seedDefaultDocument();
   })
   .catch((err) => {
     console.error("[db] failed to initialize:", err.message);

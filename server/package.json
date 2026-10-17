@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "test": "node --test",
     "eval": "node scripts/eval.js",
     "benchmark": "node scripts/benchmark.js"
   },
