@@ -53,7 +53,7 @@ const PdfUploader = ({ onDocumentReady }) => {
           (doc) => {
             setIngestStatus("ready");
             onDocumentReady(data.documentId);
-            message.success(`"${doc.filename}" indexed — ${doc.chunkCount} chunks stored`);
+            message.success(`"${doc.filename}" indexed — ${doc.chunk_count} chunks stored`);
           },
           (err) => {
             setIngestStatus("failed");

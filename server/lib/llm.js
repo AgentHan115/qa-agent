@@ -96,21 +96,23 @@ export const formatQuery = (question) => {
 // Guarded calls: refuse prompts that may not fit, verify the server-reported
 // prompt size afterwards (truncation), and fail if thinking leaked through.
 // The returned/filled `check` record belongs in the request's meta.
-export const invokeGuarded = async (model, prompt) => {
+// `input` is a prompt string or a list of chat messages; `promptText` is the
+// text the model reads (all message contents), used for the size checks.
+export const invokeGuarded = async (model, input, promptText = input) => {
   const c = llmConfig();
-  assertFitsContext(prompt, c);
-  const message = await model.invoke(prompt);
-  const check = checkPromptUsage(prompt, message.usage_metadata, c);
+  assertFitsContext(promptText, c);
+  const message = await model.invoke(input);
+  const check = checkPromptUsage(promptText, message.usage_metadata, c);
   if (c.disableThinking) assertNoThinking(message);
   return { message, check };
 };
 
-export async function* streamGuarded(model, prompt, meta) {
+export async function* streamGuarded(model, input, meta, promptText = input) {
   const c = llmConfig();
-  assertFitsContext(prompt, c);
+  assertFitsContext(promptText, c);
   let usage;
   let text = "";
-  for await (const chunk of await model.stream(prompt)) {
+  for await (const chunk of await model.stream(input)) {
     if (chunk.usage_metadata) usage = chunk.usage_metadata;
     if (chunk.content) {
       text += chunk.content;
@@ -119,6 +121,6 @@ export async function* streamGuarded(model, prompt, meta) {
   }
   // Usage arrives on a final chunk with no content, so record it here.
   meta.usage = usageFrom({ usage_metadata: usage });
-  meta.check = checkPromptUsage(prompt, usage, c);
+  meta.check = checkPromptUsage(promptText, usage, c);
   if (c.disableThinking) assertNoThinking({ content: text, usage_metadata: usage });
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Input } from "antd";
+import { Button, Input, Segmented } from "antd";
 import { AudioOutlined } from "@ant-design/icons";
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -13,7 +13,17 @@ const DOMAIN = "http://localhost:5001";
 const searchContainer = {
   display: "flex",
   justifyContent: "center",
+  alignItems: "center",
 };
+
+const MODE_OPTIONS = [
+  { label: "Doc + Web", value: "hybrid" },
+  { label: "Doc only", value: "docs" },
+  { label: "Web only", value: "web" },
+];
+
+// Citation labels like [D1][W2] shouldn't be read aloud.
+const stripCitations = (text) => text.replace(/\s*\[\s*[DW]\d+(?:\s*[,;]\s*[DW]\d+)*\s*\]/g, "");
 
 const ChatComponent = (props) => {
   const { handleResp, updateLastAnswer, isLoading, setIsLoading, documentId } = props;
@@ -22,6 +32,7 @@ const ChatComponent = (props) => {
   const [isChatModeOn, setIsChatModeOn] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [speech, setSpeech] = useState();
+  const [mode, setMode] = useState("hybrid");
 
   // speech recognation
   const {
@@ -122,24 +133,31 @@ const ChatComponent = (props) => {
   };
 
   const onSearch = (question) => {
-    if (!documentId) {
-      handleResp(question, { ragAnswer: "Please upload a PDF first.", mcpAnswer: "" });
+    if (!question?.trim()) return;
+    if (!documentId && mode !== "web") {
+      handleResp(question, { mode, error: "Please upload a PDF first, or switch to Web only." });
       return;
     }
 
     setSearchValue("");
     setIsLoading(true);
 
-    // Push a placeholder entry immediately — tokens will fill it in as they arrive
-    handleResp(question, { ragAnswer: "", mcpAnswer: "" });
+    // Push a placeholder entry immediately — sources and tokens fill it in as they arrive
+    handleResp(question, { mode, text: "", sources: [] });
 
-    const params = new URLSearchParams({ question });
-    if (documentId) params.set("documentId", documentId);
+    const params = new URLSearchParams({ question, mode });
+    if (documentId && mode !== "web") params.set("documentId", documentId);
     const es = new EventSource(`${DOMAIN}/chat/stream?${params}`);
 
     let accumulated = "";
     const t0 = Date.now();
     let ttft = null;
+
+    // Sent once retrieval/search finish, before the first answer token.
+    es.addEventListener("sources", (e) => {
+      const { sources, web } = JSON.parse(e.data);
+      updateLastAnswer({ sources, web });
+    });
 
     es.onmessage = (e) => {
       const data = JSON.parse(e.data);
@@ -149,26 +167,27 @@ const ChatComponent = (props) => {
           console.log(`[stream] time-to-first-token: ${ttft}ms`);
         }
         accumulated += data.token;
-        updateLastAnswer({ ragAnswer: accumulated });
+        updateLastAnswer({ text: accumulated });
       }
       if (data.done) {
-        console.log(`[stream] total time: ${Date.now() - t0}ms`);
-        updateLastAnswer({ mcpAnswer: data.mcpAnswer });
+        console.log(`[stream] total time: ${Date.now() - t0}ms`, data.meta);
+        updateLastAnswer({ citations: data.citations });
         es.close();
         setIsLoading(false);
-        if (isChatModeOn) talk(accumulated);
+        if (isChatModeOn) talk(stripCitations(accumulated));
       }
     };
 
     es.addEventListener("apierror", (e) => {
       const data = JSON.parse(e.data);
-      updateLastAnswer({ ragAnswer: `Error: ${data.error}` });
+      updateLastAnswer({ error: data.error });
       es.close();
       setIsLoading(false);
     });
 
     es.onerror = () => {
-      updateLastAnswer({ ragAnswer: accumulated || "Connection error." });
+      // Fires for HTTP errors before the stream starts too (e.g. 409 still processing)
+      if (!accumulated) updateLastAnswer({ error: "Connection error." });
       es.close();
       setIsLoading(false);
     };
@@ -181,6 +200,13 @@ const ChatComponent = (props) => {
 
   return (
     <div style={searchContainer}>
+      <Segmented
+        options={MODE_OPTIONS}
+        value={mode}
+        onChange={setMode}
+        disabled={isLoading}
+        style={{ marginRight: "8px" }}
+      />
       {!isChatModeOn && (
         <Search
           placeholder="input search text"

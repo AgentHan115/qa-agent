@@ -26,7 +26,7 @@
 //   SERVER_URL=http://localhost:5001  (default)
 //   EVAL_JUDGE_MODEL=<model>          (default: LLM_MODEL — same runtime as the app)
 //   EVAL_GRADING=judge|layered        (default: judge)
-//   EVAL_WEB=off                      (skip the web path; measures the document pipeline alone)
+//   EVAL_MODE=docs|web|hybrid         (default: hybrid) — which sources /chat may use
 //
 // Each run writes results/eval-<timestamp>.json with the server's /runtime
 // record and the git commit, so results can be tied to an exact configuration.
@@ -45,7 +45,7 @@ import { z } from "zod";
 const SERVER_URL = process.env.SERVER_URL || "http://localhost:5001";
 const JUDGE_MODEL = process.env.EVAL_JUDGE_MODEL || llmConfig().model;
 const GRADING = process.env.EVAL_GRADING || "judge";
-const WEB = process.env.EVAL_WEB === "off" ? "off" : "on";
+const MODE = process.env.EVAL_MODE || "hybrid";
 
 // Similarity band for the embedding pre-filter. Tuned loosely — wide enough
 // that the LLM judge only sees genuinely ambiguous cases.
@@ -192,7 +192,7 @@ const httpGet = (url) =>
 async function runCase(c, embeddings, judgeModel) {
   const url = `${SERVER_URL}/chat?question=${encodeURIComponent(
     c.question
-  )}&documentId=${documentId}${WEB === "off" ? "&web=off" : ""}`;
+  )}&documentId=${documentId}&mode=${MODE}`;
   const t0 = Date.now();
   let res;
   try {
@@ -213,8 +213,15 @@ async function runCase(c, embeddings, judgeModel) {
     };
   }
 
-  const { ragAnswer, meta } = JSON.parse(res.body);
-  const answer = ragAnswer || "";
+  const body = JSON.parse(res.body);
+  const answer = body.answer || "";
+  // Kept with every case: what the answer cited, and what it was given.
+  const grounding = {
+    citations: body.citations,
+    web: body.web,
+    sources: body.sources.map((s) => (s.type === "document" ? { id: s.id, page: s.page } : { id: s.id, url: s.url })),
+  };
+  const meta = body.meta;
 
   const [refVec, ansVec] = await embeddings.embedDocuments([
     c.reference,
@@ -223,10 +230,10 @@ async function runCase(c, embeddings, judgeModel) {
   const similarity = cosineSimilarity(refVec, ansVec);
 
   if (GRADING === "layered" && similarity >= HIGH_CONFIDENCE_SIM) {
-    return { passed: true, method: "embedding", similarity, answer, latencyMs, meta };
+    return { passed: true, method: "embedding", similarity, answer, latencyMs, ...grounding, meta };
   }
   if (GRADING === "layered" && similarity <= LOW_CONFIDENCE_SIM) {
-    return { passed: false, method: "embedding", similarity, answer, latencyMs, meta };
+    return { passed: false, method: "embedding", similarity, answer, latencyMs, ...grounding, meta };
   }
 
   // Judge mode, or the ambiguous zone in layered mode
@@ -238,6 +245,7 @@ async function runCase(c, embeddings, judgeModel) {
     similarity,
     answer,
     latencyMs,
+    ...grounding,
     meta,
   };
 }
@@ -299,6 +307,10 @@ for (const c of CASES) {
     console.log(`       Reference: ${c.reference}`);
     console.log(`       Answer: ${result.answer?.slice(0, 160)}...`);
   }
+  if (result.citations) {
+    const { cited, invalid } = result.citations;
+    console.log(`       Cited: ${cited.join(" ") || "(none)"}${invalid.length ? ` | INVALID: ${invalid.join(" ")}` : ""} | web: ${result.web?.status ?? "n/a"}`);
+  }
   console.log(`       Latency: ${result.latencyMs}ms`);
   console.log();
 }
@@ -331,7 +343,7 @@ writeFileSync(
       git,
       runtime,
       judgeModel: JUDGE_MODEL,
-      web: WEB,
+      mode: MODE,
       grading: { mode: GRADING, low: LOW_CONFIDENCE_SIM, high: HIGH_CONFIDENCE_SIM },
       summary: {
         passed,
@@ -339,6 +351,13 @@ writeFileSync(
         httpErrors: records.filter((r) => r.method === "http-error").length,
         requestErrors: records.filter((r) => r.method === "request-error").length,
         avgLatencyMs: avgLatency,
+        answersWithValidCitation: records.filter((r) => r.citations?.cited.length > 0).length,
+        invalidCitationLabels: records.reduce((n, r) => n + (r.citations?.invalid.length ?? 0), 0),
+        webStatus: records.reduce((acc, r) => {
+          const s = r.web?.status ?? "n/a";
+          acc[s] = (acc[s] ?? 0) + 1;
+          return acc;
+        }, {}),
       },
       cases: records,
     },

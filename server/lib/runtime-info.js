@@ -5,7 +5,10 @@
 
 import { llmConfig, embeddingConfig } from "./llm.js";
 import { CHUNK_SIZE, CHUNK_OVERLAP } from "../ingest.js";
-import { TOP_K } from "../query.js";
+import { TOP_K } from "../pipeline/retrieve.js";
+import { searchConfig } from "../search/index.js";
+import { INSTRUCTIONS } from "../pipeline/context.js";
+import { createHash } from "crypto";
 
 const getJson = async (url, init) => {
   const res = await fetch(url, { signal: AbortSignal.timeout(5000), ...init });
@@ -47,7 +50,9 @@ export const describeRuntime = async () => {
     llm: { ...llm },
     embedding: { ...embedding },
     retrieval: { top_k: TOP_K, chunk_size: CHUNK_SIZE, chunk_overlap: CHUNK_OVERLAP },
-    web_search: { provider: "serpapi", engine: "google", num: 5 },
+    web_search: searchConfig(),
+    // Identifies the exact answer instructions without embedding them here.
+    prompt: { instructions_sha1: createHash("sha1").update(INSTRUCTIONS).digest("hex").slice(0, 12) },
     serving: null,
   };
   try {

@@ -8,6 +8,7 @@ import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { Chroma } from "@langchain/community/vectorstores/chroma";
 import { countVectors, deleteVectors } from "./lib/vectors.js";
 import { createEmbeddings } from "./lib/llm.js";
+import { forgetDocumentStore } from "./pipeline/retrieve.js";
 
 const CHROMA_URL = process.env.CHROMA_URL || "http://localhost:8000";
 export const CHUNK_SIZE = 500;
@@ -66,6 +67,7 @@ export const ingestDocument = async (
   // Retries must be idempotent: start from an empty collection and use
   // deterministic ids, so a retry after a partial write can't duplicate vectors.
   await deleteVectors(documentId);
+  forgetDocumentStore(documentId); // cached query handles point at the old collection
   const vectorStore = new Chroma(embeddings, {
     collectionName: documentId,
     url: CHROMA_URL,

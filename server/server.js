@@ -12,12 +12,11 @@ import {
   findDocumentByFilename,
   listDocumentsByStatus,
 } from "./db/documents.js";
-import { queryDocument, streamQueryDocument } from "./query.js";
+import { answerQuestion, streamAnswer, MODES, WebSearchUnavailableError } from "./pipeline/answer.js";
 import { enqueueIngestion } from "./lib/queue.js";
 import { countVectors, VectorsMissingError } from "./lib/vectors.js";
 import { reconcileReadyDocuments, vectorsMissingReason } from "./lib/reconcile.js";
 import { describeRuntime } from "./lib/runtime-info.js";
-import chatMCP from "./chat-mcp.js";
 import client from "prom-client";
 
 dotenv.config();
@@ -41,14 +40,6 @@ const handleVectorsMissing = async (documentId) => {
   console.error(`[chat] ${documentId}: ${reason}`);
   await markFailed(documentId, reason);
   return reason;
-};
-
-// Resolves fn() and records its wall-clock duration on the result's meta.
-const timed = async (fn) => {
-  const t = Date.now();
-  const result = await fn();
-  result.meta = { ...result.meta, path_ms: Date.now() - t };
-  return result;
 };
 
 const app = express();
@@ -128,69 +119,72 @@ app.get("/metrics", async (req, res) => {
   res.end(await register.metrics());
 });
 
-// GET /chat?question=...&documentId=...[&web=off]
-// documentId is required — each document has its own Chroma collection.
-// web=off skips the web-search path (the document path is unchanged), so the
-// document pipeline can be measured on its own.
-app.get("/chat", async (req, res) => {
+// Shared request validation for /chat and /chat/stream. Responds and returns
+// null if the request can't be served; otherwise returns the parsed options.
+const parseChatRequest = async (req, res) => {
   const { question, documentId } = req.query;
-  const skipWeb = req.query.web === "off";
+  const mode = req.query.mode || "hybrid";
 
-  if (!question) {
-    return res.status(400).json({ error: "question is required" });
+  if (!question) return res.status(400).json({ error: "question is required" }) && null;
+  if (!MODES.includes(mode)) {
+    return res.status(400).json({ error: `mode must be one of ${MODES.join(", ")}` }) && null;
   }
-  if (!documentId) {
-    return res.status(400).json({ error: "documentId is required" });
-  }
+  // Web-only answers don't touch a document.
+  if (mode === "web") return { question, documentId: null, mode };
 
+  if (!documentId) return res.status(400).json({ error: "documentId is required" }) && null;
   const doc = await findDocument(documentId);
-  if (!doc) {
-    return res.status(404).json({ error: "Document not found" });
-  }
+  if (!doc) return res.status(404).json({ error: "Document not found" }) && null;
   if (doc.status === "processing") {
-    return res.status(409).json({ error: "Document is still being processed" });
+    return res.status(409).json({ error: "Document is still being processed" }) && null;
   }
   if (doc.status === "failed") {
-    return res.status(422).json({ error: "Document ingestion failed", detail: doc.error });
+    return res.status(422).json({ error: "Document ingestion failed", detail: doc.error }) && null;
   }
+  return { question, documentId, mode };
+};
+
+// GET /chat?question=...&documentId=...&mode=docs|web|hybrid (default hybrid)
+// One grounded answer citing document sources [D#] and web sources [W#].
+// documentId is required except in web mode.
+app.get("/chat", async (req, res) => {
+  const opts = await parseChatRequest(req, res);
+  if (!opts) return;
 
   const t0 = Date.now();
   try {
-    const [ragResp, mcpResp] = await Promise.all([
-      timed(() => queryDocument(question, documentId)),
-      skipWeb ? { text: "", meta: { status: "skipped" } } : timed(() => chatMCP(question)),
-    ]);
-
+    const { answer, sources, citations, meta } = await answerQuestion(opts);
     const totalMs = Date.now() - t0;
     queryLatency.observe({ endpoint: "/chat" }, totalMs);
     res.json({
-      ragAnswer: ragResp.text,
-      mcpAnswer: mcpResp.text,
-      meta: { total_ms: totalMs, doc: ragResp.meta, web: mcpResp.meta },
+      answer,
+      mode: opts.mode,
+      sources,
+      citations,
+      web: meta.web && { status: meta.web.status, error: meta.web.error },
+      meta: { ...meta, total_ms: totalMs },
     });
   } catch (err) {
     if (err instanceof VectorsMissingError) {
-      const reason = await handleVectorsMissing(documentId);
+      const reason = await handleVectorsMissing(opts.documentId);
       return res.status(422).json({ error: "Document ingestion failed", detail: reason });
+    }
+    if (err instanceof WebSearchUnavailableError) {
+      return res.status(502).json({ error: "Web search unavailable", detail: err.message });
     }
     console.error("[chat] error:", err.message);
     res.status(500).json({ error: "Failed to generate answer", detail: err.message });
   }
 });
 
-// GET /chat/stream?question=...&documentId=...
-// SSE endpoint — streams RAG tokens as they are generated, then sends the
-// MCP answer as a final event. First token arrives in ~300ms instead of ~14s.
+// GET /chat/stream — same parameters as /chat, as Server-Sent Events:
+//   event "sources" { sources, web }   once retrieval/search finish
+//   data { token }                     answer tokens
+//   data { done: true, citations, meta }
+//   event "apierror" { error }
 app.get("/chat/stream", async (req, res) => {
-  const { question, documentId } = req.query;
-
-  if (!question) return res.status(400).json({ error: "question is required" });
-  if (!documentId) return res.status(400).json({ error: "documentId is required" });
-
-  const doc = await findDocument(documentId);
-  if (!doc) return res.status(404).json({ error: "Document not found" });
-  if (doc.status === "processing") return res.status(409).json({ error: "Document is still being processed" });
-  if (doc.status === "failed") return res.status(422).json({ error: "Document ingestion failed", detail: doc.error });
+  const opts = await parseChatRequest(req, res);
+  if (!opts) return;
 
   // SSE headers — must be set before any write
   res.setHeader("Content-Type", "text/event-stream");
@@ -199,46 +193,29 @@ app.get("/chat/stream", async (req, res) => {
   res.flushHeaders();
 
   const t0 = Date.now();
-  const docMeta = {};
+  const meta = {};
   let ttftMs;
 
-  // Start MCP in parallel — it isn't streamed, arrives as a final event.
-  // Timeout after 8s so a slow/hanging MCP call never blocks the done event.
-  const MCP_TIMEOUT_MS = 8000;
-  const mcpPromise = Promise.race([
-    timed(() => chatMCP(question)).catch((err) => {
-      console.error("[stream] MCP error:", err.message);
-      return { text: "", meta: { status: "error", error: err.message } };
-    }),
-    new Promise((resolve) =>
-      setTimeout(() => {
-        console.warn("[stream] MCP timed out");
-        resolve({ text: "", meta: { status: "timeout" } });
-      }, MCP_TIMEOUT_MS)
-    ),
-  ]);
-
   try {
-    for await (const token of streamQueryDocument(question, documentId, docMeta)) {
-      if (ttftMs === undefined) ttftMs = Date.now() - t0;
-      res.write(`data: ${JSON.stringify({ token })}\n\n`);
+    for await (const event of streamAnswer(opts, meta)) {
+      if (event.sources) {
+        meta.sources_sent_ms = Date.now() - t0;
+        res.write(`event: sources\ndata: ${JSON.stringify(event)}\n\n`);
+      } else {
+        if (ttftMs === undefined) ttftMs = Date.now() - t0;
+        res.write(`data: ${JSON.stringify(event)}\n\n`);
+      }
     }
-    const docDoneMs = Date.now() - t0;
-    const mcpResp = await mcpPromise;
     const totalMs = Date.now() - t0;
     queryLatency.observe({ endpoint: "/chat/stream" }, totalMs);
-    const meta = {
-      ttft_ms: ttftMs, // first token written, measured from request arrival
-      doc_done_ms: docDoneMs, // RAG stream finished
-      total_ms: totalMs, // done event (includes waiting on the web path)
-      doc: docMeta,
-      web: mcpResp.meta,
-    };
-    res.write(`data: ${JSON.stringify({ done: true, mcpAnswer: mcpResp.text, meta })}\n\n`);
+    const { citations, ...rest } = meta;
+    res.write(
+      `data: ${JSON.stringify({ done: true, citations, meta: { ...rest, ttft_ms: ttftMs, total_ms: totalMs } })}\n\n`
+    );
   } catch (err) {
     const message =
-      err instanceof VectorsMissingError ? await handleVectorsMissing(documentId) : err.message;
-    console.error("[stream] RAG error:", message);
+      err instanceof VectorsMissingError ? await handleVectorsMissing(opts.documentId) : err.message;
+    console.error("[stream] error:", message);
     res.write(`event: apierror\ndata: ${JSON.stringify({ error: message })}\n\n`);
   } finally {
     res.end();
