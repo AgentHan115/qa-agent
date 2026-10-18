@@ -16,6 +16,7 @@ import { queryDocument, streamQueryDocument } from "./query.js";
 import { enqueueIngestion } from "./lib/queue.js";
 import { countVectors, VectorsMissingError } from "./lib/vectors.js";
 import { reconcileReadyDocuments, vectorsMissingReason } from "./lib/reconcile.js";
+import { describeRuntime } from "./lib/runtime-info.js";
 import chatMCP from "./chat-mcp.js";
 import client from "prom-client";
 
@@ -113,6 +114,12 @@ app.post("/documents/:documentId/reingest", async (req, res) => {
   await markProcessing(doc.id);
   await enqueueIngestion(doc.id, doc.file_path, doc.filename);
   res.status(202).json({ documentId: doc.id, status: "processing", filename: doc.filename });
+});
+
+// GET /runtime — exact model/runtime configuration (no secrets), for
+// reproducibility. Eval runs store this alongside their results.
+app.get("/runtime", async (req, res) => {
+  res.json(await describeRuntime());
 });
 
 // GET /metrics — Prometheus scrape endpoint
@@ -272,7 +279,10 @@ initDb()
       markFailed,
     });
     console.log(`[reconcile] checked ${checked} ready documents, ${drifted.length} missing vectors`);
-    app.listen(PORT, () => console.log(`server running on port ${PORT}`));
+    const server = app.listen(PORT, () => console.log(`server running on port ${PORT}`));
+    // Node closes requests after 300s by default; local models can be slower
+    // than that on long prompts (the baseline web path took ~290s on a Mac).
+    server.requestTimeout = parseInt(process.env.SERVER_REQUEST_TIMEOUT_MS || "900000", 10);
     await seedDefaultDocument();
   })
   .catch((err) => {

@@ -2,7 +2,7 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
-import { ChatOpenAI } from "@langchain/openai";
+import { createChatModel, invokeGuarded } from "./lib/llm.js";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { usageFrom } from "./lib/usage.js";
 
@@ -61,7 +61,6 @@ const ensureConnected = async () => {
 };
 
 const chatMCP = async (query) => {
-  const apiKey = process.env.OPENAI_API_KEY;
   const meta = {};
 
   try {
@@ -92,10 +91,7 @@ const chatMCP = async (query) => {
     meta.search_payload_chars = searchResults.length;
 
     // Use the LLM to answer the question based on search results
-    const model = new ChatOpenAI({
-      model: process.env.OPENAI_MODEL || "gpt-4o",
-      apiKey,
-    });
+    const model = createChatModel();
 
     const answerTemplate = `Summarize the search result.
 
@@ -110,9 +106,10 @@ Helpful Answer:`;
     });
 
     t = Date.now();
-    const response = await model.invoke(formattedPrompt);
+    const { message: response, check } = await invokeGuarded(model, formattedPrompt);
     meta.llm_ms = Date.now() - t;
     meta.usage = usageFrom(response);
+    meta.check = check;
     const finalAnswer = response.content;
 
     return { text: finalAnswer, meta };

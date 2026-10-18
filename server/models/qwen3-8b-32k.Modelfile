@@ -1,0 +1,8 @@
+# Local dev model for the QA agent (Ollama). Same weights as qwen3:8b with an
+# explicit context window: Ollama's runtime default (4096 here) silently
+# truncates longer prompts to ~2k tokens with no error.
+#   ollama create qa-qwen3-8b-32k -f server/models/qwen3-8b-32k.Modelfile
+# Sampling and thinking mode are set per request by the app (lib/llm.js),
+# so this file only fixes the context size.
+FROM qwen3:8b
+PARAMETER num_ctx 32768

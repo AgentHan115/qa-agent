@@ -2,22 +2,19 @@
 // Each document has its own Chroma collection — no filtering needed.
 
 import { Chroma } from "@langchain/community/vectorstores/chroma";
-import { OpenAIEmbeddings } from "@langchain/openai";
-import { ChatOpenAI } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
+import { createChatModel, createEmbeddings, formatQuery, invokeGuarded, streamGuarded } from "./lib/llm.js";
 import { usageFrom } from "./lib/usage.js";
 import { VectorsMissingError } from "./lib/vectors.js";
 
 const CHROMA_URL = process.env.CHROMA_URL || "http://localhost:8000";
-const TOP_K = 5;
+export const TOP_K = 5;
 
 // Shared helper — embeds the question and retrieves context from Chroma.
 // Used by both the blocking and streaming query paths. Embedding and vector
 // search are timed separately (same calls asRetriever({ k }) makes internally).
 const retrieveContext = async (question, documentId, meta) => {
-  const embeddings = new OpenAIEmbeddings({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
+  const embeddings = createEmbeddings();
 
   const vectorStore = new Chroma(embeddings, {
     collectionName: documentId,
@@ -25,7 +22,8 @@ const retrieveContext = async (question, documentId, meta) => {
   });
 
   let t = Date.now();
-  const queryVector = await embeddings.embedQuery(question);
+  // Instruction-tuned embedders get a query prefix; stored chunks have none.
+  const queryVector = await embeddings.embedQuery(formatQuery(question));
   meta.embed_ms = Date.now() - t;
 
   t = Date.now();
@@ -55,18 +53,16 @@ export const queryDocument = async (question, documentId) => {
   const meta = {};
   const context = await retrieveContext(question, documentId, meta);
 
-  const model = new ChatOpenAI({
-    model: process.env.OPENAI_MODEL || "gpt-4o",
-    apiKey: process.env.OPENAI_API_KEY,
-  });
+  const model = createChatModel();
 
   const prompt = PromptTemplate.fromTemplate(PROMPT_TEMPLATE);
   const formattedPrompt = await prompt.format({ context, question });
 
   const t = Date.now();
-  const response = await model.invoke(formattedPrompt);
+  const { message: response, check } = await invokeGuarded(model, formattedPrompt);
   meta.llm_ms = Date.now() - t;
   meta.usage = usageFrom(response);
+  meta.check = check;
 
   return { text: response.content, meta };
 };
@@ -77,23 +73,15 @@ export const queryDocument = async (question, documentId) => {
 export async function* streamQueryDocument(question, documentId, meta = {}) {
   const context = await retrieveContext(question, documentId, meta);
 
-  const model = new ChatOpenAI({
-    model: process.env.OPENAI_MODEL || "gpt-4o",
-    apiKey: process.env.OPENAI_API_KEY,
-    streaming: true,
-  });
+  const model = createChatModel({ streaming: true });
 
   const prompt = PromptTemplate.fromTemplate(PROMPT_TEMPLATE);
   const formattedPrompt = await prompt.format({ context, question });
 
   const t = Date.now();
-  const stream = await model.stream(formattedPrompt);
-  for await (const chunk of stream) {
-    if (chunk.usage_metadata) meta.usage = usageFrom(chunk);
-    if (chunk.content) {
-      if (meta.llm_ttft_ms === undefined) meta.llm_ttft_ms = Date.now() - t;
-      yield chunk.content;
-    }
+  for await (const chunk of streamGuarded(model, formattedPrompt, meta)) {
+    if (meta.llm_ttft_ms === undefined) meta.llm_ttft_ms = Date.now() - t;
+    yield chunk.content;
   }
   meta.llm_ms = Date.now() - t;
 }

@@ -7,7 +7,8 @@ export const usageFrom = (message) => {
   return {
     input_tokens: u.input_tokens ?? 0,
     output_tokens: u.output_tokens ?? 0,
-    // Prompt tokens served from the provider's prefix cache (0 if none / not reported)
-    cached_input_tokens: u.input_token_details?.cache_read ?? 0,
+    // Prompt tokens served from the provider's prefix cache. null = the server
+    // doesn't report it (e.g. Ollama) — not the same as a measured 0.
+    cached_input_tokens: u.input_token_details?.cache_read ?? null,
   };
 };

@@ -1,6 +1,12 @@
 // Retrieval eval harness — 10 fixed questions about the HBS Lean Startup PDF.
 //
-// Grading is layered instead of flat keyword matching:
+// Grading modes (EVAL_GRADING):
+//   judge (default) — every answer is graded by the LLM judge. The embedding
+//     similarity is still recorded, but not used to decide.
+//   layered — the original scheme below. Its similarity band was tuned for
+//     OpenAI ada-002 embeddings and must be recalibrated for any other model.
+//
+// Layered grading:
 //   1. Embed the reference answer and the candidate answer, compare cosine similarity.
 //   2. Similarity outside the [LOW, HIGH] band is decided immediately — cheap and fast,
 //      no LLM call needed for clearly-right or clearly-wrong answers.
@@ -18,19 +24,26 @@
 //
 // Optional env vars:
 //   SERVER_URL=http://localhost:5001  (default)
-//   OPENAI_JUDGE_MODEL=gpt-4o-mini    (default — judging is cheap, doesn't need gpt-4o)
+//   EVAL_JUDGE_MODEL=<model>          (default: LLM_MODEL — same runtime as the app)
+//   EVAL_GRADING=judge|layered        (default: judge)
+//
+// Each run writes results/eval-<timestamp>.json with the server's /runtime
+// record and the git commit, so results can be tied to an exact configuration.
 
 import dotenv from "dotenv";
 dotenv.config();
 
 import { mkdirSync, writeFileSync } from "fs";
+import { execSync } from "child_process";
+import http from "http";
 
-import { OpenAIEmbeddings, ChatOpenAI } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
+import { createChatModel, createEmbeddings, llmConfig } from "../lib/llm.js";
 import { z } from "zod";
 
 const SERVER_URL = process.env.SERVER_URL || "http://localhost:5001";
-const JUDGE_MODEL = process.env.OPENAI_JUDGE_MODEL || "gpt-4o-mini";
+const JUDGE_MODEL = process.env.EVAL_JUDGE_MODEL || llmConfig().model;
+const GRADING = process.env.EVAL_GRADING || "judge";
 
 // Similarity band for the embedding pre-filter. Tuned loosely — wide enough
 // that the LLM judge only sees genuinely ambiguous cases.
@@ -156,6 +169,21 @@ const llmJudge = async (judgeModel, question, reference, candidate) => {
   return structuredModel.invoke(formatted);
 };
 
+// GET with an explicit timeout. Node's fetch gives up waiting for response
+// headers after 300s, which slow local models can exceed.
+const REQUEST_TIMEOUT_MS = parseInt(process.env.EVAL_REQUEST_TIMEOUT_MS || "900000", 10);
+const httpGet = (url) =>
+  new Promise((resolve, reject) => {
+    const req = http.get(url, (res) => {
+      let body = "";
+      res.setEncoding("utf8");
+      res.on("data", (d) => (body += d));
+      res.on("end", () => resolve({ ok: res.statusCode < 400, status: res.statusCode, body }));
+    });
+    req.setTimeout(REQUEST_TIMEOUT_MS, () => req.destroy(new Error(`timed out after ${REQUEST_TIMEOUT_MS}ms`)));
+    req.on("error", reject);
+  });
+
 // ---------------------------------------------------------------------------
 // Run a single eval case
 // ---------------------------------------------------------------------------
@@ -164,20 +192,26 @@ async function runCase(c, embeddings, judgeModel) {
     c.question
   )}&documentId=${documentId}`;
   const t0 = Date.now();
-  const res = await fetch(url);
+  let res;
+  try {
+    res = await httpGet(url);
+  } catch (err) {
+    return { passed: false, method: "request-error", answer: err.message, latencyMs: Date.now() - t0 };
+  }
   const latencyMs = Date.now() - t0;
 
   if (!res.ok) {
-    const body = await res.text();
+    const body = res.body;
     return {
       passed: false,
       method: "http-error",
       answer: `HTTP ${res.status}: ${body}`,
+      httpStatus: res.status,
       latencyMs,
     };
   }
 
-  const { ragAnswer, meta } = await res.json();
+  const { ragAnswer, meta } = JSON.parse(res.body);
   const answer = ragAnswer || "";
 
   const [refVec, ansVec] = await embeddings.embedDocuments([
@@ -186,14 +220,14 @@ async function runCase(c, embeddings, judgeModel) {
   ]);
   const similarity = cosineSimilarity(refVec, ansVec);
 
-  if (similarity >= HIGH_CONFIDENCE_SIM) {
+  if (GRADING === "layered" && similarity >= HIGH_CONFIDENCE_SIM) {
     return { passed: true, method: "embedding", similarity, answer, latencyMs, meta };
   }
-  if (similarity <= LOW_CONFIDENCE_SIM) {
+  if (GRADING === "layered" && similarity <= LOW_CONFIDENCE_SIM) {
     return { passed: false, method: "embedding", similarity, answer, latencyMs, meta };
   }
 
-  // Ambiguous zone — escalate to the LLM judge
+  // Judge mode, or the ambiguous zone in layered mode
   const judgment = await llmJudge(judgeModel, c.question, c.reference, answer);
   return {
     passed: judgment.passed,
@@ -212,16 +246,28 @@ async function runCase(c, embeddings, judgeModel) {
 console.log(`\nEval harness — documentId: ${documentId}`);
 console.log(`Server: ${SERVER_URL}`);
 console.log(
-  `Grading: embedding pre-filter (band ${LOW_CONFIDENCE_SIM}-${HIGH_CONFIDENCE_SIM}) + LLM judge (${JUDGE_MODEL}) for ambiguous cases\n`
+  GRADING === "layered"
+    ? `Grading: embedding pre-filter (band ${LOW_CONFIDENCE_SIM}-${HIGH_CONFIDENCE_SIM}) + LLM judge (${JUDGE_MODEL}) for ambiguous cases\n`
+    : `Grading: LLM judge (${JUDGE_MODEL}) on every answer; embedding similarity recorded only\n`
 );
+
+// What the server is actually running, captured before the run starts.
+const runtime = await fetch(`${SERVER_URL}/runtime`)
+  .then((r) => r.json())
+  .catch((err) => ({ error: err.message }));
+const git = (() => {
+  try {
+    const commit = execSync("git rev-parse HEAD").toString().trim();
+    const dirty = execSync("git status --porcelain").toString().trim().length > 0;
+    return { commit, dirty };
+  } catch {
+    return null;
+  }
+})();
 console.log("─".repeat(72));
 
-const embeddings = new OpenAIEmbeddings({ apiKey: process.env.OPENAI_API_KEY });
-const judgeModel = new ChatOpenAI({
-  model: JUDGE_MODEL,
-  apiKey: process.env.OPENAI_API_KEY,
-  temperature: 0,
-});
+const embeddings = createEmbeddings();
+const judgeModel = createChatModel({ model: JUDGE_MODEL });
 
 let passed = 0;
 let embeddingDecided = 0;
@@ -280,10 +326,17 @@ writeFileSync(
       runAt,
       server: SERVER_URL,
       documentId,
-      model: process.env.OPENAI_MODEL || "gpt-4o",
+      git,
+      runtime,
       judgeModel: JUDGE_MODEL,
-      grading: { low: LOW_CONFIDENCE_SIM, high: HIGH_CONFIDENCE_SIM },
-      summary: { passed, total: CASES.length, avgLatencyMs: avgLatency },
+      grading: { mode: GRADING, low: LOW_CONFIDENCE_SIM, high: HIGH_CONFIDENCE_SIM },
+      summary: {
+        passed,
+        total: CASES.length,
+        httpErrors: records.filter((r) => r.method === "http-error").length,
+        requestErrors: records.filter((r) => r.method === "request-error").length,
+        avgLatencyMs: avgLatency,
+      },
       cases: records,
     },
     null,

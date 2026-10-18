@@ -5,12 +5,13 @@
 
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
-import { OpenAIEmbeddings } from "@langchain/openai";
 import { Chroma } from "@langchain/community/vectorstores/chroma";
 import { countVectors, deleteVectors } from "./lib/vectors.js";
-import { failFastOnPermanentErrors } from "./lib/errors.js";
+import { createEmbeddings } from "./lib/llm.js";
 
 const CHROMA_URL = process.env.CHROMA_URL || "http://localhost:8000";
+export const CHUNK_SIZE = 500;
+export const CHUNK_OVERLAP = 50;
 
 // Flatten metadata to primitives only. Nested objects are JSON-stringified,
 // arrays are dropped (Chroma typed arrays aren't needed here).
@@ -34,12 +35,7 @@ export const ingestDocument = async (
   documentId,
   filePath,
   filename,
-  {
-    embeddings = new OpenAIEmbeddings({
-      apiKey: process.env.OPENAI_API_KEY,
-      onFailedAttempt: failFastOnPermanentErrors,
-    }),
-  } = {}
+  { embeddings = createEmbeddings() } = {}
 ) => {
   // Step 1: Load PDF
   const loader = new PDFLoader(filePath);
@@ -47,8 +43,8 @@ export const ingestDocument = async (
 
   // Step 2: Chunk the text
   const splitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 500,
-    chunkOverlap: 50,
+    chunkSize: CHUNK_SIZE,
+    chunkOverlap: CHUNK_OVERLAP,
   });
   const chunks = await splitter.splitDocuments(docs);
 
