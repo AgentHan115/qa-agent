@@ -26,6 +26,7 @@
 //   SERVER_URL=http://localhost:5001  (default)
 //   EVAL_JUDGE_MODEL=<model>          (default: LLM_MODEL — same runtime as the app)
 //   EVAL_GRADING=judge|layered        (default: judge)
+//   EVAL_WEB=off                      (skip the web path; measures the document pipeline alone)
 //
 // Each run writes results/eval-<timestamp>.json with the server's /runtime
 // record and the git commit, so results can be tied to an exact configuration.
@@ -44,6 +45,7 @@ import { z } from "zod";
 const SERVER_URL = process.env.SERVER_URL || "http://localhost:5001";
 const JUDGE_MODEL = process.env.EVAL_JUDGE_MODEL || llmConfig().model;
 const GRADING = process.env.EVAL_GRADING || "judge";
+const WEB = process.env.EVAL_WEB === "off" ? "off" : "on";
 
 // Similarity band for the embedding pre-filter. Tuned loosely — wide enough
 // that the LLM judge only sees genuinely ambiguous cases.
@@ -190,7 +192,7 @@ const httpGet = (url) =>
 async function runCase(c, embeddings, judgeModel) {
   const url = `${SERVER_URL}/chat?question=${encodeURIComponent(
     c.question
-  )}&documentId=${documentId}`;
+  )}&documentId=${documentId}${WEB === "off" ? "&web=off" : ""}`;
   const t0 = Date.now();
   let res;
   try {
@@ -329,6 +331,7 @@ writeFileSync(
       git,
       runtime,
       judgeModel: JUDGE_MODEL,
+      web: WEB,
       grading: { mode: GRADING, low: LOW_CONFIDENCE_SIM, high: HIGH_CONFIDENCE_SIM },
       summary: {
         passed,

@@ -128,10 +128,13 @@ app.get("/metrics", async (req, res) => {
   res.end(await register.metrics());
 });
 
-// GET /chat?question=...&documentId=...
+// GET /chat?question=...&documentId=...[&web=off]
 // documentId is required — each document has its own Chroma collection.
+// web=off skips the web-search path (the document path is unchanged), so the
+// document pipeline can be measured on its own.
 app.get("/chat", async (req, res) => {
   const { question, documentId } = req.query;
+  const skipWeb = req.query.web === "off";
 
   if (!question) {
     return res.status(400).json({ error: "question is required" });
@@ -155,7 +158,7 @@ app.get("/chat", async (req, res) => {
   try {
     const [ragResp, mcpResp] = await Promise.all([
       timed(() => queryDocument(question, documentId)),
-      timed(() => chatMCP(question)),
+      skipWeb ? { text: "", meta: { status: "skipped" } } : timed(() => chatMCP(question)),
     ]);
 
     const totalMs = Date.now() - t0;
