@@ -1,0 +1,429 @@
+{
+  "runAt": "2026-10-18T06:14:01.156Z",
+  "server": "http://localhost:5001",
+  "documentId": "6428a0e7-8603-471a-889a-cffc6a06999c",
+  "git": {
+    "commit": "a990933b7cb9437a7917350c7ca7741258564ee2",
+    "dirty": true
+  },
+  "runtime": {
+    "llm": {
+      "runtime": "ollama",
+      "baseURL": "http://localhost:11434/v1",
+      "model": "qa-qwen3-8b-32k",
+      "disableThinking": true,
+      "contextTokens": 32768,
+      "maxOutputTokens": 1024,
+      "temperature": 0,
+      "seed": 1,
+      "timeoutMs": 120000,
+      "maxRetries": 2
+    },
+    "embedding": {
+      "baseURL": "http://localhost:11434/v1",
+      "model": "qwen3-embedding:0.6b",
+      "queryInstruction": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+      "batchSize": 32
+    },
+    "retrieval": {
+      "top_k": 5,
+      "chunk_size": 500,
+      "chunk_overlap": 50
+    },
+    "web_search": {
+      "provider": "serpapi",
+      "engine": "google",
+      "num": 5
+    },
+    "serving": {
+      "server": "ollama",
+      "version": "0.33.2",
+      "models": [
+        {
+          "name": "qa-qwen3-8b-32k",
+          "digest": "365415f081c0b8f003dad729b765e948a3f6588a99dd508e8aa941043f976b5b",
+          "quantization": "Q4_K_M",
+          "parameter_size": "8.2B",
+          "family": "qwen3",
+          "parent_model": "qwen3:8b",
+          "parameters": "num_ctx                        32768\nrepeat_penalty                 1\nstop                           \"<|im_start|>\"\nstop                           \"<|im_end|>\"\ntemperature                    0.6\ntop_k                          20\ntop_p                          0.95"
+        },
+        {
+          "name": "qwen3-embedding:0.6b",
+          "digest": "ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d",
+          "quantization": "Q8_0",
+          "parameter_size": "595.78M",
+          "family": "qwen3",
+          "parent_model": "/Users/ollama/.ollama/models/blobs/sha256-06507c7b42688469c4e7298b0a1e16deff06caf291cf0a5b278c308249c3e439",
+          "parameters": null
+        }
+      ]
+    }
+  },
+  "judgeModel": "qa-qwen3-8b-32k",
+  "web": "off",
+  "grading": {
+    "mode": "judge",
+    "low": 0.6,
+    "high": 0.85
+  },
+  "summary": {
+    "passed": 10,
+    "total": 10,
+    "httpErrors": 0,
+    "requestErrors": 0,
+    "avgLatencyMs": 16305
+  },
+  "cases": [
+    {
+      "id": 1,
+      "question": "What is the Build-Measure-Learn feedback loop?",
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer is semantically correct. It accurately describes the Build-Measure-Learn feedback loop as a cycle involving building an MVP, testing with users, gathering feedback, and refining the business model. It emphasizes data-driven decisions and continuous learning, which aligns with the core idea of the Lean Startup method. While the wording differs slightly from the reference answer, the meaning is consistent and the central point is not omitted.",
+      "similarity": 0.7696614939730158,
+      "answer": "The Build-Measure-Learn feedback loop is a cycle where a minimum viable product (MVP) is built, tested with real users, and then used to gather feedback to refine the business model. This process allows entrepreneurs to test hypotheses and make data-driven decisions. It emphasizes continuous learning and adaptation based on customer feedback.",
+      "latencyMs": 55906,
+      "meta": {
+        "total_ms": 55841,
+        "doc": {
+          "embed_ms": 2369,
+          "chroma_ms": 74,
+          "chunks": 5,
+          "llm_ms": 53396,
+          "usage": {
+            "input_tokens": 542,
+            "output_tokens": 66,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2208,
+            "prompt_tokens": 542,
+            "chars_per_token": 4.07,
+            "truncation_ruled_out_by": "short_prompt"
+          },
+          "path_ms": 55841
+        },
+        "web": {
+          "status": "skipped"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "question": "What is a Minimum Viable Product (MVP)?",
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer is semantically correct. It captures the central idea of an MVP as a simplified version of a product used to test hypotheses with minimal effort. It emphasizes core features, temporary solutions, and the goal of gathering feedback and validating ideas — all of which align with the reference answer. While the phrasing differs, the meaning is consistent and the answer fully addresses the question without omission or contradiction.",
+      "similarity": 0.7514551474110203,
+      "answer": "A Minimum Viable Product (MVP) is the simplest version of a product that allows an entrepreneur to test business hypotheses with the least amount of effort. It focuses on core features and may use temporary solutions or limited functionality. The goal is to gather feedback and validate ideas before full development.",
+      "latencyMs": 17111,
+      "meta": {
+        "total_ms": 16861,
+        "doc": {
+          "embed_ms": 4277,
+          "chroma_ms": 165,
+          "chunks": 5,
+          "llm_ms": 12412,
+          "usage": {
+            "input_tokens": 584,
+            "output_tokens": 59,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2422,
+            "prompt_tokens": 584,
+            "chars_per_token": 4.15,
+            "truncation_ruled_out_by": "short_prompt"
+          },
+          "path_ms": 16861
+        },
+        "web": {
+          "status": "skipped"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "question": "What is validated learning?",
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer is semantically correct. It captures the core idea of validated learning as a process of testing hypotheses through experiments to gain insights and make informed decisions. While the reference answer emphasizes 'empirically demonstrating valuable truths about a startup's business prospects,' the candidate answer aligns with this by focusing on testing assumptions and using data to guide decisions. The mention of minimum viable products (MVPs) is a common and accurate example of how validated learning is applied in practice. The candidate answer does not contradict the reference and fully addresses the question.",
+      "similarity": 0.8684562726772864,
+      "answer": "Validated learning is the process of testing hypotheses through experiments to gain insights and confirm or refute assumptions about a business model. It involves creating and testing minimum viable products to gather data and make informed decisions. This approach helps entrepreneurs avoid wasting resources on unproven ideas.",
+      "latencyMs": 19944,
+      "meta": {
+        "total_ms": 19719,
+        "doc": {
+          "embed_ms": 7019,
+          "chroma_ms": 285,
+          "chunks": 5,
+          "llm_ms": 12405,
+          "usage": {
+            "input_tokens": 589,
+            "output_tokens": 54,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2133,
+            "prompt_tokens": 589,
+            "chars_per_token": 3.62,
+            "truncation_ruled_out_by": "short_prompt"
+          },
+          "path_ms": 19718
+        },
+        "web": {
+          "status": "skipped"
+        }
+      }
+    },
+    {
+      "id": 4,
+      "question": "What is a pivot in the context of the lean startup?",
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer is semantically correct. It captures the core idea of a pivot as a course correction in response to failed hypothesis tests or market feedback, while retaining key elements of the business model. It aligns with the reference answer's emphasis on adapting without discarding the core vision. The answer does not contradict the reference and directly addresses the question.",
+      "similarity": 0.8252882689605783,
+      "answer": "A pivot in the context of the lean startup is changing some business model elements while retaining others. It occurs in response to failed hypothesis tests or significant market feedback. This allows entrepreneurs to adapt their approach without discarding their core vision.",
+      "latencyMs": 15626,
+      "meta": {
+        "total_ms": 15548,
+        "doc": {
+          "embed_ms": 2059,
+          "chroma_ms": 360,
+          "chunks": 5,
+          "llm_ms": 13117,
+          "usage": {
+            "input_tokens": 659,
+            "output_tokens": 47,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2612,
+            "prompt_tokens": 659,
+            "chars_per_token": 3.96,
+            "truncation_ruled_out_by": "short_prompt"
+          },
+          "path_ms": 15548
+        },
+        "web": {
+          "status": "skipped"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "question": "What is innovation accounting?",
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer is semantically correct. It captures the core idea of innovation accounting as a framework for measuring progress and validating ideas, aligning with the reference answer's emphasis on using actionable metrics rather than vanity metrics. While the wording differs, the central point about measuring progress and making data-driven decisions in the context of innovation is preserved. The candidate answer does not contradict the reference and fully addresses the question.",
+      "similarity": 0.836701882512812,
+      "answer": "Innovation accounting is a framework used to measure progress and validate ideas in the context of lean startup methodologies. It focuses on tracking key metrics that indicate whether a business model is viable and scalable. This approach helps entrepreneurs make data-driven decisions during the innovation process.",
+      "latencyMs": 9832,
+      "meta": {
+        "total_ms": 9754,
+        "doc": {
+          "embed_ms": 526,
+          "chroma_ms": 2030,
+          "chunks": 5,
+          "llm_ms": 7194,
+          "usage": {
+            "input_tokens": 723,
+            "output_tokens": 52,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2501,
+            "prompt_tokens": 723,
+            "chars_per_token": 3.46,
+            "truncation_ruled_out_by": "short_prompt"
+          },
+          "path_ms": 9754
+        },
+        "web": {
+          "status": "skipped"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "question": "What is the difference between vanity metrics and actionable metrics?",
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer is semantically correct. It accurately captures the distinction between vanity metrics and actionable metrics by emphasizing that vanity metrics appear positive but lack meaningful insight, while actionable metrics provide valuable, measurable information that guides strategic decisions. The candidate also correctly notes that actionable metrics help track progress toward specific goals, which aligns with the reference answer. The answer does not contradict the reference and fully addresses the question.",
+      "similarity": 0.8710060510757117,
+      "answer": "Vanity metrics are indicators that appear positive but do not provide meaningful insights into business performance, while actionable metrics are measurable and provide valuable information that can guide strategic decisions. Actionable metrics help entrepreneurs track progress toward specific goals, such as improving customer conversion rates or retention. Vanity metrics may inflate perceptions without contributing to actual business growth.",
+      "latencyMs": 8897,
+      "meta": {
+        "total_ms": 8825,
+        "doc": {
+          "embed_ms": 450,
+          "chroma_ms": 1118,
+          "chunks": 5,
+          "llm_ms": 7254,
+          "usage": {
+            "input_tokens": 586,
+            "output_tokens": 66,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2520,
+            "prompt_tokens": 586,
+            "chars_per_token": 4.3,
+            "truncation_ruled_out_by": "short_prompt"
+          },
+          "path_ms": 8825
+        },
+        "web": {
+          "status": "skipped"
+        }
+      }
+    },
+    {
+      "id": 7,
+      "question": "How does the lean startup define waste?",
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer is semantically correct. It captures the central idea from the reference answer that waste in the lean startup context refers to activities that do not contribute to validated learning or validating a business model hypothesis. While the wording differs slightly, the core concept is preserved. The candidate answer also expands on the idea by mentioning the focus on avoiding unnecessary expenditures, which aligns with the lean startup principle of minimizing waste. There is no contradiction or omission of the central point.",
+      "similarity": 0.7203278281593593,
+      "answer": "In the lean startup context, waste is defined as any activity that does not contribute to validating a business model hypothesis. The focus is on avoiding unnecessary expenditures of time, money, and resources. Lean startups aim to maximize learning and minimize actions that do not lead to progress.",
+      "latencyMs": 10721,
+      "meta": {
+        "total_ms": 10625,
+        "doc": {
+          "embed_ms": 2529,
+          "chroma_ms": 122,
+          "chunks": 5,
+          "llm_ms": 7971,
+          "usage": {
+            "input_tokens": 605,
+            "output_tokens": 55,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2489,
+            "prompt_tokens": 605,
+            "chars_per_token": 4.11,
+            "truncation_ruled_out_by": "short_prompt"
+          },
+          "path_ms": 10624
+        },
+        "web": {
+          "status": "skipped"
+        }
+      }
+    },
+    {
+      "id": 8,
+      "question": "What is a split test or A/B test according to the lean startup?",
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer is semantically correct. It accurately describes a split test (or A/B test) as a method that divides customers into control and treatment groups to evaluate the impact of product changes. It mentions testing hypotheses and validating business assumptions, which aligns with the lean startup approach. While the wording differs slightly from the reference answer, the core concepts are consistent and the central point is not omitted or contradicted.",
+      "similarity": 0.8416397680984488,
+      "answer": "A split test, or A/B test, divides customers into a control group and a treatment group to determine if modifications to a product yield statistically significant performance improvements. It is used to test hypotheses by comparing the outcomes of different versions of a product. This method helps entrepreneurs validate or refute business model assumptions efficiently.",
+      "latencyMs": 7942,
+      "meta": {
+        "total_ms": 7881,
+        "doc": {
+          "embed_ms": 629,
+          "chroma_ms": 1536,
+          "chunks": 5,
+          "llm_ms": 5710,
+          "usage": {
+            "input_tokens": 620,
+            "output_tokens": 62,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2485,
+            "prompt_tokens": 620,
+            "chars_per_token": 4.01,
+            "truncation_ruled_out_by": "short_prompt"
+          },
+          "path_ms": 7880
+        },
+        "web": {
+          "status": "skipped"
+        }
+      }
+    },
+    {
+      "id": 9,
+      "question": "What does it mean to persevere vs pivot?",
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly captures the core distinction between perseverance and pivoting. It conveys that perseverance involves continuing with the current path when the MVP validates the business model, aligning with the reference's idea of maintaining the strategic hypothesis. Pivoting is described as changing strategy while keeping the original vision intact, which matches the reference's notion of changing the fundamental hypothesis while carrying forward prior learning. The answer is semantically correct and does not contradict the reference.",
+      "similarity": 0.8434753076287858,
+      "answer": "Persevering means continuing with the current path if the MVP validates the business model and no significant shifts are needed. Pivoting involves changing strategy while keeping the original vision intact when feedback suggests a different direction is necessary.",
+      "latencyMs": 9257,
+      "meta": {
+        "total_ms": 9194,
+        "doc": {
+          "embed_ms": 2349,
+          "chroma_ms": 244,
+          "chunks": 5,
+          "llm_ms": 6592,
+          "usage": {
+            "input_tokens": 628,
+            "output_tokens": 46,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2458,
+            "prompt_tokens": 628,
+            "chars_per_token": 3.91,
+            "truncation_ruled_out_by": "short_prompt"
+          },
+          "path_ms": 9193
+        },
+        "web": {
+          "status": "skipped"
+        }
+      }
+    },
+    {
+      "id": 10,
+      "question": "What is the role of customers in the lean startup methodology?",
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer is semantically correct. It captures the central idea that customers provide feedback through MVPs to validate hypotheses, and it emphasizes the importance of interpreting feedback to avoid relying on assumptions. While it doesn't explicitly mention continuous engagement, interviews, or usage data, it conveys the core concept of customers as a source of validated learning in the lean startup methodology. It does not contradict the reference answer or fail to address the question.",
+      "similarity": 0.6895929425674011,
+      "answer": "Customers play a crucial role in the lean startup methodology by providing feedback through Minimum Viable Products (MVPs) to validate business hypotheses. Their true preferences may differ from stated ones, so entrepreneurs must carefully interpret this feedback. Lean startups aim to avoid waste by focusing on validated learning rather than relying solely on founder assumptions.",
+      "latencyMs": 7816,
+      "meta": {
+        "total_ms": 7772,
+        "doc": {
+          "embed_ms": 497,
+          "chroma_ms": 207,
+          "chunks": 5,
+          "llm_ms": 7067,
+          "usage": {
+            "input_tokens": 634,
+            "output_tokens": 65,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2571,
+            "prompt_tokens": 634,
+            "chars_per_token": 4.06,
+            "truncation_ruled_out_by": "short_prompt"
+          },
+          "path_ms": 7772
+        },
+        "web": {
+          "status": "skipped"
+        }
+      }
+    }
+  ]
+}

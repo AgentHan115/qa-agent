@@ -1,0 +1,294 @@
+{
+  "runAt": "2026-10-18T06:07:34.126Z",
+  "server": "http://localhost:5001",
+  "documentId": "6428a0e7-8603-471a-889a-cffc6a06999c",
+  "git": {
+    "commit": "68f02f65a7e0934e3d5bfb0f4e3f7c3e5535c61d",
+    "dirty": false
+  },
+  "runtime": {
+    "llm": {
+      "runtime": "ollama",
+      "baseURL": "http://localhost:11434/v1",
+      "model": "qa-qwen3-8b-32k",
+      "disableThinking": true,
+      "contextTokens": 32768,
+      "maxOutputTokens": 1024,
+      "temperature": 0,
+      "seed": 1,
+      "timeoutMs": 120000,
+      "maxRetries": 2
+    },
+    "embedding": {
+      "baseURL": "http://localhost:11434/v1",
+      "model": "qwen3-embedding:0.6b",
+      "queryInstruction": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+      "batchSize": 32
+    },
+    "retrieval": {
+      "top_k": 5,
+      "chunk_size": 500,
+      "chunk_overlap": 50
+    },
+    "web_search": {
+      "provider": "serpapi",
+      "engine": "google",
+      "num": 5
+    },
+    "serving": {
+      "server": "ollama",
+      "version": "0.33.2",
+      "models": [
+        {
+          "name": "qa-qwen3-8b-32k",
+          "digest": "365415f081c0b8f003dad729b765e948a3f6588a99dd508e8aa941043f976b5b",
+          "quantization": "Q4_K_M",
+          "parameter_size": "8.2B",
+          "family": "qwen3",
+          "parent_model": "qwen3:8b",
+          "parameters": "num_ctx                        32768\nrepeat_penalty                 1\nstop                           \"<|im_start|>\"\nstop                           \"<|im_end|>\"\ntemperature                    0.6\ntop_k                          20\ntop_p                          0.95"
+        },
+        {
+          "name": "qwen3-embedding:0.6b",
+          "digest": "ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d",
+          "quantization": "Q8_0",
+          "parameter_size": "595.78M",
+          "family": "qwen3",
+          "parent_model": "/Users/ollama/.ollama/models/blobs/sha256-06507c7b42688469c4e7298b0a1e16deff06caf291cf0a5b278c308249c3e439",
+          "parameters": null
+        }
+      ]
+    }
+  },
+  "judgeModel": "qa-qwen3-8b-32k",
+  "grading": {
+    "mode": "judge",
+    "low": 0.6,
+    "high": 0.85
+  },
+  "summary": {
+    "passed": 3,
+    "total": 10,
+    "httpErrors": 7,
+    "requestErrors": 0,
+    "avgLatencyMs": 218308
+  },
+  "cases": [
+    {
+      "id": 1,
+      "question": "What is the Build-Measure-Learn feedback loop?",
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer is semantically correct. It accurately describes the Build-Measure-Learn feedback loop as a cycle involving building an MVP, testing with users, gathering feedback, and refining the business model. It emphasizes data-driven decisions and continuous learning, which aligns with the core idea of the Lean Startup method. While the wording differs slightly from the reference answer, the meaning is consistent and the central point is not omitted.",
+      "similarity": 0.7696614939730158,
+      "answer": "The Build-Measure-Learn feedback loop is a cycle where a minimum viable product (MVP) is built, tested with real users, and then used to gather feedback to refine the business model. This process allows entrepreneurs to test hypotheses and make data-driven decisions. It emphasizes continuous learning and adaptation based on customer feedback.",
+      "latencyMs": 332057,
+      "meta": {
+        "total_ms": 331983,
+        "doc": {
+          "embed_ms": 2721,
+          "chroma_ms": 74,
+          "chunks": 5,
+          "llm_ms": 329186,
+          "usage": {
+            "input_tokens": 542,
+            "output_tokens": 66,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2208,
+            "prompt_tokens": 542,
+            "chars_per_token": 4.07,
+            "truncation_ruled_out_by": "short_prompt"
+          },
+          "path_ms": 331983
+        },
+        "web": {
+          "connect_ms": 142,
+          "search_ms": 609,
+          "search_payload_chars": 50629,
+          "llm_ms": 269810,
+          "usage": {
+            "input_tokens": 29330,
+            "output_tokens": 152,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 50692,
+            "prompt_tokens": 29330,
+            "chars_per_token": 1.73,
+            "truncation_ruled_out_by": "above_ollama_truncation_size"
+          },
+          "path_ms": 270563
+        }
+      }
+    },
+    {
+      "id": 2,
+      "question": "What is a Minimum Viable Product (MVP)?",
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer is semantically correct. It captures the central idea of an MVP as a simplified version of a product used to test hypotheses with minimal effort. It emphasizes core features, temporary solutions, and the goal of gathering feedback and validating ideas — all of which align with the reference answer. While the phrasing differs, the meaning is consistent and the answer fully addresses the question without omission or contradiction.",
+      "similarity": 0.7514551474110203,
+      "answer": "A Minimum Viable Product (MVP) is the simplest version of a product that allows an entrepreneur to test business hypotheses with the least amount of effort. It focuses on core features and may use temporary solutions or limited functionality. The goal is to gather feedback and validate ideas before full development.",
+      "latencyMs": 263592,
+      "meta": {
+        "total_ms": 263395,
+        "doc": {
+          "embed_ms": 2652,
+          "chroma_ms": 475,
+          "chunks": 5,
+          "llm_ms": 260263,
+          "usage": {
+            "input_tokens": 584,
+            "output_tokens": 59,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2422,
+            "prompt_tokens": 584,
+            "chars_per_token": 4.15,
+            "truncation_ruled_out_by": "short_prompt"
+          },
+          "path_ms": 263395
+        },
+        "web": {
+          "connect_ms": 0,
+          "search_ms": 138,
+          "search_payload_chars": 50907,
+          "llm_ms": 212258,
+          "usage": {
+            "input_tokens": 29693,
+            "output_tokens": 467,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 50970,
+            "prompt_tokens": 29693,
+            "chars_per_token": 1.72,
+            "truncation_ruled_out_by": "above_ollama_truncation_size"
+          },
+          "path_ms": 212401
+        }
+      }
+    },
+    {
+      "id": 3,
+      "question": "What is validated learning?",
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer is semantically correct. It captures the core idea of validated learning as a process of testing hypotheses through experiments to gain insights and make informed decisions. While it adds specific details about minimum viable products (MVPs), this is consistent with the broader concept of validated learning as described in the reference. The candidate answer does not contradict the reference and addresses the question accurately, even if it is more detailed or phrased differently.",
+      "similarity": 0.8658288300021845,
+      "answer": "Validated learning is the process of testing hypotheses through experiments to gain insights and confirm or refute assumptions. It involves creating and testing a minimum viable product to gather data. This approach helps entrepreneurs make informed decisions and avoid wasting resources on unproven ideas.",
+      "latencyMs": 283043,
+      "meta": {
+        "total_ms": 282857,
+        "doc": {
+          "embed_ms": 1752,
+          "chroma_ms": 601,
+          "chunks": 5,
+          "llm_ms": 280499,
+          "usage": {
+            "input_tokens": 589,
+            "output_tokens": 51,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2133,
+            "prompt_tokens": 589,
+            "chars_per_token": 3.62,
+            "truncation_ruled_out_by": "short_prompt"
+          },
+          "path_ms": 282856
+        },
+        "web": {
+          "connect_ms": 0,
+          "search_ms": 1607,
+          "search_payload_chars": 51394,
+          "llm_ms": 232937,
+          "usage": {
+            "input_tokens": 29767,
+            "output_tokens": 617,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 51457,
+            "prompt_tokens": 29767,
+            "chars_per_token": 1.73,
+            "truncation_ruled_out_by": "above_ollama_truncation_size"
+          },
+          "path_ms": 234564
+        }
+      }
+    },
+    {
+      "id": 4,
+      "question": "What is a pivot in the context of the lean startup?",
+      "passed": false,
+      "method": "http-error",
+      "answer": "HTTP 500: {\"error\":\"Failed to generate answer\",\"detail\":\"Possible silent truncation: 61010 chars reported as 16386 tokens (context 32768, runtime ollama)\"}",
+      "httpStatus": 500,
+      "latencyMs": 116626
+    },
+    {
+      "id": 5,
+      "question": "What is innovation accounting?",
+      "passed": false,
+      "method": "http-error",
+      "answer": "HTTP 500: {\"error\":\"Failed to generate answer\",\"detail\":\"Possible silent truncation: 57280 chars reported as 16386 tokens (context 32768, runtime ollama)\"}",
+      "httpStatus": 500,
+      "latencyMs": 187441
+    },
+    {
+      "id": 6,
+      "question": "What is the difference between vanity metrics and actionable metrics?",
+      "passed": false,
+      "method": "http-error",
+      "answer": "HTTP 500: {\"error\":\"Failed to generate answer\",\"detail\":\"Possible silent truncation: 74118 chars reported as 16386 tokens (context 32768, runtime ollama)\"}",
+      "httpStatus": 500,
+      "latencyMs": 173325
+    },
+    {
+      "id": 7,
+      "question": "How does the lean startup define waste?",
+      "passed": false,
+      "method": "http-error",
+      "answer": "HTTP 500: {\"error\":\"Failed to generate answer\",\"detail\":\"Possible silent truncation: 65893 chars reported as 16386 tokens (context 32768, runtime ollama)\"}",
+      "httpStatus": 500,
+      "latencyMs": 192424
+    },
+    {
+      "id": 8,
+      "question": "What is a split test or A/B test according to the lean startup?",
+      "passed": false,
+      "method": "http-error",
+      "answer": "HTTP 500: {\"error\":\"Failed to generate answer\",\"detail\":\"Possible silent truncation: 71725 chars reported as 16386 tokens (context 32768, runtime ollama)\"}",
+      "httpStatus": 500,
+      "latencyMs": 176971
+    },
+    {
+      "id": 9,
+      "question": "What does it mean to persevere vs pivot?",
+      "passed": false,
+      "method": "http-error",
+      "answer": "HTTP 500: {\"error\":\"Failed to generate answer\",\"detail\":\"Possible silent truncation: 64992 chars reported as 16386 tokens (context 32768, runtime ollama)\"}",
+      "httpStatus": 500,
+      "latencyMs": 215834
+    },
+    {
+      "id": 10,
+      "question": "What is the role of customers in the lean startup methodology?",
+      "passed": false,
+      "method": "http-error",
+      "answer": "HTTP 500: {\"error\":\"Failed to generate answer\",\"detail\":\"Possible silent truncation: 64915 chars reported as 16386 tokens (context 32768, runtime ollama)\"}",
+      "httpStatus": 500,
+      "latencyMs": 241763
+    }
+  ]
+}

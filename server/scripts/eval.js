@@ -260,7 +260,7 @@ const runtime = await fetch(`${SERVER_URL}/runtime`)
 const git = (() => {
   try {
     const commit = execSync("git rev-parse HEAD").toString().trim();
-    const dirty = execSync("git status --porcelain").toString().trim().length > 0;
+    const dirty = execSync("git status --porcelain --untracked-files=no").toString().trim().length > 0;
     return { commit, dirty };
   } catch {
     return null;
