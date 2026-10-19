@@ -9,7 +9,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { createSearchProvider } from "./search/index.js";
+import { createSearchProvider, searchWithRetries } from "./search/index.js";
 
 const provider = createSearchProvider();
 
@@ -36,20 +36,23 @@ server.registerTool(
       query: z.string().describe("The search query to execute"),
       num: z.number().int().min(1).max(10).optional().describe("Number of results to return (default: 5)"),
     },
-    outputSchema: { results: z.array(resultSchema) },
+    outputSchema: { results: z.array(resultSchema), attempts: z.number().int() },
   },
-  async ({ query, num = 5 }) => {
+  // `signal` aborts when the client cancels the request (e.g. its time budget
+  // ran out or its user disconnected), which stops the provider call.
+  async ({ query, num = 5 }, { signal }) => {
     try {
-      const results = await provider.search(query, { num });
+      const { results, attempts } = await searchWithRetries(provider, query, { num, signal });
       return {
-        structuredContent: { results },
-        content: [{ type: "text", text: JSON.stringify({ results }) }],
+        structuredContent: { results, attempts },
+        content: [{ type: "text", text: JSON.stringify({ results, attempts }) }],
       };
     } catch (error) {
       // isError lets the client distinguish a failed search from an empty one.
       return {
         isError: true,
         content: [{ type: "text", text: `Web search failed (${provider.name}): ${error.message}` }],
+        _meta: { attempts: error.attempts ?? null },
       };
     }
   }

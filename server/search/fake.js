@@ -4,11 +4,13 @@
 //
 // Env (when selected via SEARCH_PROVIDER=fake):
 //   FAKE_SEARCH_LATENCY_MS=200
-//   FAKE_SEARCH_MODE=ok | empty | error | hang
+//   FAKE_SEARCH_MODE=ok | empty | error | transient | hang
+//     error     — permanent failure (not retried)
+//     transient — retryable failure (e.g. a 503) on every attempt
+//     hang      — never resolves (until the caller's signal aborts)
 
 import { SearchProviderError, normalizeResult } from "./provider.js";
-
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+import { sleep } from "./retry.js";
 
 const cannedResults = (query) =>
   [1, 2, 3, 4, 5].map((i) =>
@@ -29,10 +31,14 @@ export const createFakeProvider = ({
   results,
 } = {}) => ({
   name: "fake",
-  async search(query, { num = 5 } = {}) {
-    if (mode === "hang") return new Promise(() => {});
-    await sleep(latencyMs);
-    if (mode === "error") throw new SearchProviderError("fake provider failure", { provider: "fake" });
+  calls: 0,
+  async search(query, { num = 5, signal } = {}) {
+    this.calls++;
+    await sleep(mode === "hang" ? 2 ** 31 - 1 : latencyMs, signal);
+    if (mode === "error") throw new SearchProviderError("fake provider failure", { provider: "fake", status: 401 });
+    if (mode === "transient") {
+      throw new SearchProviderError("fake provider unavailable", { provider: "fake", status: 503, retryable: true });
+    }
     if (mode === "empty") return [];
     return (results ?? cannedResults(query)).slice(0, num);
   },

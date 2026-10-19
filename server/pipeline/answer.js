@@ -3,16 +3,23 @@
 // Modes:
 //   docs   — document chunks only
 //   web    — web results only (no document needed)
-//   hybrid — both; retrieval and search run in parallel. The search is bounded
-//            by SEARCH_TIMEOUT_MS; if it fails, times out, or finds nothing the
-//            answer is built from the document alone and `web.status` says why.
+//   hybrid — both, in parallel. Each side degrades independently:
+//            - search fails / exceeds SEARCH_TIMEOUT_MS / finds nothing
+//              -> answer from the document alone, `web.status` says why
+//            - retrieval fails (Chroma or embeddings down)
+//              -> answer from the web alone, `retrieval.status` says why
+//            - both fail -> NoSourcesError
+//            Missing vectors are never papered over: they mark the document
+//            failed (VectorsMissingError propagates).
 //
-// Unlike the old design (two pipelines, two LLM calls, two answers), document
-// and web sources reach the model together and the answer cites both.
+// Cancellation: callers pass `signal` (the server aborts it when the client
+// disconnects). It stops the search — including inside the MCP server — and
+// the LLM call, so abandoned requests stop using the model.
 
 import { SystemMessage, HumanMessage } from "@langchain/core/messages";
 import { createChatModel, invokeGuarded, streamGuarded } from "../lib/llm.js";
 import { usageFrom } from "../lib/usage.js";
+import { VectorsMissingError } from "../lib/vectors.js";
 import { searchWeb, searchConfig } from "../search/index.js";
 import { retrieveDocuments } from "./retrieve.js";
 import { buildContext } from "./context.js";
@@ -28,56 +35,99 @@ export class WebSearchUnavailableError extends Error {
   }
 }
 
-const TIMED_OUT = Symbol("timeout");
-const withTimeout = (promise, ms) => {
-  let timer;
-  return Promise.race([
-    promise,
-    new Promise((resolve) => (timer = setTimeout(() => resolve(TIMED_OUT), ms))),
-  ]).finally(() => clearTimeout(timer));
+export class RetrievalUnavailableError extends Error {
+  constructor(detail) {
+    super(`Document retrieval failed: ${detail}`);
+    this.name = "RetrievalUnavailableError";
+  }
+}
+
+export class NoSourcesError extends Error {
+  constructor(retrievalError, webStatus) {
+    super(`No sources available (retrieval: ${retrievalError}; web search: ${webStatus})`);
+    this.name = "NoSourcesError";
+  }
+}
+
+const throwIfAborted = (signal) => {
+  if (signal?.aborted) throw signal.reason;
 };
 
-// Runs the search within its time budget and records what happened.
-// Never throws: failures become a status. (The search itself is not cancelled
-// on timeout yet; it finishes in the background.)
-const searchWithBudget = async (question, meta, search) => {
+// Runs the search within its time budget and records what happened. Failures
+// become a status; only a cancelled request (caller's signal) throws.
+const searchWithBudget = async (question, meta, search, signal) => {
   const { timeoutMs } = searchConfig();
+  const budget = AbortSignal.timeout(timeoutMs);
+  const searchSignal = signal ? AbortSignal.any([signal, budget]) : budget;
   const t = Date.now();
   try {
-    const result = await withTimeout(search(question), timeoutMs);
+    const { results, attempts } = await search(question, { signal: searchSignal });
     meta.search_ms = Date.now() - t;
-    if (result === TIMED_OUT) {
-      meta.status = "timeout";
-      return [];
-    }
-    meta.results = result.length;
-    meta.status = result.length ? "ok" : "empty";
-    return result;
+    meta.attempts = attempts;
+    meta.results = results.length;
+    meta.status = results.length ? "ok" : "empty";
+    return results;
   } catch (err) {
     meta.search_ms = Date.now() - t;
+    throwIfAborted(signal);
+    if (budget.aborted) {
+      meta.status = "timeout";
+    } else {
+      meta.status = "error";
+      meta.error = err.message;
+      if (err.attempts) meta.attempts = err.attempts;
+    }
+    return [];
+  }
+};
+
+// Retrieval for hybrid mode: failures become a status (except missing vectors).
+const retrieveOrRecord = async (retrieve, question, documentId, meta) => {
+  try {
+    const docs = await retrieve(question, documentId, meta);
+    meta.status = "ok";
+    return docs;
+  } catch (err) {
+    if (err instanceof VectorsMissingError) throw err;
     meta.status = "error";
     meta.error = err.message;
     return [];
   }
 };
 
-// Gathers sources for the mode and builds the prompt. Throws for unusable
-// states (missing vectors; web-only mode with no web results).
+// Gathers sources for the mode and builds the prompt.
 // `deps` is for tests: substitute the retriever and search function.
 export const prepareContext = async (
-  { question, documentId, mode },
+  { question, documentId, mode, signal },
   { retrieve = retrieveDocuments, search = searchWeb } = {}
 ) => {
   const meta = { mode, retrieval: null, web: null };
   const t = Date.now();
 
   const docsPromise =
-    mode === "web" ? Promise.resolve([]) : retrieve(question, documentId, (meta.retrieval = {}));
-  const webPromise = mode === "docs" ? Promise.resolve([]) : searchWithBudget(question, (meta.web = {}), search);
+    mode === "web"
+      ? Promise.resolve([])
+      : mode === "docs"
+        ? retrieve(question, documentId, (meta.retrieval = {})).then(
+            (docs) => {
+              meta.retrieval.status = "ok";
+              return docs;
+            },
+            (err) => {
+              if (err instanceof VectorsMissingError) throw err;
+              throw new RetrievalUnavailableError(err.message);
+            }
+          )
+        : retrieveOrRecord(retrieve, question, documentId, (meta.retrieval = {}));
+  const webPromise = mode === "docs" ? Promise.resolve([]) : searchWithBudget(question, (meta.web = {}), search, signal);
   const [docs, web] = await Promise.all([docsPromise, webPromise]);
+  throwIfAborted(signal);
 
   if (mode === "web" && meta.web.status !== "ok") {
     throw new WebSearchUnavailableError(meta.web.status, meta.web.error);
+  }
+  if (mode === "hybrid" && meta.retrieval.status === "error" && meta.web.status !== "ok") {
+    throw new NoSourcesError(meta.retrieval.error, meta.web.status);
   }
 
   meta.prepare_ms = Date.now() - t;
@@ -93,11 +143,11 @@ export const prepareContext = async (
 const messagesFor = (context) => [new SystemMessage(context.system), new HumanMessage(context.user)];
 
 // Blocking: one LLM call, returns the answer with its sources and citation check.
-export const answerQuestion = async ({ question, documentId, mode }) => {
-  const { context, meta } = await prepareContext({ question, documentId, mode });
+export const answerQuestion = async ({ question, documentId, mode, signal }) => {
+  const { context, meta } = await prepareContext({ question, documentId, mode, signal });
 
   const t = Date.now();
-  const { message, check } = await invokeGuarded(createChatModel(), messagesFor(context), context.promptText);
+  const { message, check } = await invokeGuarded(createChatModel(), messagesFor(context), context.promptText, { signal });
   meta.llm = { ms: Date.now() - t, usage: usageFrom(message), check };
 
   const answer = typeof message.content === "string" ? message.content : "";
@@ -106,16 +156,17 @@ export const answerQuestion = async ({ question, documentId, mode }) => {
 
 // Streaming: yields { sources } once the prompt is built, then { token } chunks.
 // `meta` is filled in as the request progresses (citations at the end).
-export async function* streamAnswer({ question, documentId, mode }, meta) {
-  const prepared = await prepareContext({ question, documentId, mode });
+export async function* streamAnswer({ question, documentId, mode, signal }, meta) {
+  const prepared = await prepareContext({ question, documentId, mode, signal });
   Object.assign(meta, prepared.meta);
   const { context } = prepared;
-  yield { sources: context.sources, web: meta.web };
+  yield { sources: context.sources, web: meta.web, retrieval: meta.retrieval };
 
   const llmMeta = {};
   let answer = "";
   const t = Date.now();
-  for await (const chunk of streamGuarded(createChatModel({ streaming: true }), messagesFor(context), llmMeta, context.promptText)) {
+  const model = createChatModel({ streaming: true });
+  for await (const chunk of streamGuarded(model, messagesFor(context), llmMeta, context.promptText, { signal })) {
     if (llmMeta.ttft_ms === undefined) llmMeta.ttft_ms = Date.now() - t;
     answer += chunk.content;
     yield { token: chunk.content };

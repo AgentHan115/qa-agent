@@ -1,5 +1,11 @@
 // Calls the search_web tool on the MCP stdio server (mcp-server.js), keeping
 // one child process alive across requests.
+//
+// Connection handling: concurrent callers share one in-flight connection
+// attempt, and the cached client is published only after connect() succeeds.
+// It is dropped only when the transport closes (child exited, pipe broke) —
+// never because a single tool call failed or was cancelled, since other
+// requests may be using the same connection.
 
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
@@ -9,71 +15,56 @@ import { SearchProviderError } from "./provider.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// Reusable MCP client instance
-let client = null;
-let transport = null;
-let isConnecting = false;
-let connectionPromise = null;
+let client = null; // connected client, or null
+let connecting = null; // in-flight connection attempt, shared by concurrent callers
+export const stats = { connects: 0 }; // for tests and diagnostics
 
-// Initialize the MCP client connection (lazy initialization)
-const ensureConnected = async () => {
-  // If already connected, return
-  if (client && transport) {
-    return;
-  }
-
-  // If connection is in progress, wait for it
-  if (isConnecting && connectionPromise) {
-    await connectionPromise;
-    return;
-  }
-
-  // Start new connection
-  isConnecting = true;
-  connectionPromise = (async () => {
-    try {
-      client = new Client({ name: "chat-client", version: "1.0.0" });
-      transport = new StdioClientTransport({
-        command: "node",
-        args: [join(__dirname, "..", "mcp-server.js")],
-        env: { ...process.env }, // provider selection and keys come from the parent env
-      });
-      await client.connect(transport);
-    } finally {
-      isConnecting = false;
-      connectionPromise = null;
-    }
-  })();
-  await connectionPromise;
+const connect = async () => {
+  const c = new Client({ name: "chat-client", version: "1.0.0" });
+  const transport = new StdioClientTransport({
+    command: "node",
+    args: [join(__dirname, "..", "mcp-server.js")],
+    env: { ...process.env }, // provider selection and keys come from the parent env
+    stderr: "inherit",
+  });
+  c.onclose = () => {
+    if (client === c) client = null;
+  };
+  stats.connects++;
+  await c.connect(transport);
+  client = c;
+  return c;
 };
 
-const resetConnection = async () => {
-  if (!client) return;
-  try {
-    await client.close();
-  } catch {
-    // Ignore cleanup errors
-  }
+const getClient = () => {
+  if (client) return Promise.resolve(client);
+  connecting ??= connect().finally(() => {
+    connecting = null;
+  });
+  return connecting;
+};
+
+// Shut the child process down (tests, graceful exit).
+export const closeMcpClient = async () => {
+  const c = client;
   client = null;
-  transport = null;
+  await c?.close();
 };
 
-// Resolves to normalized results (search/provider.js); throws SearchProviderError
-// when the tool reports a failure.
-export const searchViaMcp = async (query, { num = 5 } = {}) => {
-  let toolResult;
-  try {
-    await ensureConnected();
-    toolResult = await client.callTool({ name: "search_web", arguments: { query, num } });
-  } catch (err) {
-    // Transport-level failure: drop the connection so the next call reconnects.
-    await resetConnection();
-    throw err;
-  }
+// Resolves { results, attempts }; throws SearchProviderError when the tool
+// reports a failure, or the abort reason when `signal` fires (the SDK then
+// sends a cancellation to the server, which stops the provider call).
+export const searchViaMcp = async (query, { num = 5, signal } = {}) => {
+  const c = await getClient();
+  const toolResult = await c.callTool({ name: "search_web", arguments: { query, num } }, undefined, { signal });
 
   const text = toolResult.content?.[0]?.text ?? "";
-  if (toolResult.isError) throw new SearchProviderError(text || "search_web failed");
-  const results = toolResult.structuredContent?.results ?? JSON.parse(text).results;
-  if (!Array.isArray(results)) throw new SearchProviderError("search_web returned no results array");
-  return results;
+  if (toolResult.isError) {
+    const err = new SearchProviderError(text || "search_web failed");
+    err.attempts = toolResult._meta?.attempts ?? undefined;
+    throw err;
+  }
+  const payload = toolResult.structuredContent ?? JSON.parse(text);
+  if (!Array.isArray(payload?.results)) throw new SearchProviderError("search_web returned no results array");
+  return { results: payload.results, attempts: payload.attempts ?? null };
 };

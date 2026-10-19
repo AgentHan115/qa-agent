@@ -1,21 +1,25 @@
 // The web-search provider contract.
 //
-// A provider is { name, search(query, { num }) } and resolves to an array of
-// normalized results. Everything downstream (MCP tool, context builder,
-// citations, UI) only sees this shape, so swapping SerpAPI for another search
-// API means writing one adapter that maps its response here.
+// A provider is { name, search(query, { num, signal }) } and resolves to an
+// array of normalized results. Everything downstream (MCP tool, context
+// builder, citations, UI) only sees this shape, so swapping SerpAPI for another
+// search API means writing one adapter that maps its response here.
 //
 //   { title: string, url: string, snippet: string, position: number,
 //     date: string | null, provider: string }
 //
 // Providers resolve [] for "no results" and throw SearchProviderError for
-// failures (bad response shape, HTTP errors), so callers can tell them apart.
+// failures. `retryable` marks failures worth retrying (rate limit, 5xx,
+// timeout, network); `status` is the HTTP status when there was one.
+// Providers must stop work when `signal` aborts.
 
 export class SearchProviderError extends Error {
-  constructor(message, { provider, cause } = {}) {
+  constructor(message, { provider, status = null, retryable = false, cause } = {}) {
     super(message);
     this.name = "SearchProviderError";
     this.provider = provider;
+    this.status = status;
+    this.retryable = retryable;
     this.cause = cause;
   }
 }

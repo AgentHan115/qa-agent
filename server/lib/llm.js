@@ -81,6 +81,7 @@ export const createEmbeddings = () => {
   return new OpenAIEmbeddings({
     model: c.model,
     batchSize: c.batchSize,
+    timeout: intEnv("EMBEDDING_TIMEOUT_MS", 60000),
     apiKey: apiKeyFor(c.baseURL),
     configuration: c.baseURL ? { baseURL: c.baseURL } : undefined,
     maxRetries: intEnv("LLM_MAX_RETRIES", 2),
@@ -98,21 +99,22 @@ export const formatQuery = (question) => {
 // The returned/filled `check` record belongs in the request's meta.
 // `input` is a prompt string or a list of chat messages; `promptText` is the
 // text the model reads (all message contents), used for the size checks.
-export const invokeGuarded = async (model, input, promptText = input) => {
+// `options.signal` cancels the request (the server stops generating).
+export const invokeGuarded = async (model, input, promptText = input, { signal } = {}) => {
   const c = llmConfig();
   assertFitsContext(promptText, c);
-  const message = await model.invoke(input);
+  const message = await model.invoke(input, { signal });
   const check = checkPromptUsage(promptText, message.usage_metadata, c);
   if (c.disableThinking) assertNoThinking(message);
   return { message, check };
 };
 
-export async function* streamGuarded(model, input, meta, promptText = input) {
+export async function* streamGuarded(model, input, meta, promptText = input, { signal } = {}) {
   const c = llmConfig();
   assertFitsContext(promptText, c);
   let usage;
   let text = "";
-  for await (const chunk of await model.stream(input)) {
+  for await (const chunk of await model.stream(input, { signal })) {
     if (chunk.usage_metadata) usage = chunk.usage_metadata;
     if (chunk.content) {
       text += chunk.content;

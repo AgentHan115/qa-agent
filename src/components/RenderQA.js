@@ -66,6 +66,8 @@ const WEB_FALLBACK_MESSAGES = {
   empty: "Web search returned no results — this answer uses the document only.",
 };
 
+const RETRIEVAL_FALLBACK_MESSAGE = "Document retrieval failed — this answer uses web sources only.";
+
 // Matches [D1], [W2], and grouped forms like [D1, W2] (same rules as the server's parser).
 const CITATION_GROUP = /\[\s*([DW]\d+(?:\s*[,;]\s*[DW]\d+)*)\s*\]/g;
 
@@ -154,7 +156,7 @@ const RenderQA = (props) => {
   return (
     <>
       {conversation?.map((each, index) => {
-        const { text, sources, citations, web, mode, error } = each.answer;
+        const { text, sources, citations, web, retrieval, mode, error } = each.answer;
         return (
           <div key={index} style={containerStyle}>
             <div style={userContainer}>
@@ -164,6 +166,9 @@ const RenderQA = (props) => {
               <div style={answerLabel}>Answer ({MODE_LABELS[mode] || mode}):</div>
               {WEB_FALLBACK_MESSAGES[web?.status] && mode === "hybrid" && (
                 <Alert type="warning" showIcon message={WEB_FALLBACK_MESSAGES[web.status]} style={{ maxWidth: "70%", marginBottom: 6 }} />
+              )}
+              {retrieval?.status === "error" && mode === "hybrid" && (
+                <Alert type="warning" showIcon message={RETRIEVAL_FALLBACK_MESSAGE} style={{ maxWidth: "70%", marginBottom: 6 }} />
               )}
               {error ? (
                 <Alert type="error" showIcon message={error} style={{ maxWidth: "70%" }} />

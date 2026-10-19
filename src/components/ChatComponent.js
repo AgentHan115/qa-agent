@@ -155,8 +155,8 @@ const ChatComponent = (props) => {
 
     // Sent once retrieval/search finish, before the first answer token.
     es.addEventListener("sources", (e) => {
-      const { sources, web } = JSON.parse(e.data);
-      updateLastAnswer({ sources, web });
+      const { sources, web, retrieval } = JSON.parse(e.data);
+      updateLastAnswer({ sources, web, retrieval });
     });
 
     es.onmessage = (e) => {
@@ -180,7 +180,7 @@ const ChatComponent = (props) => {
 
     es.addEventListener("apierror", (e) => {
       const data = JSON.parse(e.data);
-      updateLastAnswer({ error: data.error });
+      updateLastAnswer({ error: data.detail ? `${data.error}: ${data.detail}` : data.error });
       es.close();
       setIsLoading(false);
     });
