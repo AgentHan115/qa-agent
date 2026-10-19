@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "test": "node --test",
+    "eval:validate": "node eval/validate-dataset.js eval/datasets/gpt4-report.v1.json uploads/gpt-4.pdf",
     "eval": "node scripts/eval.js",
     "benchmark": "node scripts/benchmark.js"
   },

@@ -1,0 +1,284 @@
+{
+  "name": "gpt4-report",
+  "version": "1-draft",
+  "status": "DRAFT — questions, references and gold pages need human review before use",
+  "document": {
+    "title": "GPT-4 Technical Report (OpenAI)",
+    "source": "https://arxiv.org/abs/2303.08774v3",
+    "sha256": "a4990dde0f0e9e7a28f75ab8442294135a9343da9872eda7fbb9c9297384a0f5",
+    "pages": 100,
+    "note": "Page numbers are 1-based PDF pages as extracted by PDFLoader (= metadata.page on chunks), not printed page labels."
+  },
+  "created": "2026-10-19",
+  "web_references_verified_on": "2026-10-19",
+  "fields": {
+    "category": "doc_prose | doc_table | doc_undisclosed | web | mixed",
+    "complexity": "single_fact | table_lookup | explanation | synthesis | comparison | multi_hop",
+    "needs": "which sources a correct answer requires: doc | web | both",
+    "gold_pages": "PDF pages that contain the answer (any one is enough for retrieval credit); [] when the document can't answer",
+    "evidence": "verbatim text from a gold page, checked automatically by eval/validate-dataset.js",
+    "grading": "extra instructions for the judge, when the reference alone isn't enough"
+  },
+  "questions": [
+    {
+      "id": "P01", "category": "doc_prose", "complexity": "single_fact", "needs": "doc",
+      "question": "According to the report, when does most of GPT-4's pre-training data cut off?",
+      "reference": "September 2021 (the report notes a small amount of more recent data in pre- and post-training).",
+      "gold_pages": [10],
+      "evidence": ["pre-training data cuts off in September 2021"]
+    },
+    {
+      "id": "P02", "category": "doc_prose", "complexity": "single_fact", "needs": "doc",
+      "question": "How was GPT-4 fine-tuned after pre-training?",
+      "reference": "With Reinforcement Learning from Human Feedback (RLHF).",
+      "gold_pages": [2],
+      "evidence": ["The model was then fine-tuned using Reinforcement Learning from Human Feedback (RLHF)"]
+    },
+    {
+      "id": "P03", "category": "doc_prose", "complexity": "single_fact", "needs": "doc",
+      "question": "How much less compute did the smaller models used to predict GPT-4's performance use?",
+      "reference": "Between 1,000x and 10,000x less compute than GPT-4 (loss prediction used models with at most 10,000x less; HumanEval prediction at most 1,000x less).",
+      "gold_pages": [1, 2],
+      "evidence": ["no more than 1/1,000th the compute of GPT-4", "using at most 10,000x less compute than GPT-4"]
+    },
+    {
+      "id": "P04", "category": "doc_prose", "complexity": "explanation", "needs": "doc",
+      "question": "What are rule-based reward models (RBRMs) and how were they used in training GPT-4?",
+      "reference": "A set of zero-shot GPT-4 classifiers that give an additional reward signal to the GPT-4 policy model during RLHF fine-tuning, targeting correct behaviour such as refusing harmful requests and not refusing innocuous ones. Each takes the prompt (optional), the policy model's output, and a human-written rubric, and classifies the output against the rubric.",
+      "gold_pages": [12, 13, 62],
+      "evidence": ["Our rule-based reward models (RBRMs) are a set of zero-shot GPT-4 classifiers"]
+    },
+    {
+      "id": "P05", "category": "doc_prose", "complexity": "single_fact", "needs": "doc",
+      "question": "By how much did GPT-4 reduce its tendency to respond to requests for disallowed content compared with GPT-3.5?",
+      "reference": "By 82%.",
+      "gold_pages": [13, 62],
+      "evidence": ["requests for disallowed content (Table 6) by 82% compared to GPT-3.5"]
+    },
+    {
+      "id": "P06", "category": "doc_prose", "complexity": "explanation", "needs": "doc",
+      "question": "How did the authors check whether exam and benchmark questions appeared in GPT-4's pre-training data?",
+      "reference": "By substring match: evaluation and training data are stripped of spaces and symbols; for each evaluation example three random 50-character substrings are sampled (or the whole example if shorter), and the example counts as contaminated if any of them is a substring of a processed training example.",
+      "gold_pages": [28, 29],
+      "evidence": ["we randomly select three substrings of 50 characters"]
+    },
+    {
+      "id": "P07", "category": "doc_prose", "complexity": "synthesis", "needs": "doc",
+      "question": "What happened to GPT-4's calibration after post-training?",
+      "reference": "The pre-trained model was highly calibrated, but post-training (RLHF/PPO) reduced calibration: on a subset of MMLU the expected calibration error rose from 0.007 (pre-trained) to 0.074 (PPO).",
+      "gold_pages": [10, 11, 12],
+      "evidence": ["after the post-training process, the calibration is reduced", "ECE: 0.007"]
+    },
+    {
+      "id": "P08", "category": "doc_prose", "complexity": "comparison", "needs": "doc",
+      "question": "In the system card, what is the difference between GPT-4-early and GPT-4-launch?",
+      "reference": "GPT-4-early is an early version fine-tuned for instruction following, showing risks with minimal safety mitigations; GPT-4-launch was further fine-tuned for helpfulness and harmlessness with the mitigations described in the system card, and behaves much more safely.",
+      "gold_pages": [42, 43],
+      "evidence": ["an early version fine-tuned for instruction following"]
+    },
+    {
+      "id": "P09", "category": "doc_prose", "complexity": "synthesis", "needs": "doc",
+      "question": "What did the Alignment Research Center conclude about GPT-4's ability to autonomously replicate?",
+      "reference": "In a preliminary evaluation, it concluded the model is probably not yet capable of autonomously replicating and gathering resources. ARC had no fine-tuning access and didn't test the final deployed model.",
+      "gold_pages": [43, 55],
+      "evidence": ["the current model is probably not yet capable of autonomously doing so"]
+    },
+    {
+      "id": "P10", "category": "doc_prose", "complexity": "single_fact", "needs": "doc",
+      "question": "How many external experts did OpenAI engage to adversarially test GPT-4?",
+      "reference": "More than 50 experts (domains such as AI alignment risks, cybersecurity, biorisk and international security).",
+      "gold_pages": [12, 42],
+      "evidence": ["over 50 experts from domains such as long-term AI alignment risks"]
+    },
+    {
+      "id": "P11", "category": "doc_prose", "complexity": "single_fact", "needs": "doc",
+      "question": "On translated versions of MMLU, in how many languages did GPT-4 beat the English-language state of the art?",
+      "reference": "24 of the 26 languages tested.",
+      "gold_pages": [1],
+      "evidence": ["GPT-4 surpasses the English-language state-of-the-art in 24 of 26 languages considered"]
+    },
+    {
+      "id": "P12", "category": "doc_prose", "complexity": "single_fact", "needs": "doc",
+      "question": "On which Inverse Scaling Prize task does the report show GPT-4 reversing the inverse-scaling trend?",
+      "reference": "Hindsight Neglect.",
+      "gold_pages": [4],
+      "evidence": ["as shown on one of the tasks called Hindsight Neglect"]
+    },
+    {
+      "id": "P13", "category": "doc_prose", "complexity": "single_fact", "needs": "doc",
+      "question": "How much better did GPT-4 do than GPT-3.5 on OpenAI's internal adversarially-designed factuality evaluations?",
+      "reference": "19 percentage points higher than the latest GPT-3.5.",
+      "gold_pages": [10, 46],
+      "evidence": ["GPT-4 scores 19 percentage points higher than our latest GPT-3.5"]
+    },
+    {
+      "id": "T01", "category": "doc_table", "complexity": "table_lookup", "needs": "doc",
+      "question": "What score and percentile did GPT-4 get on the Uniform Bar Exam?",
+      "reference": "298 out of 400, around the 90th percentile (Table 1). The abstract describes this as around the top 10% of test takers.",
+      "gold_pages": [5, 1],
+      "evidence": ["Uniform Bar Exam (MBE+MEE+MPT)298 / 400 (~90th)"]
+    },
+    {
+      "id": "T02", "category": "doc_table", "complexity": "table_lookup", "needs": "doc",
+      "question": "What did GPT-3.5 score on the LSAT in Table 1?",
+      "reference": "149 (around the 40th percentile). GPT-4 scored 163 (~88th).",
+      "gold_pages": [5],
+      "evidence": ["163 (~88th)161 (~83rd)149 (~40th)"],
+      "grading": "Columns are GPT-4, GPT-4 (no vision), GPT-3.5. Fail if GPT-4's or GPT-4 (no vision)'s score is given as GPT-3.5's."
+    },
+    {
+      "id": "T03", "category": "doc_table", "complexity": "table_lookup", "needs": "doc",
+      "question": "What Codeforces rating did GPT-4 achieve?",
+      "reference": "392, below the 5th percentile.",
+      "gold_pages": [5],
+      "evidence": ["Codeforces Rating 392 (below 5th)"]
+    },
+    {
+      "id": "T04", "category": "doc_table", "complexity": "comparison", "needs": "doc",
+      "question": "How did GPT-4 and GPT-3.5 compare on the AP Calculus BC exam?",
+      "reference": "GPT-4 scored 4 (43rd–59th percentile); GPT-3.5 scored 1 (0th–7th percentile).",
+      "gold_pages": [5],
+      "evidence": ["AP Calculus BC4 (43rd - 59th)4 (43rd - 59th)1 (0th - 7th)"]
+    },
+    {
+      "id": "T05", "category": "doc_table", "complexity": "comparison", "needs": "doc",
+      "question": "What did GPT-4 score on MMLU, and how does that compare with GPT-3.5?",
+      "reference": "86.4% (5-shot) versus 70.0% for GPT-3.5.",
+      "gold_pages": [7, 32],
+      "evidence": ["MMLU [49]86.4%70.0%"]
+    },
+    {
+      "id": "T06", "category": "doc_table", "complexity": "table_lookup", "needs": "doc",
+      "question": "What pass rate did GPT-4 achieve on HumanEval?",
+      "reference": "67.0% (0-shot), versus 48.1% for GPT-3.5.",
+      "gold_pages": [7, 32],
+      "evidence": ["HumanEval [43]67.0%48.1%"]
+    },
+    {
+      "id": "T07", "category": "doc_table", "complexity": "synthesis", "needs": "doc",
+      "question": "How contaminated was HumanEval with GPT-4's pre-training data, and what did GPT-4 score on the non-contaminated subset?",
+      "reference": "About 25% of HumanEval was contaminated; GPT-4 scored 65.58% on the non-contaminated subset (a 2.12% degradation from 67.0%).",
+      "gold_pages": [32],
+      "evidence": ["HumanEval 67.0%48.1%25%65.58%-2.12%"]
+    },
+    {
+      "id": "T08", "category": "doc_table", "complexity": "comparison", "needs": "doc",
+      "question": "How often does GPT-4 produce toxic text on RealToxicityPrompts compared with GPT-3.5?",
+      "reference": "0.73% of the time for GPT-4 versus 6.48% for GPT-3.5.",
+      "gold_pages": [13, 62],
+      "evidence": ["GPT-4 produces toxic generations only 0.73% of the time, while GPT-3.5 generates toxic content 6.48% of time"]
+    },
+    {
+      "id": "U01", "category": "doc_undisclosed", "complexity": "single_fact", "needs": "doc",
+      "question": "How many parameters does GPT-4 have?",
+      "reference": "The report doesn't say: it explicitly withholds details of the architecture, including model size.",
+      "gold_pages": [2],
+      "evidence": ["this report contains no further details about the architecture (including model size)"],
+      "grading": "Pass if the answer says the report doesn't disclose the parameter count. Fail if it states a parameter count as fact. In hybrid mode, mentioning unofficial estimates is acceptable only if clearly attributed as unofficial."
+    },
+    {
+      "id": "U02", "category": "doc_undisclosed", "complexity": "single_fact", "needs": "doc",
+      "question": "What hardware was GPT-4 trained on?",
+      "reference": "The report doesn't disclose the training hardware.",
+      "gold_pages": [2],
+      "evidence": ["no further details about the architecture (including model size), hardware, training compute"],
+      "grading": "Pass only if the answer says this isn't disclosed. Fail if it names specific hardware as fact."
+    },
+    {
+      "id": "U03", "category": "doc_undisclosed", "complexity": "single_fact", "needs": "doc",
+      "question": "How much compute was used to train GPT-4?",
+      "reference": "Not disclosed. The report only describes predicting GPT-4's performance from smaller runs using 1,000x–10,000x less compute; the absolute training compute is withheld.",
+      "gold_pages": [2],
+      "evidence": ["hardware, training compute, dataset construction, training method, or similar"],
+      "grading": "Pass if the answer says the absolute compute isn't disclosed (mentioning the relative 1,000x–10,000x figure is fine). Fail if it gives an absolute FLOP count as fact."
+    },
+    {
+      "id": "U04", "category": "doc_undisclosed", "complexity": "explanation", "needs": "doc",
+      "question": "What data was GPT-4 trained on?",
+      "reference": "Only described at a high level: publicly available data (such as internet data) and data licensed from third-party providers. Dataset construction is not disclosed.",
+      "gold_pages": [2],
+      "evidence": ["using both publicly available data (such as internet data) and data licensed from third-party providers"],
+      "grading": "Fail if the answer names specific training datasets as fact. (The report does say MATH and GSM-8K training data were mixed in (p29); mentioning that is fine.)"
+    },
+    {
+      "id": "W01", "category": "web", "complexity": "single_fact", "needs": "web",
+      "question": "When did OpenAI release GPT-4o?",
+      "reference": "May 13, 2024 (announced at OpenAI's Spring Update).",
+      "gold_pages": [],
+      "web_sources": ["https://en.wikipedia.org/wiki/GPT-4o"]
+    },
+    {
+      "id": "W02", "category": "web", "complexity": "single_fact", "needs": "web",
+      "question": "What context window did GPT-4 Turbo offer, and when was it announced?",
+      "reference": "128K tokens; announced at OpenAI's first DevDay on November 6, 2023.",
+      "gold_pages": [],
+      "web_sources": ["https://techcrunch.com/2023/11/06/openai-launches-gpt-4-turbo-and-launches-fine-tuning-program-for-gpt-4"]
+    },
+    {
+      "id": "W03", "category": "web", "complexity": "single_fact", "needs": "web",
+      "question": "When was GPT-4 retired from ChatGPT, and what replaced it?",
+      "reference": "It was fully replaced by GPT-4o in ChatGPT on April 30, 2025 (it remained available in the API at the time).",
+      "gold_pages": [],
+      "web_sources": ["https://techcrunch.com/2025/04/11/openai-is-winding-down-its-gpt-4-ai-model-in-chatgpt"]
+    },
+    {
+      "id": "W04", "category": "web", "complexity": "single_fact", "needs": "web",
+      "question": "What is the latest arXiv version of the GPT-4 Technical Report, and when was it posted?",
+      "reference": "Version 6 (v6), posted March 4, 2024.",
+      "gold_pages": [],
+      "web_sources": ["https://arxiv.org/abs/2303.08774"],
+      "grading": "The document itself is v3 (27 Mar 2023). Fail if the answer gives v3 as the latest version."
+    },
+    {
+      "id": "W05", "category": "web", "complexity": "single_fact", "needs": "web",
+      "question": "What is GPT-4 Turbo's knowledge cutoff?",
+      "reference": "April 2023 (for the model launched at DevDay in November 2023).",
+      "gold_pages": [],
+      "web_sources": ["https://techcrunch.com/2023/11/06/openai-launches-gpt-4-turbo-and-launches-fine-tuning-program-for-gpt-4"],
+      "grading": "Later GPT-4 Turbo snapshots had later cutoffs; accept a later date only if the answer ties it to a specific later snapshot."
+    },
+    {
+      "id": "M01", "category": "mixed", "complexity": "multi_hop", "needs": "both",
+      "question": "The report says GPT-4 scored around the 90th percentile on the bar exam. What did later independent research find?",
+      "reference": "Document: 298/400, ~90th percentile on the Uniform Bar Exam. Web: Eric Martínez's 'Re-evaluating GPT-4's bar exam performance' (Artificial Intelligence and Law, 2024) estimated lower percentiles — below the 69th percentile overall against the July exam, about the 62nd against first-time takers, and about the 48th (15th on essays) against those who passed.",
+      "gold_pages": [5, 1],
+      "evidence": ["Uniform Bar Exam (MBE+MEE+MPT)298 / 400 (~90th)"],
+      "web_sources": ["https://papers.ssrn.com/abstract=4441311", "https://dspace.mit.edu/handle/1721.1/153986"],
+      "grading": "Pass if the answer gives the report's ~90th percentile and that independent research found substantially lower percentiles. Exact figures are a bonus, not required."
+    },
+    {
+      "id": "M02", "category": "mixed", "complexity": "comparison", "needs": "both",
+      "question": "What knowledge cutoff does the report give for GPT-4, and how did it change with GPT-4 Turbo?",
+      "reference": "The report: most pre-training data cuts off in September 2021. GPT-4 Turbo (November 2023) moved the cutoff to April 2023.",
+      "gold_pages": [10],
+      "evidence": ["pre-training data cuts off in September 2021"],
+      "web_sources": ["https://techcrunch.com/2023/11/06/openai-launches-gpt-4-turbo-and-launches-fine-tuning-program-for-gpt-4"]
+    },
+    {
+      "id": "M03", "category": "mixed", "complexity": "multi_hop", "needs": "both",
+      "question": "Which organization evaluated GPT-4's ability to autonomously replicate, and what is that organization called today?",
+      "reference": "The Alignment Research Center (ARC), via its evaluations team, ARC Evals. That team spun off into a standalone nonprofit in December 2023 and is now called METR (Model Evaluation & Threat Research).",
+      "gold_pages": [43, 55],
+      "evidence": ["Alignment Research Center (ARC)"],
+      "web_sources": ["https://metr.org/blog/2023-12-04-metr-announcement"]
+    },
+    {
+      "id": "M04", "category": "mixed", "complexity": "comparison", "needs": "both",
+      "question": "GPT-4 scored 67.0% on HumanEval in the report. What do OpenAI's later published evaluations report for GPT-4o?",
+      "reference": "Report: 67.0% (0-shot). OpenAI's simple-evals reports about 90–91% for GPT-4o (90.2% for the 2024-08-06 and 2024-11-20 snapshots, 91.0% for 2024-05-13).",
+      "gold_pages": [7, 32],
+      "evidence": ["HumanEval [43]67.0%48.1%"],
+      "web_sources": ["https://github.com/openai/simple-evals"],
+      "grading": "Pass if the answer gives 67.0% for GPT-4 and roughly 90% for GPT-4o."
+    },
+    {
+      "id": "M05", "category": "mixed", "complexity": "multi_hop", "needs": "both",
+      "question": "What context window did GPT-4 launch with? Does the technical report say?",
+      "reference": "The report doesn't give a size; it only says GPT-4 'has a limited context window'. GPT-4 launched with an 8K-token context, with a 32K-token version available to some developers.",
+      "gold_pages": [1],
+      "evidence": ["has a limited context window"],
+      "web_sources": ["https://techcrunch.com/2023/11/06/openai-launches-gpt-4-turbo-and-launches-fine-tuning-program-for-gpt-4"],
+      "grading": "Fail if the answer claims the report states a context size."
+    }
+  ]
+}
