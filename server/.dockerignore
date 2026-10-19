@@ -1,0 +1,14 @@
+# Secrets are passed at runtime (docker-compose env_file), never baked into the image
+.env
+.env.*
+!.env.example
+
+# Installed inside the image by `npm ci` for the image's platform
+node_modules
+
+# User data and local artifacts
+uploads/*
+!uploads/hbs-lean-startup.pdf
+results
+test
+.DS_Store

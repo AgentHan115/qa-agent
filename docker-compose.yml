@@ -52,6 +52,11 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/agentai
       CHROMA_URL: http://chroma:8000
       REDIS_URL: redis://redis:6379
+      # "localhost" inside the container is the container itself; reach a model
+      # server on the host (Ollama by default) through host.docker.internal.
+      LLM_BASE_URL: ${DOCKER_LLM_BASE_URL:-http://host.docker.internal:11434/v1}
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # needed on Linux; built in on Docker Desktop
     depends_on:
       postgres:
         condition: service_healthy
