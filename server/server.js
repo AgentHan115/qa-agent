@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import multer from "multer";
 import { randomUUID } from "crypto";
+import { existsSync } from "fs";
 import { initDb } from "./db/postgres.js";
 import {
   insertDocument,
@@ -90,10 +91,10 @@ app.post("/upload", upload.single("file"), route(async (req, res) => {
 }));
 
 // GET /documents/default
-// Returns the default document (hbs-lean-startup.pdf). The frontend uses this
+// Returns the default document (DEFAULT_DOCUMENT). The frontend uses this
 // on mount so the user can start asking questions without uploading anything.
 app.get("/documents/default", route(async (req, res) => {
-  const doc = await findDocumentByFilename("hbs-lean-startup.pdf");
+  const doc = await findDocumentByFilename(DEFAULT_DOCUMENT.filename);
   if (!doc) return res.status(404).json({ error: "Default document not ready yet" });
   const { file_path, ...safe } = doc;
   res.json(safe);
@@ -290,14 +291,16 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5001;
 
+// Demo document ingested on startup: "GPT-4 Technical Report", arXiv:2303.08774v3,
+// downloaded by scripts/fetch-demo-doc.sh (not committed; see that script).
+const DEFAULT_DOCUMENT = { filename: "gpt-4.pdf", path: "uploads/gpt-4.pdf" };
+
 // Ingest the default PDF on startup if it hasn't been ingested yet, or retry
 // it (once per boot) if its last ingestion failed — e.g. after reconcile found
 // its vectors missing. Other failed documents are re-ingested only on request.
 const seedDefaultDocument = async () => {
-  const DEFAULT_FILENAME = "hbs-lean-startup.pdf";
-  const DEFAULT_PATH = "uploads/hbs-lean-startup.pdf";
-
-  const existing = await findDocumentByFilename(DEFAULT_FILENAME);
+  const { filename, path } = DEFAULT_DOCUMENT;
+  const existing = await findDocumentByFilename(filename);
   if (existing?.status === "failed") {
     console.log(`[seed] default document failed previously (${existing.error}); re-ingesting`);
     await markProcessing(existing.id);
@@ -309,11 +312,17 @@ const seedDefaultDocument = async () => {
     return;
   }
 
-  const documentId = randomUUID();
-  await insertDocument(documentId, DEFAULT_FILENAME, DEFAULT_PATH);
-  console.log("[seed] ingesting default document...");
+  // The demo PDF isn't committed (see scripts/fetch-demo-doc.sh).
+  if (!existsSync(path)) {
+    console.warn(`[seed] ${path} not found; run "sh server/scripts/fetch-demo-doc.sh" to download the demo document`);
+    return;
+  }
 
-  await enqueueIngestion(documentId, DEFAULT_PATH, DEFAULT_FILENAME);
+  const documentId = randomUUID();
+  await insertDocument(documentId, filename, path);
+  console.log(`[seed] ingesting default document ${filename}...`);
+
+  await enqueueIngestion(documentId, path, filename);
 };
 
 // Initialize DB schema, reconcile Postgres status with Chroma, then start.

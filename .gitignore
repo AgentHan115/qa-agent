@@ -24,6 +24,6 @@ yarn-error.log*
 
 server/.env
 
-# user uploads (may contain personal documents); keep only the demo PDF
+# user uploads (may contain personal documents) and the downloaded demo PDF
+# (server/scripts/fetch-demo-doc.sh); nothing in uploads/ is committed
 server/uploads/*
-!server/uploads/hbs-lean-startup.pdf

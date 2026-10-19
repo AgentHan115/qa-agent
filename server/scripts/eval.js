@@ -18,7 +18,7 @@
 //
 // Usage:
 //   1. Upload the PDF and wait for status=ready:
-//      curl -F "file=@uploads/hbs-lean-startup.pdf" http://localhost:5001/upload
+//      curl -F "file=@uploads/<file>.pdf" http://localhost:5001/upload
 //   2. Run:
 //      node scripts/eval.js --documentId=<uuid>
 //

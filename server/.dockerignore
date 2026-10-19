@@ -8,7 +8,8 @@ node_modules
 
 # User data and local artifacts
 uploads/*
-!uploads/hbs-lean-startup.pdf
+# the demo PDF, if downloaded (server/scripts/fetch-demo-doc.sh)
+!uploads/gpt-4.pdf
 results
 test
 .DS_Store

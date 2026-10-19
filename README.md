@@ -91,13 +91,19 @@ ollama pull qwen3:8b && ollama pull qwen3-embedding:0.6b
 ollama create qa-qwen3-8b-32k -f server/models/qwen3-8b-32k.Modelfile
 ```
 
-**2. Configuration.** Copy the template, then set `SERPAPI_KEY`.
+**2. Demo document.** Downloads the GPT-4 Technical Report (arXiv:2303.08774v3) and checks its SHA-256. The PDF isn't committed: arXiv's license doesn't let us redistribute it.
+
+```bash
+sh server/scripts/fetch-demo-doc.sh
+```
+
+**3. Configuration.** Copy the template, then set `SERPAPI_KEY`.
 
 ```bash
 cp server/.env.example server/.env
 ```
 
-**3. Run.** Choose one of the two options below.
+**4. Run.** Choose one of the two options below.
 
 *Everything except the UI in Docker:*
 
@@ -119,13 +125,13 @@ npm run dev
 
 `npm run dev` starts the API on `:5001` and the UI on `:3000`. If you used the Docker option, start just the UI with `npm start`.
 
-On first start, the server ingests the demo document [server/uploads/hbs-lean-startup.pdf](server/uploads/hbs-lean-startup.pdf) (an HBS note on the Lean Startup, 26 pages). Open http://localhost:3000 and ask a question, or use the API directly:
+On first start, the server ingests the demo document, the [GPT-4 Technical Report](https://arxiv.org/abs/2303.08774v3) (OpenAI, 100 pages, 682 chunks). It's a useful test case for hybrid retrieval: it is frozen at March 2023, deliberately omits some details (e.g. model size), and contains benchmark tables. Open http://localhost:3000 and ask a question, or use the API directly:
 
 ```bash
 curl -s localhost:5001/documents/default
 ```
 ```bash
-curl -s "localhost:5001/chat?mode=hybrid&documentId=<id>&question=What%20is%20a%20pivot%3F"
+curl -s "localhost:5001/chat?mode=hybrid&documentId=<id>&question=What%20percentile%20did%20GPT-4%20reach%20on%20the%20bar%20exam%3F"
 ```
 
 Prometheus (`:9090`) and Grafana (`:3001`) are also defined in [docker-compose.yml](docker-compose.yml). They scrape `GET /metrics`.
@@ -307,7 +313,7 @@ EVAL_MODE=hybrid node scripts/eval.js --documentId=<id>
 
 Run that from `server/`. It asks the 10 questions in [scripts/eval.js](server/scripts/eval.js) through `/chat`, has an LLM judge grade each answer against a reference, and writes `server/results/eval-<timestamp>.json`. Each file contains every answer, its sources, citations, per-stage timings, token counts, the server's `/runtime` record (model digests, quantization, context size) and the git commit.
 
-Results so far. Environment: MacBook M3 Pro 18 GB, Ollama 0.33.2, Qwen3-8B Q4_K_M with a 32k context, Qwen3-Embedding-0.6B, top-5 chunks. One run each. The judge is the same Qwen3-8B model and **has not been calibrated against human labels**.
+Results so far come from the **earlier demo document** (an HBS teaching note on the Lean Startup, since removed because its license didn't allow redistribution). The 10 questions in `scripts/eval.js` are about that note and are being replaced with a labelled dataset for the GPT-4 report. Environment: MacBook M3 Pro 18 GB, Ollama 0.33.2, Qwen3-8B Q4_K_M with a 32k context, Qwen3-Embedding-0.6B, top-5 chunks. One run each. The judge is the same Qwen3-8B model and **has not been calibrated against human labels**.
 
 | Run | Requests completed | Judged correct | LLM calls per question | Input tokens per question | Median latency (warm) |
 |---|---|---|---|---|---|
@@ -318,7 +324,7 @@ Results so far. Environment: MacBook M3 Pro 18 GB, Ollama 0.33.2, Qwen3-8B Q4_K_
 
 How to read this:
 - **The original design** sent SerpAPI's raw JSON to the model, 50–74k characters per question. That exceeded the 32k context for 7 of 10 questions, and those requests failed on the truncation guard. Ollama processes one request at a time here (`OLLAMA_NUM_PARALLEL=1`), so its two "parallel" pipelines actually ran one after the other.
-- **`docs` mode's 8/10 is grounded behaviour, not a regression.** Q5 and Q6 ask about "innovation accounting" and "vanity/actionable metrics", which the PDF never mentions. The original pipeline's passes on them came from the model's own knowledge. `hybrid` answers both from cited web sources.
+- **`docs` mode's 8/10 is grounded behaviour, not a regression.** Q5 and Q6 ask about "innovation accounting" and "vanity/actionable metrics", which the HBS note never mentions. The original pipeline's passes on them came from the model's own knowledge. `hybrid` answers both from cited web sources.
 - **These questions are too easy** to tell configurations apart. A harder, labelled dataset is the next step.
 - These numbers come from one local machine. Don't compare them with measurements from a different model server or GPU.
 
