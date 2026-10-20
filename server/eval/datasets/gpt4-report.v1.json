@@ -115,7 +115,7 @@
       "id": "T01", "category": "doc_table", "complexity": "table_lookup", "needs": "doc",
       "question": "What score and percentile did GPT-4 get on the Uniform Bar Exam?",
       "reference": "298 out of 400, around the 90th percentile (Table 1). The abstract describes this as around the top 10% of test takers.",
-      "gold_pages": [5, 1],
+      "gold_pages": [5, 1, 30],
       "evidence": ["Uniform Bar Exam (MBE+MEE+MPT)298 / 400 (~90th)"]
     },
     {
@@ -217,9 +217,9 @@
     {
       "id": "W03", "category": "web", "complexity": "single_fact", "needs": "web",
       "question": "When was GPT-4 retired from ChatGPT, and what replaced it?",
-      "reference": "It was fully replaced by GPT-4o in ChatGPT on April 30, 2025 (it remained available in the API at the time).",
+      "reference": "It was retired from ChatGPT effective April 30, 2025 and fully replaced by GPT-4o (it remained available in the API).",
       "gold_pages": [],
-      "web_sources": ["https://techcrunch.com/2025/04/11/openai-is-winding-down-its-gpt-4-ai-model-in-chatgpt"]
+      "web_sources": ["https://help.openai.com/en/articles/6825453-chatgpt-release-notes", "https://techcrunch.com/2025/04/11/openai-is-winding-down-its-gpt-4-ai-model-in-chatgpt"]
     },
     {
       "id": "W04", "category": "web", "complexity": "single_fact", "needs": "web",
@@ -241,10 +241,10 @@
       "id": "M01", "category": "mixed", "complexity": "multi_hop", "needs": "both",
       "question": "The report says GPT-4 scored around the 90th percentile on the bar exam. What did later independent research find?",
       "reference": "Document: 298/400, ~90th percentile on the Uniform Bar Exam. Web: Eric Martínez's 'Re-evaluating GPT-4's bar exam performance' (Artificial Intelligence and Law, 2024) estimated lower percentiles — below the 69th percentile overall against the July exam, about the 62nd against first-time takers, and about the 48th (15th on essays) against those who passed.",
-      "gold_pages": [5, 1],
+      "gold_pages": [5, 1, 30],
       "evidence": ["Uniform Bar Exam (MBE+MEE+MPT)298 / 400 (~90th)"],
-      "web_sources": ["https://papers.ssrn.com/abstract=4441311", "https://dspace.mit.edu/handle/1721.1/153986"],
-      "grading": "Pass if the answer gives the report's ~90th percentile and that independent research found substantially lower percentiles. Exact figures are a bonus, not required."
+      "web_sources": ["https://dspace.mit.edu/handle/1721.1/153986", "https://papers.ssrn.com/abstract=4441311"],
+      "grading": "Pass if the answer gives the report's ~90th percentile and that independent research found substantially lower percentiles. Exact figures are a bonus, not required, as is the paper's main explanation: OpenAI's ~90th came from February Illinois exams, whose takers are skewed toward repeat takers who score lower."
     },
     {
       "id": "M02", "category": "mixed", "complexity": "comparison", "needs": "both",
@@ -265,20 +265,20 @@
     {
       "id": "M04", "category": "mixed", "complexity": "comparison", "needs": "both",
       "question": "GPT-4 scored 67.0% on HumanEval in the report. What do OpenAI's later published evaluations report for GPT-4o?",
-      "reference": "Report: 67.0% (0-shot). OpenAI's simple-evals reports about 90–91% for GPT-4o (90.2% for the 2024-08-06 and 2024-11-20 snapshots, 91.0% for 2024-05-13).",
+      "reference": "Report: 67.0% (0-shot). OpenAI's GPT-4o launch post reports 90.2% for GPT-4o next to 67.0% for the initial GPT-4. simple-evals lists 90.2–91.0% depending on the snapshot. The figures weren't necessarily measured with the same setup.",
       "gold_pages": [7, 32],
       "evidence": ["HumanEval [43]67.0%48.1%"],
-      "web_sources": ["https://github.com/openai/simple-evals"],
-      "grading": "Pass if the answer gives 67.0% for GPT-4 and roughly 90% for GPT-4o."
+      "web_sources": ["https://openai.com/index/hello-gpt-4o/", "https://github.com/openai/simple-evals"],
+      "grading": "Pass if the answer gives 67.0% for GPT-4 and roughly 90% for GPT-4o, attributing each to its source. A caveat that the two weren't measured the same way is a bonus. Fail if the answer presents the gap as a measured, like-for-like improvement."
     },
     {
       "id": "M05", "category": "mixed", "complexity": "multi_hop", "needs": "both",
       "question": "What context window did GPT-4 launch with? Does the technical report say?",
-      "reference": "The report doesn't give a size; it only says GPT-4 'has a limited context window'. GPT-4 launched with an 8K-token context, with a 32K-token version available to some developers.",
+      "reference": "The report doesn't give a size; it only says GPT-4 'has a limited context window'. GPT-4 launched with a context length of 8,192 tokens, with limited access to a 32,768-token version (gpt-4-32k).",
       "gold_pages": [1],
       "evidence": ["has a limited context window"],
-      "web_sources": ["https://techcrunch.com/2023/11/06/openai-launches-gpt-4-turbo-and-launches-fine-tuning-program-for-gpt-4"],
-      "grading": "Fail if the answer claims the report states a context size."
+      "web_sources": ["https://openai.com/index/gpt-4-research/", "https://techcrunch.com/2023/11/06/openai-launches-gpt-4-turbo-and-launches-fine-tuning-program-for-gpt-4"],
+      "grading": "Fail if the answer claims the report states a context size. Citing p55's 'longer context length' (of the final model compared with earlier versions) is fine; fail only if a token count is attributed to the report."
     }
   ]
 }
