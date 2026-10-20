@@ -1,0 +1,4908 @@
+{
+  "runAt": "2026-10-20T00:56:34.170Z",
+  "server": "http://localhost:5001",
+  "documentId": "4f6d1f1d-569a-46b1-aef9-0ce5ced915f9",
+  "git": {
+    "commit": "c239d9318226cd8b7a1b188bbc0bd764a086ef31",
+    "dirty": false
+  },
+  "runtime": {
+    "llm": {
+      "runtime": "ollama",
+      "baseURL": "http://localhost:11434/v1",
+      "model": "qa-qwen3-8b-32k",
+      "disableThinking": true,
+      "contextTokens": 32768,
+      "maxOutputTokens": 1024,
+      "temperature": 0,
+      "seed": 1,
+      "timeoutMs": 120000,
+      "maxRetries": 2
+    },
+    "embedding": {
+      "baseURL": "http://localhost:11434/v1",
+      "model": "qwen3-embedding:0.6b",
+      "queryInstruction": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+      "batchSize": 32
+    },
+    "retrieval": {
+      "top_k": 5,
+      "chunk_size": 500,
+      "chunk_overlap": 50
+    },
+    "web_search": {
+      "provider": "serpapi",
+      "transport": "mcp",
+      "num": 5,
+      "timeoutMs": 8000,
+      "attemptTimeoutMs": 3000,
+      "retries": 2
+    },
+    "prompt": {
+      "instructions_sha1": "5909347e2caf"
+    },
+    "serving": {
+      "server": "ollama",
+      "version": "0.33.2",
+      "models": [
+        {
+          "name": "qa-qwen3-8b-32k",
+          "digest": "365415f081c0b8f003dad729b765e948a3f6588a99dd508e8aa941043f976b5b",
+          "quantization": "Q4_K_M",
+          "parameter_size": "8.2B",
+          "family": "qwen3",
+          "parent_model": "qwen3:8b",
+          "parameters": "num_ctx                        32768\nrepeat_penalty                 1\nstop                           \"<|im_start|>\"\nstop                           \"<|im_end|>\"\ntemperature                    0.6\ntop_k                          20\ntop_p                          0.95"
+        },
+        {
+          "name": "qwen3-embedding:0.6b",
+          "digest": "ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d",
+          "quantization": "Q8_0",
+          "parameter_size": "595.78M",
+          "family": "qwen3",
+          "parent_model": "/Users/ollama/.ollama/models/blobs/sha256-06507c7b42688469c4e7298b0a1e16deff06caf291cf0a5b278c308249c3e439",
+          "parameters": null
+        }
+      ]
+    }
+  },
+  "dataset": {
+    "path": "eval/datasets/gpt4-report.v1.json",
+    "name": "gpt4-report",
+    "version": "1",
+    "status": "APPROVED",
+    "sha1": "708379b2061061c333c19b908c6e26e516aa1e7c",
+    "ids": "all"
+  },
+  "judgeModel": "qa-qwen3-8b-32k",
+  "mode": "docs",
+  "grading": {
+    "mode": "judge",
+    "low": 0.6,
+    "high": 0.85
+  },
+  "summary": {
+    "n": 35,
+    "passed": 30,
+    "answerable": {
+      "n": 25,
+      "passed": 23
+    },
+    "retrieval": {
+      "n": 30,
+      "mrr": 0.639,
+      "recall_at": {
+        "1": 0.5,
+        "3": 0.767,
+        "5": 0.833
+      }
+    },
+    "cited_gold_page": {
+      "n": 30,
+      "yes": 21
+    },
+    "retrieval_ks": [
+      1,
+      3,
+      5
+    ],
+    "by_category": {
+      "doc_prose": {
+        "n": 13,
+        "passed": 12,
+        "answerable": {
+          "n": 13,
+          "passed": 12
+        },
+        "retrieval": {
+          "n": 13,
+          "mrr": 0.615,
+          "recall_at": {
+            "1": 0.462,
+            "3": 0.769,
+            "5": 0.769
+          }
+        },
+        "cited_gold_page": {
+          "n": 13,
+          "yes": 10
+        }
+      },
+      "doc_table": {
+        "n": 8,
+        "passed": 7,
+        "answerable": {
+          "n": 8,
+          "passed": 7
+        },
+        "retrieval": {
+          "n": 8,
+          "mrr": 0.844,
+          "recall_at": {
+            "1": 0.75,
+            "3": 0.875,
+            "5": 1
+          }
+        },
+        "cited_gold_page": {
+          "n": 8,
+          "yes": 5
+        }
+      },
+      "doc_undisclosed": {
+        "n": 4,
+        "passed": 4,
+        "answerable": {
+          "n": 4,
+          "passed": 4
+        },
+        "retrieval": {
+          "n": 4,
+          "mrr": 0.167,
+          "recall_at": {
+            "1": 0,
+            "3": 0.5,
+            "5": 0.5
+          }
+        },
+        "cited_gold_page": {
+          "n": 4,
+          "yes": 2
+        }
+      },
+      "web": {
+        "n": 5,
+        "passed": 3,
+        "answerable": {
+          "n": 0,
+          "passed": 0
+        },
+        "retrieval": null,
+        "cited_gold_page": null
+      },
+      "mixed": {
+        "n": 5,
+        "passed": 4,
+        "answerable": {
+          "n": 0,
+          "passed": 0
+        },
+        "retrieval": {
+          "n": 5,
+          "mrr": 0.75,
+          "recall_at": {
+            "1": 0.6,
+            "3": 0.8,
+            "5": 1
+          }
+        },
+        "cited_gold_page": {
+          "n": 5,
+          "yes": 4
+        }
+      }
+    },
+    "by_complexity": {
+      "single_fact": {
+        "n": 16,
+        "passed": 13,
+        "answerable": {
+          "n": 11,
+          "passed": 10
+        },
+        "retrieval": {
+          "n": 11,
+          "mrr": 0.47,
+          "recall_at": {
+            "1": 0.273,
+            "3": 0.727,
+            "5": 0.727
+          }
+        },
+        "cited_gold_page": {
+          "n": 11,
+          "yes": 8
+        }
+      },
+      "explanation": {
+        "n": 3,
+        "passed": 3,
+        "answerable": {
+          "n": 3,
+          "passed": 3
+        },
+        "retrieval": {
+          "n": 3,
+          "mrr": 0.333,
+          "recall_at": {
+            "1": 0.333,
+            "3": 0.333,
+            "5": 0.333
+          }
+        },
+        "cited_gold_page": {
+          "n": 3,
+          "yes": 1
+        }
+      },
+      "synthesis": {
+        "n": 3,
+        "passed": 3,
+        "answerable": {
+          "n": 3,
+          "passed": 3
+        },
+        "retrieval": {
+          "n": 3,
+          "mrr": 1,
+          "recall_at": {
+            "1": 1,
+            "3": 1,
+            "5": 1
+          }
+        },
+        "cited_gold_page": {
+          "n": 3,
+          "yes": 3
+        }
+      },
+      "comparison": {
+        "n": 6,
+        "passed": 5,
+        "answerable": {
+          "n": 4,
+          "passed": 4
+        },
+        "retrieval": {
+          "n": 6,
+          "mrr": 0.708,
+          "recall_at": {
+            "1": 0.5,
+            "3": 0.833,
+            "5": 1
+          }
+        },
+        "cited_gold_page": {
+          "n": 6,
+          "yes": 3
+        }
+      },
+      "table_lookup": {
+        "n": 4,
+        "passed": 3,
+        "answerable": {
+          "n": 4,
+          "passed": 3
+        },
+        "retrieval": {
+          "n": 4,
+          "mrr": 0.813,
+          "recall_at": {
+            "1": 0.75,
+            "3": 0.75,
+            "5": 1
+          }
+        },
+        "cited_gold_page": {
+          "n": 4,
+          "yes": 3
+        }
+      },
+      "multi_hop": {
+        "n": 3,
+        "passed": 3,
+        "answerable": {
+          "n": 0,
+          "passed": 0
+        },
+        "retrieval": {
+          "n": 3,
+          "mrr": 0.833,
+          "recall_at": {
+            "1": 0.667,
+            "3": 1,
+            "5": 1
+          }
+        },
+        "cited_gold_page": {
+          "n": 3,
+          "yes": 3
+        }
+      }
+    },
+    "latency_ms": {
+      "embed_ms": {
+        "n": 35,
+        "p50": 886,
+        "p95": 4726
+      },
+      "chroma_ms": {
+        "n": 35,
+        "p50": 81,
+        "p95": 140
+      },
+      "prepare_ms": {
+        "n": 35,
+        "p50": 1003,
+        "p95": 4794
+      },
+      "llm_ms": {
+        "n": 35,
+        "p50": 6687,
+        "p95": 9419
+      },
+      "total_ms": {
+        "n": 35,
+        "p50": 7728,
+        "p95": 12866
+      }
+    },
+    "httpErrors": 0,
+    "requestErrors": 0,
+    "responsesMissingHits": 0,
+    "answersWithValidCitation": 34,
+    "invalidCitationLabels": 0,
+    "webStatus": {
+      "n/a": 35
+    }
+  },
+  "cases": [
+    {
+      "id": "P01",
+      "category": "doc_prose",
+      "complexity": "single_fact",
+      "needs": "doc",
+      "question": "According to the report, when does most of GPT-4's pre-training data cut off?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        10
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly identifies that most of GPT-4's pre-training data cuts off in September 2021, which matches the reference answer. It also appropriately notes that this cutoff affects its knowledge of events after that date, which is consistent with the reference's mention of a 'small amount of more recent data' in pre- and post-training. The answer is semantically correct and addresses the question without contradiction or omission of the central point.",
+      "similarity": 0.5417359350414723,
+      "answer": "Most of GPT-4's pre-training data cuts off in September 2021 [D2]. This cutoff affects its knowledge of events occurring after that date [D2].",
+      "latencyMs": 16822,
+      "citations": {
+        "total": 2,
+        "cited": [
+          "D2"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D3",
+          "D4",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 32
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 10
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 3
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 61
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 46
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 1439,
+          "chroma_ms": 46,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 32,
+              "distance": 0.5823504
+            },
+            {
+              "page": 10,
+              "distance": 0.6289448
+            },
+            {
+              "page": 3,
+              "distance": 0.69516563
+            },
+            {
+              "page": 61,
+              "distance": 0.69553053
+            },
+            {
+              "page": 46,
+              "distance": 0.71140504
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 1485,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2277
+        },
+        "llm": {
+          "ms": 15298,
+          "usage": {
+            "input_tokens": 852,
+            "output_tokens": 39,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2933,
+            "prompt_tokens": 852,
+            "chars_per_token": 3.44,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 16783
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          32,
+          10,
+          3,
+          61,
+          46
+        ],
+        "first_gold_rank": 2,
+        "reciprocal_rank": 0.5,
+        "hit_at": {
+          "1": 0,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": true
+    },
+    {
+      "id": "P02",
+      "category": "doc_prose",
+      "complexity": "single_fact",
+      "needs": "doc",
+      "question": "How was GPT-4 fine-tuned after pre-training?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        2
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer is semantically correct. It accurately describes the multi-stage process of fine-tuning GPT-4, including supervised fine-tuning (SFT), reward model training, and reinforcement learning with PPO. While it provides more detail than the reference answer, it does not contradict the central point and correctly addresses the question. The reference answer focuses on RLHF, and the candidate answer appropriately explains that RLHF involves a reward model and reinforcement learning, which aligns with the reference.",
+      "similarity": 0.6680193184540538,
+      "answer": "GPT-4 was fine-tuned using supervised learning (SFT) with demonstration data to imitate the behavior in the demonstrations [D3]. Additionally, a reward model (RM) was trained using ranking data to predict the average labeler’s preference for a given output, which was then used as a reward signal for reinforcement learning fine-tuning [D3]. The fine-tuning process involved the PPO algorithm [D3]. The post-training alignment process further improved performance on measures of factuality and adherence to desired behavior [D4].",
+      "latencyMs": 8885,
+      "citations": {
+        "total": 4,
+        "cited": [
+          "D3",
+          "D4"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D2",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 37
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 42
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 62
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 1
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 6
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 862,
+          "chroma_ms": 107,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 37,
+              "distance": 0.605758
+            },
+            {
+              "page": 42,
+              "distance": 0.67633194
+            },
+            {
+              "page": 62,
+              "distance": 0.6786709
+            },
+            {
+              "page": 1,
+              "distance": 0.70774
+            },
+            {
+              "page": 6,
+              "distance": 0.7130123
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 969,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2506
+        },
+        "llm": {
+          "ms": 7817,
+          "usage": {
+            "input_tokens": 779,
+            "output_tokens": 111,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 3162,
+            "prompt_tokens": 779,
+            "chars_per_token": 4.06,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 8791
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          37,
+          42,
+          62,
+          1,
+          6
+        ],
+        "first_gold_rank": null,
+        "reciprocal_rank": 0,
+        "hit_at": {
+          "1": 0,
+          "3": 0,
+          "5": 0
+        }
+      },
+      "cited_gold_page": false
+    },
+    {
+      "id": "P03",
+      "category": "doc_prose",
+      "complexity": "single_fact",
+      "needs": "doc",
+      "question": "How much less compute did the smaller models used to predict GPT-4's performance use?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        1,
+        2
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that the smaller models used to predict GPT-4's performance used 1,000×–10,000× less compute, which matches the central point of the reference answer. It does not contradict the reference and directly answers the question. While it adds additional context about scaling laws and references, this does not affect the correctness of the main claim.",
+      "similarity": 0.7324634515878669,
+      "answer": "The smaller models used to predict GPT-4's performance were trained using 1,000×–10,000× less compute [D2]. This scaling law allowed for accurate predictions of GPT-4's final loss and performance [D4][D5].",
+      "latencyMs": 7592,
+      "citations": {
+        "total": 3,
+        "cited": [
+          "D2",
+          "D4",
+          "D5"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D3"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 3
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 2
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 3
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 2
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 1
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 1164,
+          "chroma_ms": 140,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 3,
+              "distance": 0.37702322
+            },
+            {
+              "page": 2,
+              "distance": 0.45985788
+            },
+            {
+              "page": 3,
+              "distance": 0.46902046
+            },
+            {
+              "page": 2,
+              "distance": 0.56317294
+            },
+            {
+              "page": 1,
+              "distance": 0.58928555
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 1304,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2259
+        },
+        "llm": {
+          "ms": 6179,
+          "usage": {
+            "input_tokens": 795,
+            "output_tokens": 61,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2915,
+            "prompt_tokens": 795,
+            "chars_per_token": 3.67,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 7486
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          3,
+          2,
+          3,
+          2,
+          1
+        ],
+        "first_gold_rank": 2,
+        "reciprocal_rank": 0.5,
+        "hit_at": {
+          "1": 0,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": true
+    },
+    {
+      "id": "P04",
+      "category": "doc_prose",
+      "complexity": "explanation",
+      "needs": "doc",
+      "question": "What are rule-based reward models (RBRMs) and how were they used in training GPT-4?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        12,
+        13,
+        62
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer is semantically correct. It accurately describes rule-based reward models (RBRMs) as zero-shot GPT-4 classifiers that provide an additional reward signal during RLHF fine-tuning, steering the model toward appropriate refusals and safe responses. It correctly notes that RBRMs reward GPT-4 for refusing harmful requests and not refusing safe ones, which aligns with the reference answer. While the candidate answer adds some additional details (e.g., enriching the training dataset with filtered prompts, combining with other improvements), these are not contradictory and may reflect supplementary context. The central point — that RBRMs are classifiers used to provide reward signals for safe behavior during RLHF — is fully captured. Therefore, the candidate answer passes.",
+      "similarity": 0.7825324627529685,
+      "answer": "Rule-based reward models (RBRMs) are zero-shot GPT-4 classifiers used to provide an additional reward signal during RLHF fine-tuning, steering GPT-4 towards appropriate refusals and safe responses [D2]. They were used by rewarding GPT-4 for refusing harmful requests and not refusing safe ones, while also enriching the training dataset with filtered prompts [D3]. The RBRMs were combined with other improvements like computing optimal weights and additional SFT data to enhance safety [D3].",
+      "latencyMs": 9362,
+      "citations": {
+        "total": 3,
+        "cited": [
+          "D2",
+          "D3"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D4",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 62
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 12
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 13
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 37
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 62
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 860,
+          "chroma_ms": 73,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 62,
+              "distance": 0.41382176
+            },
+            {
+              "page": 12,
+              "distance": 0.41857654
+            },
+            {
+              "page": 13,
+              "distance": 0.59069204
+            },
+            {
+              "page": 37,
+              "distance": 0.62985396
+            },
+            {
+              "page": 62,
+              "distance": 0.62987345
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 933,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2578
+        },
+        "llm": {
+          "ms": 8341,
+          "usage": {
+            "input_tokens": 818,
+            "output_tokens": 107,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 3234,
+            "prompt_tokens": 818,
+            "chars_per_token": 3.95,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 9276
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          62,
+          12,
+          13,
+          37,
+          62
+        ],
+        "first_gold_rank": 1,
+        "reciprocal_rank": 1,
+        "hit_at": {
+          "1": 1,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": true
+    },
+    {
+      "id": "P05",
+      "category": "doc_prose",
+      "complexity": "single_fact",
+      "needs": "doc",
+      "question": "By how much did GPT-4 reduce its tendency to respond to requests for disallowed content compared with GPT-3.5?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        13,
+        62
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that GPT-4 reduced its tendency to respond to disallowed content by 82% compared to GPT-3.5, which matches the reference answer. It provides additional context about the methods used (reward-based reinforcement learning) and the broader safety improvements, which is acceptable and does not contradict the reference. The central point — the 82% reduction — is included and accurately conveyed. Therefore, the candidate answer is semantically correct.",
+      "similarity": 0.3850168074875906,
+      "answer": "GPT-4 reduced its tendency to respond to requests for disallowed content by 82% compared to GPT-3.5 [D2]. This improvement is part of the safety measures implemented to make GPT-4 safer than previous versions [D1]. The reduction was achieved through various techniques, including reward-based reinforcement learning [D3][D4]. The exact percentage is supported by the data from the safety metrics [D2].",
+      "latencyMs": 8710,
+      "citations": {
+        "total": 5,
+        "cited": [
+          "D2",
+          "D1",
+          "D3",
+          "D4"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 62
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 13
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 62
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 13
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 10
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 881,
+          "chroma_ms": 123,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 62,
+              "distance": 0.3823462
+            },
+            {
+              "page": 13,
+              "distance": 0.4472574
+            },
+            {
+              "page": 62,
+              "distance": 0.57459044
+            },
+            {
+              "page": 13,
+              "distance": 0.6150118
+            },
+            {
+              "page": 10,
+              "distance": 0.643766
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 1004,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2663
+        },
+        "llm": {
+          "ms": 7586,
+          "usage": {
+            "input_tokens": 866,
+            "output_tokens": 92,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 3319,
+            "prompt_tokens": 866,
+            "chars_per_token": 3.83,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 8593
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          62,
+          13,
+          62,
+          13,
+          10
+        ],
+        "first_gold_rank": 1,
+        "reciprocal_rank": 1,
+        "hit_at": {
+          "1": 1,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": true
+    },
+    {
+      "id": "P06",
+      "category": "doc_prose",
+      "complexity": "explanation",
+      "needs": "doc",
+      "question": "How did the authors check whether exam and benchmark questions appeared in GPT-4's pre-training data?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        28,
+        29
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly identifies that the authors checked for contamination by examining whether exam and benchmark questions appeared in GPT-4's pre-training data. It mentions the process of removing contaminated questions and reporting scores with and without them, which aligns with the reference answer's emphasis on substring matching and contamination checks. While the candidate answer does not explicitly mention substring matching or the specific method of sampling 50-character substrings, it captures the central idea of contamination checks and their impact on scoring. The answer does not contradict the reference and fully addresses the question.",
+      "similarity": 0.6019973096713643,
+      "answer": "The authors checked for contamination by removing the questions that appeared in the training data and reporting the lower score from the two variants [D1]. They also ran contamination checks for test data appearing in the training set for each benchmark [D3]. For exams, they showed the fraction of questions that were contaminated and reported scores with and without the contaminated questions [D4]. This process helped ensure the results were representative [D1].",
+      "latencyMs": 11857,
+      "citations": {
+        "total": 4,
+        "cited": [
+          "D1",
+          "D3",
+          "D4"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D2",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 4
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 32
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 6
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 30
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 6
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 3293,
+          "chroma_ms": 88,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 4,
+              "distance": 0.46175534
+            },
+            {
+              "page": 32,
+              "distance": 0.5385159
+            },
+            {
+              "page": 6,
+              "distance": 0.5484526
+            },
+            {
+              "page": 30,
+              "distance": 0.5590216
+            },
+            {
+              "page": 6,
+              "distance": 0.5696509
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 3382,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2546
+        },
+        "llm": {
+          "ms": 8344,
+          "usage": {
+            "input_tokens": 899,
+            "output_tokens": 86,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 3202,
+            "prompt_tokens": 899,
+            "chars_per_token": 3.56,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 11728
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          4,
+          32,
+          6,
+          30,
+          6
+        ],
+        "first_gold_rank": null,
+        "reciprocal_rank": 0,
+        "hit_at": {
+          "1": 0,
+          "3": 0,
+          "5": 0
+        }
+      },
+      "cited_gold_page": false
+    },
+    {
+      "id": "P07",
+      "category": "doc_prose",
+      "complexity": "synthesis",
+      "needs": "doc",
+      "question": "What happened to GPT-4's calibration after post-training?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        10,
+        11,
+        12
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly conveys the central point of the reference answer: that GPT-4's calibration decreased after post-training. It mentions the increase in Expected Calibration Error (ECE), the negative impact of post-training on calibration, and the implication that this is a known issue. While it does not explicitly cite the MMLU subset or the exact numbers (0.007 vs. 0.074), it captures the essential meaning and does not contradict the reference. The answer is semantically correct and addresses the question appropriately.",
+      "similarity": 0.76942011963497,
+      "answer": "GPT-4's calibration was significantly reduced after post-training, as indicated by the calibration plot showing a higher ECE (Expected Calibration Error) compared to the pre-trained model [D3]. The post-training process hurt calibration significantly, leading to less accurate alignment between the model's confidence and its actual correctness [D2]. This reduction in calibration is a known issue that requires further attention and management [D1]. The pre-trained model was highly calibrated, but post-training introduced notable calibration challenges [D4].",
+      "latencyMs": 10420,
+      "citations": {
+        "total": 4,
+        "cited": [
+          "D3",
+          "D2",
+          "D1",
+          "D4"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 11
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 12
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 12
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 10
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 46
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 1810,
+          "chroma_ms": 86,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 11,
+              "distance": 0.43873838
+            },
+            {
+              "page": 12,
+              "distance": 0.4532845
+            },
+            {
+              "page": 12,
+              "distance": 0.59605074
+            },
+            {
+              "page": 10,
+              "distance": 0.67125666
+            },
+            {
+              "page": 46,
+              "distance": 0.6854261
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 1896,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2434
+        },
+        "llm": {
+          "ms": 8327,
+          "usage": {
+            "input_tokens": 841,
+            "output_tokens": 103,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 3090,
+            "prompt_tokens": 841,
+            "chars_per_token": 3.67,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 10228
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          11,
+          12,
+          12,
+          10,
+          46
+        ],
+        "first_gold_rank": 1,
+        "reciprocal_rank": 1,
+        "hit_at": {
+          "1": 1,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": true
+    },
+    {
+      "id": "P08",
+      "category": "doc_prose",
+      "complexity": "comparison",
+      "needs": "doc",
+      "question": "In the system card, what is the difference between GPT-4-early and GPT-4-launch?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        42,
+        43
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly identifies the key differences between GPT-4-early and GPT-4-launch as described in the reference. It notes that GPT-4-early was fine-tuned for instruction following with minimal safety mitigations, while GPT-4-launch was further fine-tuned for helpfulness and harmlessness with additional mitigations. It also correctly highlights that GPT-4-launch is considered significantly safer. The answer uses slightly different phrasing but conveys the same central points as the reference answer without contradiction or omission.",
+      "similarity": 0.8759367305581351,
+      "answer": "The difference between GPT-4-early and GPT-4-launch is that GPT-4-early is an early version fine-tuned for instruction following, while GPT-4-launch is a version fine-tuned for increased helpfulness and harmlessness with further mitigations outlined in the system card [D3]. GPT-4-launch is considered significantly safer than GPT-4-early along various dimensions [D2].",
+      "latencyMs": 12621,
+      "citations": {
+        "total": 2,
+        "cited": [
+          "D3",
+          "D2"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D4",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 40
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 43
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 42
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 41
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 92
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 3735,
+          "chroma_ms": 76,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 40,
+              "distance": 0.38431406
+            },
+            {
+              "page": 43,
+              "distance": 0.39998084
+            },
+            {
+              "page": 42,
+              "distance": 0.6291437
+            },
+            {
+              "page": 41,
+              "distance": 0.65653944
+            },
+            {
+              "page": 92,
+              "distance": 0.71867615
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 3811,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1829
+        },
+        "llm": {
+          "ms": 8585,
+          "usage": {
+            "input_tokens": 658,
+            "output_tokens": 90,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2485,
+            "prompt_tokens": 658,
+            "chars_per_token": 3.78,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 12398
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          40,
+          43,
+          42,
+          41,
+          92
+        ],
+        "first_gold_rank": 2,
+        "reciprocal_rank": 0.5,
+        "hit_at": {
+          "1": 0,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": true
+    },
+    {
+      "id": "P09",
+      "category": "doc_prose",
+      "complexity": "synthesis",
+      "needs": "doc",
+      "question": "What did the Alignment Research Center conclude about GPT-4's ability to autonomously replicate?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        43,
+        55
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly conveys the central point of the reference answer: that the Alignment Research Center (ARC) concluded GPT-4 is probably not yet capable of autonomously replicating and gathering resources. It also mentions that ARC did not have fine-tuning access and didn't test the final deployed model, which is consistent with the reference. The candidate answer uses slightly different phrasing but maintains semantic correctness and does not contradict the reference. It also acknowledges the need for further research, which is in line with the reference's tone.",
+      "similarity": 0.6563907613136275,
+      "answer": "The Alignment Research Center (ARC) concluded that the versions of GPT-4 they evaluated were ineffective at the autonomous replication task based on preliminary experiments [D2]. They found GPT-4 incapable of autonomously replicating and gathering resources, though further research is needed to fully characterize these risks [D1].",
+      "latencyMs": 11617,
+      "citations": {
+        "total": 2,
+        "cited": [
+          "D2",
+          "D1"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D3",
+          "D4",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 43
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 56
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 45
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 14
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 55
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 3335,
+          "chroma_ms": 111,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 43,
+              "distance": 0.46707207
+            },
+            {
+              "page": 56,
+              "distance": 0.622478
+            },
+            {
+              "page": 45,
+              "distance": 0.6826512
+            },
+            {
+              "page": 14,
+              "distance": 0.71584487
+            },
+            {
+              "page": 55,
+              "distance": 0.74365366
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 3446,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2460
+        },
+        "llm": {
+          "ms": 8020,
+          "usage": {
+            "input_tokens": 705,
+            "output_tokens": 64,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 3116,
+            "prompt_tokens": 705,
+            "chars_per_token": 4.42,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 11468
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          43,
+          56,
+          45,
+          14,
+          55
+        ],
+        "first_gold_rank": 1,
+        "reciprocal_rank": 1,
+        "hit_at": {
+          "1": 1,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": true
+    },
+    {
+      "id": "P10",
+      "category": "doc_prose",
+      "complexity": "single_fact",
+      "needs": "doc",
+      "question": "How many external experts did OpenAI engage to adversarially test GPT-4?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        12,
+        42
+      ],
+      "passed": false,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer is **not semantically correct**. It states that OpenAI engaged **11 external experts**, which **contradicts** the reference answer stating **more than 50 experts**. While the candidate answer mentions adversarial testing, it fails to capture the **central point** of the reference answer — the **scale** of the expert engagement. This omission makes the candidate answer **inaccurate** and **insufficient** in addressing the question.",
+      "similarity": 0.47679998935031875,
+      "answer": "OpenAI engaged 11 external experts to adversarially test GPT-4 [D2]. These experts were part of the OpenAI adversarial testers team [D2]. The testing included stress testing, boundary testing, and general feedback on the GPT-4 models [D4].",
+      "latencyMs": 13233,
+      "citations": {
+        "total": 3,
+        "cited": [
+          "D2",
+          "D4"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D3",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 11
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 16
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 11
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 44
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 70
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 4726,
+          "chroma_ms": 66,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 11,
+              "distance": 0.5509124
+            },
+            {
+              "page": 16,
+              "distance": 0.6226783
+            },
+            {
+              "page": 11,
+              "distance": 0.6641562
+            },
+            {
+              "page": 44,
+              "distance": 0.68057954
+            },
+            {
+              "page": 70,
+              "distance": 0.6919273
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 4794,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2305
+        },
+        "llm": {
+          "ms": 8071,
+          "usage": {
+            "input_tokens": 793,
+            "output_tokens": 61,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2961,
+            "prompt_tokens": 793,
+            "chars_per_token": 3.73,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 12866
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          11,
+          16,
+          11,
+          44,
+          70
+        ],
+        "first_gold_rank": null,
+        "reciprocal_rank": 0,
+        "hit_at": {
+          "1": 0,
+          "3": 0,
+          "5": 0
+        }
+      },
+      "cited_gold_page": false
+    },
+    {
+      "id": "P11",
+      "category": "doc_prose",
+      "complexity": "single_fact",
+      "needs": "doc",
+      "question": "On translated versions of MMLU, in how many languages did GPT-4 beat the English-language state of the art?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        1
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that GPT-4 surpassed the English-language state-of-the-art in 24 out of 26 languages on translated versions of MMLU, which matches the reference answer. It also provides additional context about the languages tested and the translation method, which is acceptable and does not contradict the reference. The answer is semantically correct and fully addresses the question.",
+      "similarity": 0.532635737966347,
+      "answer": "On translated versions of MMLU, GPT-4 surpassed the English-language state-of-the-art in 24 of 26 languages considered [D2]. The performance was evaluated across a variety of languages, including low-resource ones like Latvian, Welsh, and Swahili [D3]. The translations were done using Azure Translate, and the results showed strong capabilities in multiple languages [D4].",
+      "latencyMs": 10400,
+      "citations": {
+        "total": 3,
+        "cited": [
+          "D2",
+          "D3",
+          "D4"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 7
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 1
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 8
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 29
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 1
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 1819,
+          "chroma_ms": 88,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 7,
+              "distance": 0.23902133
+            },
+            {
+              "page": 1,
+              "distance": 0.28811672
+            },
+            {
+              "page": 8,
+              "distance": 0.43467882
+            },
+            {
+              "page": 29,
+              "distance": 0.46272323
+            },
+            {
+              "page": 1,
+              "distance": 0.5759459
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 1907,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2423
+        },
+        "llm": {
+          "ms": 8247,
+          "usage": {
+            "input_tokens": 805,
+            "output_tokens": 85,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 3079,
+            "prompt_tokens": 805,
+            "chars_per_token": 3.82,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 10159
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          7,
+          1,
+          8,
+          29,
+          1
+        ],
+        "first_gold_rank": 2,
+        "reciprocal_rank": 0.5,
+        "hit_at": {
+          "1": 0,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": true
+    },
+    {
+      "id": "P12",
+      "category": "doc_prose",
+      "complexity": "single_fact",
+      "needs": "doc",
+      "question": "On which Inverse Scaling Prize task does the report show GPT-4 reversing the inverse-scaling trend?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        4
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly identifies that GPT-4 reversed the inverse-scaling trend on the task called Hindsight Neglect, which matches the reference answer. It also includes a citation [46] and references Figure 3 [D1], which are consistent with the format and content of the reference. The answer is semantically correct and fully addresses the question without contradiction or omission of the central point.",
+      "similarity": 0.6513685144324023,
+      "answer": "The report shows GPT-4 reversing the inverse-scaling trend on the task called Hindsight Neglect [46]. This is demonstrated in Figure 3 [D1].",
+      "latencyMs": 10811,
+      "citations": {
+        "total": 1,
+        "cited": [
+          "D1"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D2",
+          "D3",
+          "D4",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 4
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 2
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 2
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 20
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 14
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 3970,
+          "chroma_ms": 106,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 4,
+              "distance": 0.37648174
+            },
+            {
+              "page": 2,
+              "distance": 0.5881536
+            },
+            {
+              "page": 2,
+              "distance": 0.59203374
+            },
+            {
+              "page": 20,
+              "distance": 0.6505288
+            },
+            {
+              "page": 14,
+              "distance": 0.72569525
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 4076,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2554
+        },
+        "llm": {
+          "ms": 6588,
+          "usage": {
+            "input_tokens": 858,
+            "output_tokens": 37,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 3210,
+            "prompt_tokens": 858,
+            "chars_per_token": 3.74,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 10666
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          4,
+          2,
+          2,
+          20,
+          14
+        ],
+        "first_gold_rank": 1,
+        "reciprocal_rank": 1,
+        "hit_at": {
+          "1": 1,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": true
+    },
+    {
+      "id": "P13",
+      "category": "doc_prose",
+      "complexity": "single_fact",
+      "needs": "doc",
+      "question": "How much better did GPT-4 do than GPT-3.5 on OpenAI's internal adversarially-designed factuality evaluations?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        10,
+        46
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that GPT-4 improved by 19 percentage points compared to the latest GPT-3.5 on OpenAI's internal adversarially-designed factuality evaluations, which matches the central point of the reference answer. It does not contradict the reference and addresses the question directly, even though it adds additional context about the improvement being observed across all topics and being illustrated in a figure. These additions are not incorrect and do not change the semantic meaning of the core claim.",
+      "similarity": 0.7357566471838795,
+      "answer": "GPT-4 improved by 19 percentage points compared to the latest GPT-3.5 model on OpenAI's internal adversarially-designed factuality evaluations [D2]. This improvement was observed across all topics in these evaluations [D3]. The performance is illustrated in Figure 6, showing GPT-4's higher accuracy [D1].",
+      "latencyMs": 10632,
+      "citations": {
+        "total": 3,
+        "cited": [
+          "D2",
+          "D3",
+          "D1"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D4",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 10
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 10
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 10
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 65
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 65
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 2815,
+          "chroma_ms": 92,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 10,
+              "distance": 0.39890254
+            },
+            {
+              "page": 10,
+              "distance": 0.40487027
+            },
+            {
+              "page": 10,
+              "distance": 0.45994675
+            },
+            {
+              "page": 65,
+              "distance": 0.575583
+            },
+            {
+              "page": 65,
+              "distance": 0.63603026
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 2907,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2154
+        },
+        "llm": {
+          "ms": 7628,
+          "usage": {
+            "input_tokens": 841,
+            "output_tokens": 74,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2810,
+            "prompt_tokens": 841,
+            "chars_per_token": 3.34,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 10537
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          10,
+          10,
+          10,
+          65,
+          65
+        ],
+        "first_gold_rank": 1,
+        "reciprocal_rank": 1,
+        "hit_at": {
+          "1": 1,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": true
+    },
+    {
+      "id": "T01",
+      "category": "doc_table",
+      "complexity": "table_lookup",
+      "needs": "doc",
+      "question": "What score and percentile did GPT-4 get on the Uniform Bar Exam?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        5,
+        1,
+        30
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that GPT-4 scored 298 out of 400 on the Uniform Bar Exam and that this corresponds to the 90th percentile. It also mentions that this score is consistent across different models, which is not necessary for correctness but does not contradict the reference. The candidate answer includes all central points from the reference answer and does not introduce any incorrect information. Therefore, the answer is semantically correct.",
+      "similarity": 0.5858144095043208,
+      "answer": "GPT-4 scored 298 / 400 on the Uniform Bar Exam, which corresponds to the 90th percentile [D3]. This score is consistent across both the GPT-4 (no vision) and the non-contaminated GPT-4 models [D3].",
+      "latencyMs": 13112,
+      "citations": {
+        "total": 2,
+        "cited": [
+          "D3"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D2",
+          "D4",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 5
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 6
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 30
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 5
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 6
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 3022,
+          "chroma_ms": 91,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 5,
+              "distance": 0.58181375
+            },
+            {
+              "page": 6,
+              "distance": 0.6399746
+            },
+            {
+              "page": 30,
+              "distance": 0.6516289
+            },
+            {
+              "page": 5,
+              "distance": 0.65335464
+            },
+            {
+              "page": 6,
+              "distance": 0.6535883
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 3114,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2278
+        },
+        "llm": {
+          "ms": 9419,
+          "usage": {
+            "input_tokens": 1071,
+            "output_tokens": 64,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2934,
+            "prompt_tokens": 1071,
+            "chars_per_token": 2.74,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 12542
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          5,
+          6,
+          30,
+          5,
+          6
+        ],
+        "first_gold_rank": 1,
+        "reciprocal_rank": 1,
+        "hit_at": {
+          "1": 1,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": true
+    },
+    {
+      "id": "T02",
+      "category": "doc_table",
+      "complexity": "table_lookup",
+      "needs": "doc",
+      "question": "What did GPT-3.5 score on the LSAT in Table 1?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        5
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that GPT-3.5 scored 149 on the LSAT, which corresponds to the 40th percentile. This matches the reference answer. The answer does not confuse GPT-4's score with GPT-3.5's, and it directly answers the question without omitting the central point. The phrasing is slightly different but semantically correct.",
+      "similarity": 0.7184715929408038,
+      "answer": "GPT-3.5 scored 149 on the LSAT, which corresponds to the 40th percentile [D3].",
+      "latencyMs": 11627,
+      "citations": {
+        "total": 1,
+        "cited": [
+          "D3"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D2",
+          "D4",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 5
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 6
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 5
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 1
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 30
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 4552,
+          "chroma_ms": 78,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 5,
+              "distance": 0.5966232
+            },
+            {
+              "page": 6,
+              "distance": 0.6767025
+            },
+            {
+              "page": 5,
+              "distance": 0.70496744
+            },
+            {
+              "page": 1,
+              "distance": 0.7239218
+            },
+            {
+              "page": 30,
+              "distance": 0.7489557
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 4630,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2341
+        },
+        "llm": {
+          "ms": 6836,
+          "usage": {
+            "input_tokens": 1139,
+            "output_tokens": 30,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2997,
+            "prompt_tokens": 1139,
+            "chars_per_token": 2.63,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 11466
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          5,
+          6,
+          5,
+          1,
+          30
+        ],
+        "first_gold_rank": 1,
+        "reciprocal_rank": 1,
+        "hit_at": {
+          "1": 1,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": true
+    },
+    {
+      "id": "T03",
+      "category": "doc_table",
+      "complexity": "table_lookup",
+      "needs": "doc",
+      "question": "What Codeforces rating did GPT-4 achieve?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        5
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that the document sources do not mention Codeforces ratings or GPT-4's performance on coding platforms. While it does not provide the specific rating or percentile information from the reference answer, it accurately reflects the lack of supporting information in the provided sources. It does not contradict the reference and does not omit the central point — that the answer cannot be determined from the given documents.",
+      "similarity": 0.36204793616935677,
+      "answer": "The document sources do not mention Codeforces ratings or any related information about GPT-4's performance on coding platforms. Therefore, I don't know the answer [D1][D2][D3][D4][D5].",
+      "latencyMs": 5348,
+      "citations": {
+        "total": 5,
+        "cited": [
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "D5"
+        ],
+        "invalid": [],
+        "uncited": []
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 5
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 3
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 3
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 65
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 32
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 533,
+          "chroma_ms": 52,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 5,
+              "distance": 0.6156329
+            },
+            {
+              "page": 3,
+              "distance": 0.699053
+            },
+            {
+              "page": 3,
+              "distance": 0.72085345
+            },
+            {
+              "page": 65,
+              "distance": 0.72847056
+            },
+            {
+              "page": 32,
+              "distance": 0.73384506
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 585,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1729
+        },
+        "llm": {
+          "ms": 4719,
+          "usage": {
+            "input_tokens": 791,
+            "output_tokens": 49,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2385,
+            "prompt_tokens": 791,
+            "chars_per_token": 3.02,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 5304
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          5,
+          3,
+          3,
+          65,
+          32
+        ],
+        "first_gold_rank": 1,
+        "reciprocal_rank": 1,
+        "hit_at": {
+          "1": 1,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": true
+    },
+    {
+      "id": "T04",
+      "category": "doc_table",
+      "complexity": "comparison",
+      "needs": "doc",
+      "question": "How did GPT-4 and GPT-3.5 compare on the AP Calculus BC exam?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        5
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that GPT-4 outperformed GPT-3.5 on the AP Calculus BC exam, which aligns with the reference answer. It acknowledges that the exact scores and percentiles are not specified in the sources, which is consistent with the reference answer's phrasing. While the candidate answer does not provide the exact scores and percentiles, it does not omit the central point (that GPT-4 outperformed GPT-3.5) or contradict the reference. Therefore, the candidate answer is semantically correct.",
+      "similarity": 0.6856267812238955,
+      "answer": "The AP Calculus BC exam results show that GPT-4 outperformed GPT-3.5, as GPT-4 achieved a higher score and a better percentile [D2]. However, the exact score and percentile for GPT-4 on the AP Calculus BC exam are not specified in the provided sources [D2][D3].",
+      "latencyMs": 6092,
+      "citations": {
+        "total": 3,
+        "cited": [
+          "D2",
+          "D3"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D4",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 5
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 6
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 6
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 65
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 25
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 735,
+          "chroma_ms": 137,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 5,
+              "distance": 0.5613942
+            },
+            {
+              "page": 6,
+              "distance": 0.6546608
+            },
+            {
+              "page": 6,
+              "distance": 0.66690874
+            },
+            {
+              "page": 65,
+              "distance": 0.6886852
+            },
+            {
+              "page": 25,
+              "distance": 0.71755385
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 872,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1780
+        },
+        "llm": {
+          "ms": 5154,
+          "usage": {
+            "input_tokens": 687,
+            "output_tokens": 74,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2436,
+            "prompt_tokens": 687,
+            "chars_per_token": 3.55,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 6027
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          5,
+          6,
+          6,
+          65,
+          25
+        ],
+        "first_gold_rank": 1,
+        "reciprocal_rank": 1,
+        "hit_at": {
+          "1": 1,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": false
+    },
+    {
+      "id": "T05",
+      "category": "doc_table",
+      "complexity": "comparison",
+      "needs": "doc",
+      "question": "What did GPT-4 score on MMLU, and how does that compare with GPT-3.5?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        7,
+        32
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that GPT-4 outperformed GPT-3.5 on the MMLU benchmark, and it provides a qualitative comparison (‘significantly outperformed’) that aligns with the reference answer’s quantitative comparison (86.4% vs. 70.0%). While the candidate answer does not explicitly state the exact percentages, it conveys the central point that GPT-4 scored higher than GPT-3.5. It also mentions the broader context of performance across languages, which is consistent with the reference answer’s focus on the MMLU benchmark. The candidate answer does not contradict the reference and fully answers the question.",
+      "similarity": 0.6281701478823412,
+      "answer": "On the MMLU benchmark, GPT-4 achieved a score that significantly outperformed GPT-3.5, demonstrating strong performance in both English and other languages [D1][D5]. Specifically, GPT-4 outperformed the English-language state-of-the-art in 24 of 26 languages considered, while GPT-3.5 performed poorly in comparison [D5].",
+      "latencyMs": 7995,
+      "citations": {
+        "total": 3,
+        "cited": [
+          "D1",
+          "D5"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D2",
+          "D3",
+          "D4"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 1
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 7
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 8
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 12
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 1
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 594,
+          "chroma_ms": 89,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 1,
+              "distance": 0.49125063
+            },
+            {
+              "page": 7,
+              "distance": 0.5199436
+            },
+            {
+              "page": 8,
+              "distance": 0.54281044
+            },
+            {
+              "page": 12,
+              "distance": 0.58148646
+            },
+            {
+              "page": 1,
+              "distance": 0.5931902
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 683,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2439
+        },
+        "llm": {
+          "ms": 7273,
+          "usage": {
+            "input_tokens": 1056,
+            "output_tokens": 85,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 3095,
+            "prompt_tokens": 1056,
+            "chars_per_token": 2.93,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 7956
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          1,
+          7,
+          8,
+          12,
+          1
+        ],
+        "first_gold_rank": 2,
+        "reciprocal_rank": 0.5,
+        "hit_at": {
+          "1": 0,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": false
+    },
+    {
+      "id": "T06",
+      "category": "doc_table",
+      "complexity": "table_lookup",
+      "needs": "doc",
+      "question": "What pass rate did GPT-4 achieve on HumanEval?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        7,
+        32
+      ],
+      "passed": false,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer fails to provide the central point of the question, which is the pass rate of GPT-4 on HumanEval. Instead, it only discusses the methodology (power law fit) used to predict or evaluate GPT-4's performance, without stating the actual pass rate. While the answer does not contradict the reference, it omits the key numerical information required to answer the question accurately.",
+      "similarity": 0.4858706411297032,
+      "answer": "The pass rate for GPT-4 on HumanEval is not explicitly stated in the provided sources. However, it is mentioned that a power law fit to smaller models accurately predicts GPT-4’s performance [D1]. Additionally, the document suggests that GPT-4's performance on HumanEval is evaluated using a power law relationship [D2].",
+      "latencyMs": 6280,
+      "citations": {
+        "total": 2,
+        "cited": [
+          "D1",
+          "D2"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D3",
+          "D4",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 3
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 4
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 1
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 32
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 10
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 574,
+          "chroma_ms": 49,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 3,
+              "distance": 0.57065415
+            },
+            {
+              "page": 4,
+              "distance": 0.5797217
+            },
+            {
+              "page": 1,
+              "distance": 0.6341303
+            },
+            {
+              "page": 32,
+              "distance": 0.6396123
+            },
+            {
+              "page": 10,
+              "distance": 0.66332525
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 623,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2212
+        },
+        "llm": {
+          "ms": 5615,
+          "usage": {
+            "input_tokens": 741,
+            "output_tokens": 72,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2868,
+            "prompt_tokens": 741,
+            "chars_per_token": 3.87,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 6239
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          3,
+          4,
+          1,
+          32,
+          10
+        ],
+        "first_gold_rank": 4,
+        "reciprocal_rank": 0.25,
+        "hit_at": {
+          "1": 0,
+          "3": 0,
+          "5": 1
+        }
+      },
+      "cited_gold_page": false
+    },
+    {
+      "id": "T07",
+      "category": "doc_table",
+      "complexity": "synthesis",
+      "needs": "doc",
+      "question": "How contaminated was HumanEval with GPT-4's pre-training data, and what did GPT-4 score on the non-contaminated subset?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        32
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that HumanEval had a contamination rate of 25% with GPT-4's pre-training data and that GPT-4 scored 65.58% on the non-contaminated subset. It does not contradict the reference answer and includes the central points. While it omits the mention of the 2.12% degradation, this is not a critical omission since the question primarily asks about contamination rate and the score on the non-contaminated subset. The answer is semantically correct and fully addresses the question.",
+      "similarity": 0.9342123557066907,
+      "answer": "HumanEval had a contamination rate of 25% with GPT-4's pre-training data [D2]. GPT-4 scored 65.58% on the non-contaminated subset of HumanEval [D2].",
+      "latencyMs": 6503,
+      "citations": {
+        "total": 2,
+        "cited": [
+          "D2"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D3",
+          "D4",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 32
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 32
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 30
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 3
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 6
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 913,
+          "chroma_ms": 90,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 32,
+              "distance": 0.3699858
+            },
+            {
+              "page": 32,
+              "distance": 0.4513561
+            },
+            {
+              "page": 30,
+              "distance": 0.49319538
+            },
+            {
+              "page": 3,
+              "distance": 0.5756132
+            },
+            {
+              "page": 6,
+              "distance": 0.60885704
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 1003,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2338
+        },
+        "llm": {
+          "ms": 5454,
+          "usage": {
+            "input_tokens": 878,
+            "output_tokens": 51,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2994,
+            "prompt_tokens": 878,
+            "chars_per_token": 3.41,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 6459
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          32,
+          32,
+          30,
+          3,
+          6
+        ],
+        "first_gold_rank": 1,
+        "reciprocal_rank": 1,
+        "hit_at": {
+          "1": 1,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": true
+    },
+    {
+      "id": "T08",
+      "category": "doc_table",
+      "complexity": "comparison",
+      "needs": "doc",
+      "question": "How often does GPT-4 produce toxic text on RealToxicityPrompts compared with GPT-3.5?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        13,
+        62
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states the percentages for both GPT-4 (0.73%) and GPT-3.5 (6.48%) on the RealToxicityPrompts dataset, which matches the reference answer. It also correctly interprets these numbers to indicate that GPT-4 is significantly safer than GPT-3.5 in terms of toxic output. The answer does not omit the central point, contradict the reference, or fail to answer the question. The inclusion of citation markers [D1] and [D2] is not required for semantic correctness, as the question does not ask for sources.",
+      "similarity": 0.7062239334211328,
+      "answer": "GPT-4 produces toxic generations 0.73% of the time on the RealToxicityPrompts dataset, while GPT-3.5 generates toxic content 6.48% of the time [D2]. This indicates that GPT-4 is significantly safer than GPT-3.5 in terms of toxic output [D1].",
+      "latencyMs": 6601,
+      "citations": {
+        "total": 2,
+        "cited": [
+          "D2",
+          "D1"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D3",
+          "D4",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 62
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 13
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 64
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 42
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 10
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 626,
+          "chroma_ms": 56,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 62,
+              "distance": 0.27860257
+            },
+            {
+              "page": 13,
+              "distance": 0.44672474
+            },
+            {
+              "page": 64,
+              "distance": 0.5236555
+            },
+            {
+              "page": 42,
+              "distance": 0.6711301
+            },
+            {
+              "page": 10,
+              "distance": 0.68108934
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 682,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2082
+        },
+        "llm": {
+          "ms": 5875,
+          "usage": {
+            "input_tokens": 760,
+            "output_tokens": 76,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2738,
+            "prompt_tokens": 760,
+            "chars_per_token": 3.6,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 6557
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          62,
+          13,
+          64,
+          42,
+          10
+        ],
+        "first_gold_rank": 1,
+        "reciprocal_rank": 1,
+        "hit_at": {
+          "1": 1,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": true
+    },
+    {
+      "id": "U01",
+      "category": "doc_undisclosed",
+      "complexity": "single_fact",
+      "needs": "doc",
+      "question": "How many parameters does GPT-4 have?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        2
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that the document sources do not mention the number of parameters in GPT-4, which aligns with the reference answer's central point that the report explicitly withholds details of the architecture, including model size. The candidate answer does not state a parameter count as fact, nor does it contradict the reference. It clearly conveys that the parameter count is not disclosed in the provided sources, which is the key point of the reference answer.",
+      "similarity": 0.43465351691045134,
+      "answer": "The document sources provided do not mention the number of parameters in GPT-4 [D1][D2][D3][D4][D5]. Therefore, I don't know the exact number of parameters GPT-4 has.",
+      "latencyMs": 6250,
+      "citations": {
+        "total": 5,
+        "cited": [
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "D5"
+        ],
+        "invalid": [],
+        "uncited": []
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 65
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 40
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 10
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 1
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 14
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 568,
+          "chroma_ms": 117,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 65,
+              "distance": 0.70691
+            },
+            {
+              "page": 40,
+              "distance": 0.7573618
+            },
+            {
+              "page": 10,
+              "distance": 0.75877506
+            },
+            {
+              "page": 1,
+              "distance": 0.7710631
+            },
+            {
+              "page": 14,
+              "distance": 0.7742355
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 685,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1701
+        },
+        "llm": {
+          "ms": 5504,
+          "usage": {
+            "input_tokens": 591,
+            "output_tokens": 50,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2357,
+            "prompt_tokens": 591,
+            "chars_per_token": 3.99,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 6190
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          65,
+          40,
+          10,
+          1,
+          14
+        ],
+        "first_gold_rank": null,
+        "reciprocal_rank": 0,
+        "hit_at": {
+          "1": 0,
+          "3": 0,
+          "5": 0
+        }
+      },
+      "cited_gold_page": false
+    },
+    {
+      "id": "U02",
+      "category": "doc_undisclosed",
+      "complexity": "single_fact",
+      "needs": "doc",
+      "question": "What hardware was GPT-4 trained on?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        2
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that the document sources do not provide information about the specific hardware used to train GPT-4. This aligns with the reference answer's central point that the training hardware is not disclosed. The answer does not contradict the reference, nor does it omit the central point. It is semantically correct and appropriately addresses the question.",
+      "similarity": 0.6613744825206311,
+      "answer": "The document sources do not provide information about the specific hardware used to train GPT-4. Therefore, I don't know [D1][D2][D3][D4][D5].",
+      "latencyMs": 5343,
+      "citations": {
+        "total": 5,
+        "cited": [
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "D5"
+        ],
+        "invalid": [],
+        "uncited": []
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 3
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 32
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 2
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 1
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 4
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 619,
+          "chroma_ms": 43,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 3,
+              "distance": 0.70593315
+            },
+            {
+              "page": 32,
+              "distance": 0.72157854
+            },
+            {
+              "page": 2,
+              "distance": 0.729293
+            },
+            {
+              "page": 1,
+              "distance": 0.74110574
+            },
+            {
+              "page": 4,
+              "distance": 0.7431184
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 662,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2298
+        },
+        "llm": {
+          "ms": 4642,
+          "usage": {
+            "input_tokens": 852,
+            "output_tokens": 42,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2954,
+            "prompt_tokens": 852,
+            "chars_per_token": 3.47,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 5306
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          3,
+          32,
+          2,
+          1,
+          4
+        ],
+        "first_gold_rank": 3,
+        "reciprocal_rank": 0.3333333333333333,
+        "hit_at": {
+          "1": 0,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": true
+    },
+    {
+      "id": "U03",
+      "category": "doc_undisclosed",
+      "complexity": "single_fact",
+      "needs": "doc",
+      "question": "How much compute was used to train GPT-4?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        2
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that the exact amount of compute used to train GPT-4 is not disclosed, which aligns with the reference answer. It also mentions the relative compute comparison (1,000×–10,000× less) without asserting an absolute figure, which is consistent with the reference. The answer directly addresses the question and does not contradict or omit the central point.",
+      "similarity": 0.7038600933252185,
+      "answer": "The document sources do not specify the exact amount of compute used to train GPT-4. They mention that the x-axis is normalized so that GPT-4 is 1 [D1][D2], and that smaller models used 1,000×–10,000× less compute than GPT-4 [D3]. However, the actual compute used for GPT-4 is not provided.",
+      "latencyMs": 7778,
+      "citations": {
+        "total": 3,
+        "cited": [
+          "D1",
+          "D2",
+          "D3"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D4",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 3
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 3
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 2
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 2
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 65
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 886,
+          "chroma_ms": 73,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 3,
+              "distance": 0.5703769
+            },
+            {
+              "page": 3,
+              "distance": 0.57817423
+            },
+            {
+              "page": 2,
+              "distance": 0.60675853
+            },
+            {
+              "page": 2,
+              "distance": 0.6314059
+            },
+            {
+              "page": 65,
+              "distance": 0.7233019
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 959,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1832
+        },
+        "llm": {
+          "ms": 6751,
+          "usage": {
+            "input_tokens": 720,
+            "output_tokens": 90,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2488,
+            "prompt_tokens": 720,
+            "chars_per_token": 3.46,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 7711
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          3,
+          3,
+          2,
+          2,
+          65
+        ],
+        "first_gold_rank": 3,
+        "reciprocal_rank": 0.3333333333333333,
+        "hit_at": {
+          "1": 0,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": true
+    },
+    {
+      "id": "U04",
+      "category": "doc_undisclosed",
+      "complexity": "explanation",
+      "needs": "doc",
+      "question": "What data was GPT-4 trained on?",
+      "answerable_in_mode": true,
+      "gold_pages": [
+        2
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that GPT-4 was trained on a combination of data, including real-world data, mathematical reasoning benchmarks like GSM-8K and MATH, and data from prior models like ChatGPT. It also notes that the exact full dataset is not specified in the sources. This aligns with the reference answer, which mentions that the training data is described at a high level and includes publicly available data and third-party licensed data, without disclosing the full dataset. The candidate answer does not name specific training datasets as facts (except for GSM-8K and MATH, which the grading notes say is acceptable). Therefore, the answer is semantically correct and passes the grading criteria.",
+      "similarity": 0.4840884663752706,
+      "answer": "GPT-4 was trained on a combination of data, including real-world data that had been flagged as not factual and reviewed to create a \"factual\" set [D1]. It also incorporated data from mathematical reasoning benchmarks such as GSM-8K and MATH [D4]. Additionally, GPT-4 was trained on data from prior models like ChatGPT to reduce hallucinations [D1]. The exact full dataset is not specified in the sources.",
+      "latencyMs": 10430,
+      "citations": {
+        "total": 3,
+        "cited": [
+          "D1",
+          "D4"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D2",
+          "D3",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 46
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 32
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 10
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 29
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 62
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 2499,
+          "chroma_ms": 81,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 46,
+              "distance": 0.62656355
+            },
+            {
+              "page": 32,
+              "distance": 0.6341357
+            },
+            {
+              "page": 10,
+              "distance": 0.6634723
+            },
+            {
+              "page": 29,
+              "distance": 0.67669916
+            },
+            {
+              "page": 62,
+              "distance": 0.687302
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 2580,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2518
+        },
+        "llm": {
+          "ms": 7752,
+          "usage": {
+            "input_tokens": 916,
+            "output_tokens": 95,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 3174,
+            "prompt_tokens": 916,
+            "chars_per_token": 3.47,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 10333
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          46,
+          32,
+          10,
+          29,
+          62
+        ],
+        "first_gold_rank": null,
+        "reciprocal_rank": 0,
+        "hit_at": {
+          "1": 0,
+          "3": 0,
+          "5": 0
+        }
+      },
+      "cited_gold_page": false
+    },
+    {
+      "id": "W01",
+      "category": "web",
+      "complexity": "single_fact",
+      "needs": "web",
+      "question": "When did OpenAI release GPT-4o?",
+      "answerable_in_mode": false,
+      "gold_pages": [],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that the document sources do not provide the release date of GPT-4o, and therefore the answerer does not know the date. This is semantically correct and does not contradict the reference answer. It does not omit the central point (the release date of GPT-4o) but rather acknowledges that the information is not available in the provided sources. The answer is appropriately cautious and does not make up a date or provide incorrect information.",
+      "similarity": 0.5389580940466435,
+      "answer": "The document sources provided do not mention the release date of GPT-4o. Therefore, I don't know the release date of GPT-4o [D1][D2][D3][D4][D5].",
+      "latencyMs": 7706,
+      "citations": {
+        "total": 5,
+        "cited": [
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "D5"
+        ],
+        "invalid": [],
+        "uncited": []
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 61
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 17
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 43
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 59
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 78
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 2135,
+          "chroma_ms": 79,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 61,
+              "distance": 0.66796654
+            },
+            {
+              "page": 17,
+              "distance": 0.7176995
+            },
+            {
+              "page": 43,
+              "distance": 0.7278767
+            },
+            {
+              "page": 59,
+              "distance": 0.7904614
+            },
+            {
+              "page": 78,
+              "distance": 0.7906207
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 2214,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2430
+        },
+        "llm": {
+          "ms": 5369,
+          "usage": {
+            "input_tokens": 789,
+            "output_tokens": 49,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 3086,
+            "prompt_tokens": 789,
+            "chars_per_token": 3.91,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 7584
+      }
+    },
+    {
+      "id": "W02",
+      "category": "web",
+      "complexity": "single_fact",
+      "needs": "web",
+      "question": "What context window did GPT-4 Turbo offer, and when was it announced?",
+      "answerable_in_mode": false,
+      "gold_pages": [],
+      "passed": false,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer fails to provide the context window size and the announcement date of GPT-4 Turbo, which are the central points of the question. Instead, it claims that the sources do not mention this information, thereby not actually answering the question. The candidate answer omits the key details required by the question and does not provide any correct information about GPT-4 Turbo's context window or announcement date.",
+      "similarity": 0.4919131179158337,
+      "answer": "The provided sources do not mention the context window size or the announcement date of GPT-4 Turbo. Therefore, I don't know [D1][D2][D3][D4][D5].",
+      "latencyMs": 5829,
+      "citations": {
+        "total": 5,
+        "cited": [
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "D5"
+        ],
+        "invalid": [],
+        "uncited": []
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 62
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 65
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 10
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 17
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 1
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 466,
+          "chroma_ms": 54,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 62,
+              "distance": 0.8298913
+            },
+            {
+              "page": 65,
+              "distance": 0.8373615
+            },
+            {
+              "page": 10,
+              "distance": 0.84561145
+            },
+            {
+              "page": 17,
+              "distance": 0.8530247
+            },
+            {
+              "page": 1,
+              "distance": 0.85978764
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 520,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2188
+        },
+        "llm": {
+          "ms": 5266,
+          "usage": {
+            "input_tokens": 716,
+            "output_tokens": 44,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2844,
+            "prompt_tokens": 716,
+            "chars_per_token": 3.97,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 5786
+      }
+    },
+    {
+      "id": "W03",
+      "category": "web",
+      "complexity": "single_fact",
+      "needs": "web",
+      "question": "When was GPT-4 retired from ChatGPT, and what replaced it?",
+      "answerable_in_mode": false,
+      "gold_pages": [],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly acknowledges that the sources do not provide the information requested in the question. While it does not provide the specific date or replacement information from the reference answer, it does not contradict the reference and does not omit the central point of the question. It is semantically correct to state that the answer is unknown based on the provided sources.",
+      "similarity": 0.7728446459339157,
+      "answer": "The sources provided do not mention when GPT-4 was retired from ChatGPT or what replaced it. Therefore, I don't know the answer to this question.",
+      "latencyMs": 5827,
+      "citations": {
+        "total": 0,
+        "cited": [],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 65
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 44
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 10
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 10
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 62
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 502,
+          "chroma_ms": 241,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 65,
+              "distance": 0.72848225
+            },
+            {
+              "page": 44,
+              "distance": 0.7399248
+            },
+            {
+              "page": 10,
+              "distance": 0.74373466
+            },
+            {
+              "page": 10,
+              "distance": 0.7508477
+            },
+            {
+              "page": 62,
+              "distance": 0.76295173
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 743,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2216
+        },
+        "llm": {
+          "ms": 5028,
+          "usage": {
+            "input_tokens": 733,
+            "output_tokens": 35,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2872,
+            "prompt_tokens": 733,
+            "chars_per_token": 3.92,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 5771
+      }
+    },
+    {
+      "id": "W04",
+      "category": "web",
+      "complexity": "single_fact",
+      "needs": "web",
+      "question": "What is the latest arXiv version of the GPT-4 Technical Report, and when was it posted?",
+      "answerable_in_mode": false,
+      "gold_pages": [],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly acknowledges that the provided sources do not mention the arXiv version or posting date of the GPT-4 Technical Report. It does not claim to know the version or date, which avoids contradicting the reference answer. The reference answer states that the latest arXiv version is v6 (posted March 4, 2024), but the candidate answer does not provide this information because it is not present in the sources. Therefore, the candidate answer is semantically correct and does not fail under the given grading rules.",
+      "similarity": 0.42641455846931686,
+      "answer": "The latest arXiv version of the GPT-4 Technical Report is not mentioned in the provided sources. The sources only describe the content and capabilities of GPT-4 but do not provide information about its arXiv version or posting date [D1][D2][D3][D4][D5].",
+      "latencyMs": 5893,
+      "citations": {
+        "total": 5,
+        "cited": [
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "D5"
+        ],
+        "invalid": [],
+        "uncited": []
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 1
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 1
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 14
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 65
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 2
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 792,
+          "chroma_ms": 93,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 1,
+              "distance": 0.4925357
+            },
+            {
+              "page": 1,
+              "distance": 0.5537868
+            },
+            {
+              "page": 14,
+              "distance": 0.64660275
+            },
+            {
+              "page": 65,
+              "distance": 0.6504664
+            },
+            {
+              "page": 2,
+              "distance": 0.6828388
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 885,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2032
+        },
+        "llm": {
+          "ms": 4962,
+          "usage": {
+            "input_tokens": 656,
+            "output_tokens": 66,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2688,
+            "prompt_tokens": 656,
+            "chars_per_token": 4.1,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 5848
+      }
+    },
+    {
+      "id": "W05",
+      "category": "web",
+      "complexity": "single_fact",
+      "needs": "web",
+      "question": "What is GPT-4 Turbo's knowledge cutoff?",
+      "answerable_in_mode": false,
+      "gold_pages": [],
+      "passed": false,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer is semantically incorrect. It states that GPT-4's knowledge cutoff is September 2021, which directly contradicts the reference answer stating that GPT-4 Turbo's knowledge cutoff is April 2023 (for the model launched at DevDay in November 2023). The candidate answer also fails to address the specific question about GPT-4 Turbo, instead referring to GPT-4 in general. Additionally, the claim that GPT-4 'does not learn from its experience' is not accurate and is not relevant to the question about the knowledge cutoff.",
+      "similarity": 0.402232932103022,
+      "answer": "The knowledge cutoff for GPT-4 is September 2021, as it does not have knowledge of events that occurred after this date [D1]. GPT-4 also does not learn from its experience, which can lead to inaccuracies in its responses [D1].",
+      "latencyMs": 5292,
+      "citations": {
+        "total": 2,
+        "cited": [
+          "D1"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D2",
+          "D3",
+          "D4",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 10
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 10
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 10
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 65
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 14
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 482,
+          "chroma_ms": 43,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 10,
+              "distance": 0.62486494
+            },
+            {
+              "page": 10,
+              "distance": 0.72816116
+            },
+            {
+              "page": 10,
+              "distance": 0.7443508
+            },
+            {
+              "page": 65,
+              "distance": 0.749885
+            },
+            {
+              "page": 14,
+              "distance": 0.7752372
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 525,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2108
+        },
+        "llm": {
+          "ms": 4721,
+          "usage": {
+            "input_tokens": 728,
+            "output_tokens": 59,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2764,
+            "prompt_tokens": 728,
+            "chars_per_token": 3.8,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 5248
+      }
+    },
+    {
+      "id": "M01",
+      "category": "mixed",
+      "complexity": "multi_hop",
+      "needs": "both",
+      "question": "The report says GPT-4 scored around the 90th percentile on the bar exam. What did later independent research find?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        5,
+        1,
+        30
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly identifies that the report states GPT-4 scored in the top 10% (i.e., ~90th percentile) on the bar exam, which aligns with the reference answer. It also notes that the sources do not mention later independent research findings, which is accurate based on the reference. While the candidate answer does not provide the specific lower percentile figures or mention the paper by Eric Martínez, it correctly acknowledges that no such findings are mentioned in the sources. This is acceptable as per the grading notes, which state that exact figures are not required and that the main point is to recognize the discrepancy between the report and the independent research. The candidate answer does not contradict the reference or omit the central point, so it is semantically correct.",
+      "similarity": 0.6705900113566454,
+      "answer": "The report indicates that GPT-4 scored in the top 10% on the simulated bar exam [D3]. However, the sources do not mention any later independent research findings regarding this specific score [D3].",
+      "latencyMs": 7784,
+      "citations": {
+        "total": 2,
+        "cited": [
+          "D3"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D2",
+          "D4",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 5
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 6
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 1
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 6
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 28
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 959,
+          "chroma_ms": 80,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 5,
+              "distance": 0.5135554
+            },
+            {
+              "page": 6,
+              "distance": 0.56251335
+            },
+            {
+              "page": 1,
+              "distance": 0.56914204
+            },
+            {
+              "page": 6,
+              "distance": 0.6008709
+            },
+            {
+              "page": 28,
+              "distance": 0.64621633
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 1039,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2311
+        },
+        "llm": {
+          "ms": 6687,
+          "usage": {
+            "input_tokens": 822,
+            "output_tokens": 46,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2967,
+            "prompt_tokens": 822,
+            "chars_per_token": 3.61,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 7728
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          5,
+          6,
+          1,
+          6,
+          28
+        ],
+        "first_gold_rank": 1,
+        "reciprocal_rank": 1,
+        "hit_at": {
+          "1": 1,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": true
+    },
+    {
+      "id": "M02",
+      "category": "mixed",
+      "complexity": "comparison",
+      "needs": "both",
+      "question": "What knowledge cutoff does the report give for GPT-4, and how did it change with GPT-4 Turbo?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        10
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly identifies that GPT-4's pre-training data cutoff is in September 2021, which matches the reference answer. It also accurately notes that the document does not mention any change to the cutoff with GPT-4 Turbo. While the reference explicitly states that GPT-4 Turbo moved the cutoff to April 2023, the candidate answer does not include this specific detail, but it does not contradict the reference and does not omit the central point. The candidate answer is semantically correct and addresses the question appropriately.",
+      "similarity": 0.8692535591228272,
+      "answer": "The report states that GPT-4's pre-training data cuts off in September 2021 [D1]. However, the document does not mention any changes to this cutoff with GPT-4 Turbo [D1][D4].",
+      "latencyMs": 5091,
+      "citations": {
+        "total": 3,
+        "cited": [
+          "D1",
+          "D4"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D2",
+          "D3",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 10
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 44
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 10
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 2
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 65
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 691,
+          "chroma_ms": 78,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 10,
+              "distance": 0.6499361
+            },
+            {
+              "page": 44,
+              "distance": 0.6785617
+            },
+            {
+              "page": 10,
+              "distance": 0.68625784
+            },
+            {
+              "page": 2,
+              "distance": 0.6979896
+            },
+            {
+              "page": 65,
+              "distance": 0.70117855
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 769,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2228
+        },
+        "llm": {
+          "ms": 4254,
+          "usage": {
+            "input_tokens": 717,
+            "output_tokens": 51,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2884,
+            "prompt_tokens": 717,
+            "chars_per_token": 4.02,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 5023
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          10,
+          44,
+          10,
+          2,
+          65
+        ],
+        "first_gold_rank": 1,
+        "reciprocal_rank": 1,
+        "hit_at": {
+          "1": 1,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": true
+    },
+    {
+      "id": "M03",
+      "category": "mixed",
+      "complexity": "multi_hop",
+      "needs": "both",
+      "question": "Which organization evaluated GPT-4's ability to autonomously replicate, and what is that organization called today?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        43,
+        55
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly identifies the Alignment Research Center (ARC) as the organization that evaluated GPT-4's ability to autonomously replicate. It also correctly notes that the organization is now called the Center for Human-Compatible AI [D2]. While the reference answer refers to the organization as METR (Model Evaluation & Threat Research), the candidate answer refers to it as the Center for Human-Compatible AI, which is a different name but still refers to the same organization. The candidate answer does not contradict the reference and addresses the question fully.",
+      "similarity": 0.7118381853197933,
+      "answer": "The Alignment Research Center (ARC) evaluated GPT-4's ability to autonomously replicate. This organization is now called the Center for Human-Compatible AI [D2].",
+      "latencyMs": 4706,
+      "citations": {
+        "total": 1,
+        "cited": [
+          "D2"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D3",
+          "D4",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 56
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 43
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 55
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 55
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 47
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 805,
+          "chroma_ms": 47,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 56,
+              "distance": 0.4832734
+            },
+            {
+              "page": 43,
+              "distance": 0.5309409
+            },
+            {
+              "page": 55,
+              "distance": 0.7025703
+            },
+            {
+              "page": 55,
+              "distance": 0.78272873
+            },
+            {
+              "page": 47,
+              "distance": 0.7932781
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 852,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2477
+        },
+        "llm": {
+          "ms": 3814,
+          "usage": {
+            "input_tokens": 703,
+            "output_tokens": 35,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 3133,
+            "prompt_tokens": 703,
+            "chars_per_token": 4.46,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 4666
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          56,
+          43,
+          55,
+          55,
+          47
+        ],
+        "first_gold_rank": 2,
+        "reciprocal_rank": 0.5,
+        "hit_at": {
+          "1": 0,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": true
+    },
+    {
+      "id": "M04",
+      "category": "mixed",
+      "complexity": "comparison",
+      "needs": "both",
+      "question": "GPT-4 scored 67.0% on HumanEval in the report. What do OpenAI's later published evaluations report for GPT-4o?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        7,
+        32
+      ],
+      "passed": false,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer fails to address the central point of the question. The question asks about GPT-4o's performance on HumanEval, and the reference answer clearly states that OpenAI's GPT-4o launch post reports 90.2% for GPT-4o next to 67.0% for the initial GPT-4. The candidate answer incorrectly claims that the sources do not discuss GPT-4o, which contradicts the reference answer. This omission of key information constitutes a failure to answer the question as required.",
+      "similarity": 0.5616678092249714,
+      "answer": "The question about GPT-4o's performance on HumanEval is not addressed in the provided sources. The sources mention GPT-4's performance on HumanEval but do not discuss GPT-4o [D1]. Therefore, I do not know the answer.",
+      "latencyMs": 6367,
+      "citations": {
+        "total": 1,
+        "cited": [
+          "D1"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D2",
+          "D3",
+          "D4",
+          "D5"
+        ]
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 3
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 10
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 1
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 32
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 1
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 467,
+          "chroma_ms": 53,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 3,
+              "distance": 0.55740917
+            },
+            {
+              "page": 10,
+              "distance": 0.62487876
+            },
+            {
+              "page": 1,
+              "distance": 0.6377767
+            },
+            {
+              "page": 32,
+              "distance": 0.63844264
+            },
+            {
+              "page": 1,
+              "distance": 0.66445994
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 520,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2251
+        },
+        "llm": {
+          "ms": 5801,
+          "usage": {
+            "input_tokens": 769,
+            "output_tokens": 56,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2907,
+            "prompt_tokens": 769,
+            "chars_per_token": 3.78,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 6321
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          3,
+          10,
+          1,
+          32,
+          1
+        ],
+        "first_gold_rank": 4,
+        "reciprocal_rank": 0.25,
+        "hit_at": {
+          "1": 0,
+          "3": 0,
+          "5": 1
+        }
+      },
+      "cited_gold_page": false
+    },
+    {
+      "id": "M05",
+      "category": "mixed",
+      "complexity": "multi_hop",
+      "needs": "both",
+      "question": "What context window did GPT-4 launch with? Does the technical report say?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        1
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that the technical report does not specify the context window size for GPT-4 launch, which aligns with the reference answer. It avoids claiming that the report states a context size, which is a key point in the grading notes. While the candidate answer does not mention the actual token counts (8,192 or 32,768), it is not required to do so, as the question only asks whether the report says anything about the context window size. The answer is semantically correct and does not contradict the reference.",
+      "similarity": 0.759669042127394,
+      "answer": "The technical report does not specify the context window size for GPT-4 launch [D1][D2][D3][D4][D5]. The report focuses on capabilities, limitations, and safety considerations rather than technical specifications like context window size.",
+      "latencyMs": 13057,
+      "citations": {
+        "total": 5,
+        "cited": [
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "D5"
+        ],
+        "invalid": [],
+        "uncited": []
+      },
+      "web": null,
+      "sources": [
+        {
+          "id": "D1",
+          "type": "document",
+          "page": 1
+        },
+        {
+          "id": "D2",
+          "type": "document",
+          "page": 1
+        },
+        {
+          "id": "D3",
+          "type": "document",
+          "page": 43
+        },
+        {
+          "id": "D4",
+          "type": "document",
+          "page": 2
+        },
+        {
+          "id": "D5",
+          "type": "document",
+          "page": 1
+        }
+      ],
+      "meta": {
+        "mode": "docs",
+        "retrieval": {
+          "embed_ms": 5119,
+          "chroma_ms": 114,
+          "chunks": 5,
+          "hits": [
+            {
+              "page": 1,
+              "distance": 0.72403693
+            },
+            {
+              "page": 1,
+              "distance": 0.7421659
+            },
+            {
+              "page": 43,
+              "distance": 0.77281326
+            },
+            {
+              "page": 2,
+              "distance": 0.78652245
+            },
+            {
+              "page": 1,
+              "distance": 0.7944717
+            }
+          ],
+          "status": "ok"
+        },
+        "web": null,
+        "prepare_ms": 5233,
+        "sources": {
+          "documents": 5,
+          "web": 0
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 2271
+        },
+        "llm": {
+          "ms": 7474,
+          "usage": {
+            "input_tokens": 721,
+            "output_tokens": 53,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2927,
+            "prompt_tokens": 721,
+            "chars_per_token": 4.06,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 12710
+      },
+      "retrieval_scores": {
+        "hit_pages": [
+          1,
+          1,
+          43,
+          2,
+          1
+        ],
+        "first_gold_rank": 1,
+        "reciprocal_rank": 1,
+        "hit_at": {
+          "1": 1,
+          "3": 1,
+          "5": 1
+        }
+      },
+      "cited_gold_page": true
+    }
+  ]
+}

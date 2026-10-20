@@ -1,0 +1,3259 @@
+{
+  "runAt": "2026-10-20T01:07:20.397Z",
+  "server": "http://localhost:5001",
+  "documentId": "4f6d1f1d-569a-46b1-aef9-0ce5ced915f9",
+  "git": {
+    "commit": "c239d9318226cd8b7a1b188bbc0bd764a086ef31",
+    "dirty": false
+  },
+  "runtime": {
+    "llm": {
+      "runtime": "ollama",
+      "baseURL": "http://localhost:11434/v1",
+      "model": "qa-qwen3-8b-32k",
+      "disableThinking": true,
+      "contextTokens": 32768,
+      "maxOutputTokens": 1024,
+      "temperature": 0,
+      "seed": 1,
+      "timeoutMs": 120000,
+      "maxRetries": 2
+    },
+    "embedding": {
+      "baseURL": "http://localhost:11434/v1",
+      "model": "qwen3-embedding:0.6b",
+      "queryInstruction": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+      "batchSize": 32
+    },
+    "retrieval": {
+      "top_k": 5,
+      "chunk_size": 500,
+      "chunk_overlap": 50
+    },
+    "web_search": {
+      "provider": "serpapi",
+      "transport": "mcp",
+      "num": 5,
+      "timeoutMs": 8000,
+      "attemptTimeoutMs": 3000,
+      "retries": 2
+    },
+    "prompt": {
+      "instructions_sha1": "5909347e2caf"
+    },
+    "serving": {
+      "server": "ollama",
+      "version": "0.33.2",
+      "models": [
+        {
+          "name": "qa-qwen3-8b-32k",
+          "digest": "365415f081c0b8f003dad729b765e948a3f6588a99dd508e8aa941043f976b5b",
+          "quantization": "Q4_K_M",
+          "parameter_size": "8.2B",
+          "family": "qwen3",
+          "parent_model": "qwen3:8b",
+          "parameters": "num_ctx                        32768\nrepeat_penalty                 1\nstop                           \"<|im_start|>\"\nstop                           \"<|im_end|>\"\ntemperature                    0.6\ntop_k                          20\ntop_p                          0.95"
+        },
+        {
+          "name": "qwen3-embedding:0.6b",
+          "digest": "ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d",
+          "quantization": "Q8_0",
+          "parameter_size": "595.78M",
+          "family": "qwen3",
+          "parent_model": "/Users/ollama/.ollama/models/blobs/sha256-06507c7b42688469c4e7298b0a1e16deff06caf291cf0a5b278c308249c3e439",
+          "parameters": null
+        }
+      ]
+    }
+  },
+  "dataset": {
+    "path": "eval/datasets/gpt4-report.v1.json",
+    "name": "gpt4-report",
+    "version": "1",
+    "status": "APPROVED",
+    "sha1": "708379b2061061c333c19b908c6e26e516aa1e7c",
+    "ids": "all"
+  },
+  "judgeModel": "qa-qwen3-8b-32k",
+  "mode": "web",
+  "grading": {
+    "mode": "judge",
+    "low": 0.6,
+    "high": 0.85
+  },
+  "summary": {
+    "n": 35,
+    "passed": 23,
+    "answerable": {
+      "n": 5,
+      "passed": 3
+    },
+    "retrieval": null,
+    "cited_gold_page": null,
+    "retrieval_ks": [
+      1,
+      3,
+      5
+    ],
+    "by_category": {
+      "doc_prose": {
+        "n": 13,
+        "passed": 11,
+        "answerable": {
+          "n": 0,
+          "passed": 0
+        },
+        "retrieval": null,
+        "cited_gold_page": null
+      },
+      "doc_table": {
+        "n": 8,
+        "passed": 5,
+        "answerable": {
+          "n": 0,
+          "passed": 0
+        },
+        "retrieval": null,
+        "cited_gold_page": null
+      },
+      "doc_undisclosed": {
+        "n": 4,
+        "passed": 2,
+        "answerable": {
+          "n": 0,
+          "passed": 0
+        },
+        "retrieval": null,
+        "cited_gold_page": null
+      },
+      "web": {
+        "n": 5,
+        "passed": 3,
+        "answerable": {
+          "n": 5,
+          "passed": 3
+        },
+        "retrieval": null,
+        "cited_gold_page": null
+      },
+      "mixed": {
+        "n": 5,
+        "passed": 2,
+        "answerable": {
+          "n": 0,
+          "passed": 0
+        },
+        "retrieval": null,
+        "cited_gold_page": null
+      }
+    },
+    "by_complexity": {
+      "single_fact": {
+        "n": 16,
+        "passed": 10,
+        "answerable": {
+          "n": 5,
+          "passed": 3
+        },
+        "retrieval": null,
+        "cited_gold_page": null
+      },
+      "explanation": {
+        "n": 3,
+        "passed": 3,
+        "answerable": {
+          "n": 0,
+          "passed": 0
+        },
+        "retrieval": null,
+        "cited_gold_page": null
+      },
+      "synthesis": {
+        "n": 3,
+        "passed": 2,
+        "answerable": {
+          "n": 0,
+          "passed": 0
+        },
+        "retrieval": null,
+        "cited_gold_page": null
+      },
+      "comparison": {
+        "n": 6,
+        "passed": 4,
+        "answerable": {
+          "n": 0,
+          "passed": 0
+        },
+        "retrieval": null,
+        "cited_gold_page": null
+      },
+      "table_lookup": {
+        "n": 4,
+        "passed": 2,
+        "answerable": {
+          "n": 0,
+          "passed": 0
+        },
+        "retrieval": null,
+        "cited_gold_page": null
+      },
+      "multi_hop": {
+        "n": 3,
+        "passed": 2,
+        "answerable": {
+          "n": 0,
+          "passed": 0
+        },
+        "retrieval": null,
+        "cited_gold_page": null
+      }
+    },
+    "latency_ms": {
+      "search_ms": {
+        "n": 31,
+        "p50": 1108,
+        "p95": 3457
+      },
+      "prepare_ms": {
+        "n": 31,
+        "p50": 1109,
+        "p95": 3457
+      },
+      "llm_ms": {
+        "n": 31,
+        "p50": 6260,
+        "p95": 9230
+      },
+      "total_ms": {
+        "n": 31,
+        "p50": 7445,
+        "p95": 11753
+      }
+    },
+    "httpErrors": 4,
+    "requestErrors": 0,
+    "responsesMissingHits": 0,
+    "answersWithValidCitation": 25,
+    "invalidCitationLabels": 1,
+    "webStatus": {
+      "ok": 31,
+      "n/a": 4
+    }
+  },
+  "cases": [
+    {
+      "id": "P01",
+      "category": "doc_prose",
+      "complexity": "single_fact",
+      "needs": "doc",
+      "question": "According to the report, when does most of GPT-4's pre-training data cut off?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        10
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly identifies that most of GPT-4's pre-training data cuts off in September 2021, which matches the reference answer. It also mentions the inclusion of a small amount of more recent data in pre- and post-training, which aligns with the reference's note. The answer is semantically correct and accurately reflects the central point without contradiction or omission.",
+      "similarity": 0.6126835360659633,
+      "answer": "Most of GPT-4's pre-training data cuts off in September 2021 [W4]. The pre-training and post-training data contain a small amount of more recent data, but the majority is from September 2021 [W4].",
+      "latencyMs": 9657,
+      "citations": {
+        "total": 2,
+        "cited": [
+          "W4"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W1",
+          "W2",
+          "W3",
+          "W5"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://community.openai.com/t/gpt-4-turbo-knowledge-cutoff-issues/728680"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://blog.sshh.io/p/exploring-claudegpt-knowledge-cutoffs"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://www.reddit.com/r/OpenAI/comments/11vjsfb/help_me_understand_why_gpt4_has_a_cutoff_date_im/"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://www.mofo.com/resources/insights/230315-gpt-4-release-deep-dive-briefing-improvements"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://rankscope.ai/blog/chatgpt-knowledge-cutoff"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 1795,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 1798,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1594
+        },
+        "llm": {
+          "ms": 7663,
+          "usage": {
+            "input_tokens": 666,
+            "output_tokens": 55,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2250,
+            "prompt_tokens": 666,
+            "chars_per_token": 3.38,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 9468
+      }
+    },
+    {
+      "id": "P02",
+      "category": "doc_prose",
+      "complexity": "single_fact",
+      "needs": "doc",
+      "question": "How was GPT-4 fine-tuned after pre-training?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        2
+      ],
+      "passed": false,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer is **not semantically correct**. While it mentions fine-tuning and some general aspects of the process, it **omits the central point** that GPT-4 was fine-tuned using **Reinforcement Learning from Human Feedback (RLHF)**, which is the **key detail** in the reference answer. The candidate answer instead focuses on training on a new dataset with a smaller learning rate, which is **not the primary method** used for GPT-4 fine-tuning. This omission of the central point means the answer **does not fully address the question** as intended by the reference.",
+      "similarity": 0.2881502720043104,
+      "answer": "GPT-4 was fine-tuned after pre-training by training the model on a new dataset using a smaller learning rate than the one used during pre-training [D1]. This process allows the model to adapt to specific tasks or data types, such as handling visual data, which GPT-4 is capable of [W3]. The fine-tuning process is crucial for customizing the model to fit unique needs [W5]. However, the exact details of the fine-tuning process for GPT-4 are not fully disclosed in the provided sources.",
+      "latencyMs": 10450,
+      "citations": {
+        "total": 3,
+        "cited": [
+          "W3",
+          "W5"
+        ],
+        "invalid": [
+          "D1"
+        ],
+        "uncited": [
+          "W1",
+          "W2",
+          "W4"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://community.openai.com/t/how-does-fine-tuning-really-work/39972"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://www.reddit.com/r/OpenAI/comments/1bj9vbi/first_experiences_with_gpt4_finetuning/"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://encord.com/blog/vision-fine-tuning-with-openais-gpt-4/"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://arxiv.org/html/2408.06663v1"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://dev.to/dinakajoy/fine-tuning-gpt-4-customizing-llms-to-fit-our-unique-need-145h"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 1120,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 1130,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1426
+        },
+        "llm": {
+          "ms": 9230,
+          "usage": {
+            "input_tokens": 614,
+            "output_tokens": 113,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2082,
+            "prompt_tokens": 614,
+            "chars_per_token": 3.39,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 10371
+      }
+    },
+    {
+      "id": "P03",
+      "category": "doc_prose",
+      "complexity": "single_fact",
+      "needs": "doc",
+      "question": "How much less compute did the smaller models used to predict GPT-4's performance use?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        1,
+        2
+      ],
+      "passed": false,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer is **not semantically correct**. It claims the smaller models used **about 40% of the compute** of GPT-4, which **contradicts the reference answer**. The reference clearly states that the smaller models used **between 1,000x and 10,000x less compute** than GPT-4, meaning they used **less than 0.1%** of GPT-4's compute. The candidate's answer incorrectly implies the smaller models used a **significant portion** of GPT-4's compute, which is **factually incorrect** and **fails to answer the question** as intended.",
+      "similarity": 0.6600485827265532,
+      "answer": "The smaller models used about 40% of the compute of GPT-4. This estimate is based on authors reporting they used \"40% of the compute of GPT-4\" [W4]. However, the exact amount of compute used by GPT-4 itself is estimated to be around 8.4e24 FLOPs [W4]. Thus, the smaller models used significantly less compute compared to GPT-4.",
+      "latencyMs": 9511,
+      "citations": {
+        "total": 2,
+        "cited": [
+          "W4"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W1",
+          "W2",
+          "W3",
+          "W5"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://www.lesswrong.com/posts/iQx2eeHKLwgBYdWPZ/retrospective-on-gpt-predictions-after-the-release-of-gpt-4"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://www.reddit.com/r/mlscaling/comments/1ebt2ut/did_we_grossly_overestimate_the_gpt4_parameters/"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://epochai.substack.com/p/why-gpt-5-used-less-training-compute"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://epoch.ai/data-insights/models-over-1e25-flop"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://www.researchgate.net/figure/Performance-of-GPT-4-and-smaller-models-The-metric-is-mean-log-pass-rate-on-a-subset-of_fig1_369897711"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 1801,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 1803,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1717
+        },
+        "llm": {
+          "ms": 7661,
+          "usage": {
+            "input_tokens": 694,
+            "output_tokens": 94,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2373,
+            "prompt_tokens": 694,
+            "chars_per_token": 3.42,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 9468
+      }
+    },
+    {
+      "id": "P04",
+      "category": "doc_prose",
+      "complexity": "explanation",
+      "needs": "doc",
+      "question": "What are rule-based reward models (RBRMs) and how were they used in training GPT-4?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        12,
+        13,
+        62
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer is semantically correct. It accurately describes rule-based reward models (RBRMs) as using clear, simple rules to evaluate model outputs for safety, which aligns with the reference answer's description of classifiers that provide a reward signal during RLHF fine-tuning. It also mentions their use in training by defining rules for desired/undesired behaviors, such as avoiding judgmental refusals, which is consistent with the reference. While the candidate answer does not explicitly mention the 'zero-shot classifiers' or 'human-written rubric' from the reference, it captures the central idea of using rule-based systems to guide model behavior during training. The mention of 'Rrm' and model sizes is not central to the question and does not contradict the reference.",
+      "similarity": 0.6168117288656217,
+      "answer": "Rule-based reward models (RBRMs) use clear, simple, and step-by-step rules to evaluate if a model's outputs meet safety standards, unlike human feedback [W1]. These models were used in training by employing a collection of rules for desired or undesired behaviors, such as ensuring refusals are not judgmental [W2]. The default reward model, Rrm, used during RL training involved 4 model sizes, with the largest being comparable to GPT-4 but with reduced data [W4].",
+      "latencyMs": 9168,
+      "citations": {
+        "total": 3,
+        "cited": [
+          "W1",
+          "W2",
+          "W4"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W3",
+          "W5"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://openai.com/index/improving-model-safety-behavior-with-rule-based-rewards/"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://arxiv.org/html/2411.01111v1"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://cameronrwolfe.substack.com/p/rubric-rl"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://proceedings.neurips.cc/paper_files/paper/2024/file/c4e380fb74dec9da9c7212e834657aa9-Paper-Conference.pdf"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://www.apolo.us/blog-posts/reward-modeling-in-reinforcement-learning"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 1586,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 1588,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1549
+        },
+        "llm": {
+          "ms": 7509,
+          "usage": {
+            "input_tokens": 598,
+            "output_tokens": 107,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2205,
+            "prompt_tokens": 598,
+            "chars_per_token": 3.69,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 9099
+      }
+    },
+    {
+      "id": "P05",
+      "category": "doc_prose",
+      "complexity": "single_fact",
+      "needs": "doc",
+      "question": "By how much did GPT-4 reduce its tendency to respond to requests for disallowed content compared with GPT-3.5?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        13,
+        62
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that the question cannot be answered based on the provided sources and notes that none of the sources mention GPT-4 or its reduction in responding to disallowed content compared with GPT-3.5. This aligns with the reference answer, which provides a specific percentage (82%), but the candidate answer is not failing because it is not claiming to have the answer—it is correctly identifying that the answer is not available in the provided sources. The central point—that the question cannot be answered with the given information—is preserved, and there is no contradiction with the reference answer.",
+      "similarity": 0.23035521201683046,
+      "answer": "The question cannot be answered based on the provided sources. None of the sources mention GPT-4 or its reduction in responding to requests for disallowed content compared with GPT-3.5.",
+      "latencyMs": 4950,
+      "citations": {
+        "total": 0,
+        "cited": [],
+        "invalid": [],
+        "uncited": [
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://www.compared.edu.au/"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/12761364/"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://www.reuters.com/world/us/jd-vance-once-compared-trump-hitler-now-they-are-running-mates-2024-07-15/"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://www.nejm.org/doi/10.1056/NEJMoa2416394"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://www.youtube.com/shorts/9lmpBqaiGtI"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 1025,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 1030,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1470
+        },
+        "llm": {
+          "ms": 3881,
+          "usage": {
+            "input_tokens": 564,
+            "output_tokens": 41,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2126,
+            "prompt_tokens": 564,
+            "chars_per_token": 3.77,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 4912
+      }
+    },
+    {
+      "id": "P06",
+      "category": "doc_prose",
+      "complexity": "explanation",
+      "needs": "doc",
+      "question": "How did the authors check whether exam and benchmark questions appeared in GPT-4's pre-training data?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        28,
+        29
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly identifies that the provided sources are unrelated to the question about how authors checked for the presence of exam and benchmark questions in GPT-4's pre-training data. It acknowledges that the sources discuss DID and not the evaluation methodology. While it does not provide the method described in the reference answer (substring match), it correctly states that the answer cannot be derived from the given sources. This is semantically correct and does not contradict the reference, nor does it omit the central point — that the sources do not address the question.",
+      "similarity": 0.3316954029900257,
+      "answer": "The question is unrelated to the provided sources, which discuss Dissociative Identity Disorder (DID), its symptoms, diagnosis, and related topics. None of the sources address how authors checked for the presence of exam and benchmark questions in GPT-4's pre-training data. Therefore, I don't know the answer to this question based on the given sources.",
+      "latencyMs": 6644,
+      "citations": {
+        "total": 0,
+        "cited": [],
+        "invalid": [],
+        "uncited": [
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://my.clevelandclinic.org/health/diseases/9792-dissociative-identity-disorder-multiple-personality-disorder"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://en.wikipedia.org/wiki/Dissociative_identity_disorder"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://www.didchain.com/?srsltid=AU7gw4WNb1NuJdd2oxLd5mb_FqAdUSVK4Ql4k4KFZuRWR1XJYkVC30sI"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://www.reddit.com/r/DID/"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://www.youtube.com/watch?v=UstyVx6NQWk"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 1003,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 1004,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1432
+        },
+        "llm": {
+          "ms": 5590,
+          "usage": {
+            "input_tokens": 549,
+            "output_tokens": 73,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2088,
+            "prompt_tokens": 549,
+            "chars_per_token": 3.8,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 6606
+      }
+    },
+    {
+      "id": "P07",
+      "category": "doc_prose",
+      "complexity": "synthesis",
+      "needs": "doc",
+      "question": "What happened to GPT-4's calibration after post-training?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        10,
+        11,
+        12
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that GPT-4's calibration was reduced after post-training, which aligns with the reference answer. It also acknowledges that the initial post-training steps did not fully resolve the calibration issues, which is consistent with the reference. While the candidate answer introduces additional information about new post-training techniques (not present in the reference), this does not contradict the reference and is not required for correctness. The candidate answer does not omit the central point and does not contradict the reference. Therefore, it is semantically correct.",
+      "similarity": 0.5712709161546339,
+      "answer": "After post-training, GPT-4's calibration was reduced due to the post-training process [W1]. However, new post-training techniques have since been developed to restore calibration for aligned large language models [W3]. These techniques are part of efforts to enhance model safety without requiring a complete rebuild [W5]. The calibration issues with GPT-4 were not fully resolved by the initial post-training steps [W1].",
+      "latencyMs": 10733,
+      "citations": {
+        "total": 4,
+        "cited": [
+          "W1",
+          "W3",
+          "W5"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W2",
+          "W4"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://openai.com/index/gpt-4-research/"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://epoch.ai/gradient-updates/why-gpt5-used-less-training-compute-than-gpt45-but-gpt6-probably-wont"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://arxiv.org/html/2505.01997v3"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://www.normaltech.ai/p/is-gpt-4-getting-worse-over-time"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://iamdgarcia.medium.com/how-to-implement-post-training-calibration-for-safer-ai-outputs-d9c186da9e4a"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 1571,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 1572,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1503
+        },
+        "llm": {
+          "ms": 9131,
+          "usage": {
+            "input_tokens": 582,
+            "output_tokens": 86,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2159,
+            "prompt_tokens": 582,
+            "chars_per_token": 3.71,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 10704
+      }
+    },
+    {
+      "id": "P08",
+      "category": "doc_prose",
+      "complexity": "comparison",
+      "needs": "doc",
+      "question": "In the system card, what is the difference between GPT-4-early and GPT-4-launch?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        42,
+        43
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly identifies that GPT-4-early was fine-tuned for instruction following with minimal safety mitigations, and GPT-4-launch was further fine-tuned for helpfulness and harmlessness with more robust safety measures. It also mentions that both versions have similar limitations as earlier models, which aligns with the reference answer. While the candidate answer includes additional details about release dates and integration into Bing Chat, these are not central to the question and do not contradict the reference. The answer is semantically correct and addresses the question appropriately.",
+      "similarity": 0.7521810080475536,
+      "answer": "The GPT-4-early version was fine-tuned for following instructions, while the GPT-4-launch version mitigated some risks [W3]. Both versions exhibit similar limitations as earlier language models, such as producing biased and inaccurate outputs [W1]. The GPT-4-launch version was released in March 2023, integrated into Bing Chat in February 2023 [W2]. The differences between these versions are highlighted in their system card [W3].",
+      "latencyMs": 8174,
+      "citations": {
+        "total": 4,
+        "cited": [
+          "W3",
+          "W1",
+          "W2"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W4",
+          "W5"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://cdn.openai.com/papers/gpt-4-system-card.pdf"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://en.wikipedia.org/wiki/GPT-4"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://www.lesswrong.com/posts/jdCCBwdPqDNnzkkrm/gpt-4-what-we-i-know-about-it"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://www.reddit.com/r/singularity/comments/1izn175/openai_gpt45_system_card/"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://www.folio3.com/ai/blog/gpt-4-vs-gpt-5"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 728,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 729,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1327
+        },
+        "llm": {
+          "ms": 7353,
+          "usage": {
+            "input_tokens": 594,
+            "output_tokens": 101,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 1983,
+            "prompt_tokens": 594,
+            "chars_per_token": 3.34,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 8082
+      }
+    },
+    {
+      "id": "P09",
+      "category": "doc_prose",
+      "complexity": "synthesis",
+      "needs": "doc",
+      "question": "What did the Alignment Research Center conclude about GPT-4's ability to autonomously replicate?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        43,
+        55
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly conveys the central point of the reference answer: that the Alignment Research Center (ARC) concluded GPT-4 is probably not yet capable of autonomously replicating and gathering resources. It mentions the preliminary nature of the evaluation, the lack of fine-tuning access, and the focus on dangerous capabilities — all of which align with the reference. While the candidate answer adds additional context (e.g., references to other evaluations and experiments), it does not contradict the reference and remains semantically correct.",
+      "similarity": 0.545036596003228,
+      "answer": "The Alignment Research Center concluded that GPT-4 was ineffective at autonomously replicating, based on preliminary assessments conducted without task-specific fine-tuning [W4]. This conclusion aligns with findings from other evaluations, which also noted that GPT-4 did not demonstrate sufficient capabilities to replicate autonomously and become self-sustaining [W3]. The experiments aimed to test whether GPT-4 could escape human control or take over the world, but the results indicated otherwise [W2]. These assessments were part of broader efforts to evaluate the dangerous capabilities of advanced AI systems [W5].",
+      "latencyMs": 10761,
+      "citations": {
+        "total": 4,
+        "cited": [
+          "W4",
+          "W3",
+          "W2",
+          "W5"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W1"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://www.reddit.com/r/singularity/comments/11rfs22/openais_arc_challenges_gpt4_to_reproduce_and/"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://arstechnica.com/information-technology/2023/03/openai-checked-to-see-whether-gpt-4-could-take-over-the-world/"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://www.alignmentforum.org/posts/4Gt42jX7RiaNaxCwP/more-information-about-the-dangerous-capability-evaluations"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://www.lesswrong.com/posts/NQ85WRcLkjnTudzdg/arc-tests-to-see-if-gpt-4-can-escape-human-control-gpt-4"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://www.sciencedirect.com/science/article/pii/S2950162824000316"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 1732,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 1738,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1756
+        },
+        "llm": {
+          "ms": 8915,
+          "usage": {
+            "input_tokens": 650,
+            "output_tokens": 120,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2412,
+            "prompt_tokens": 650,
+            "chars_per_token": 3.71,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 10657
+      }
+    },
+    {
+      "id": "P10",
+      "category": "doc_prose",
+      "complexity": "single_fact",
+      "needs": "doc",
+      "question": "How many external experts did OpenAI engage to adversarially test GPT-4?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        12,
+        42
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly acknowledges that the sources do not provide information about the number of external experts OpenAI engaged to adversarially test GPT-4. It does not contradict the reference answer, nor does it omit the central point — namely, that the number of experts is not specified in the provided sources. The answer is semantically correct and appropriately responds to the question by stating that the information is not available.",
+      "similarity": 0.45885798429672664,
+      "answer": "The sources provided do not mention how many external experts OpenAI engaged to adversarially test GPT-4. Therefore, I don't know the answer to this question.",
+      "latencyMs": 4593,
+      "citations": {
+        "total": 0,
+        "cited": [],
+        "invalid": [],
+        "uncited": [
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://chatgpt.com/"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://openai.com/index/gpt-4/"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://en.wikipedia.org/wiki/Generative_pre-trained_transformer"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://aws.amazon.com/what-is/gpt/"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://www.reddit.com/r/microsoft_365_copilot/comments/1x5iz88/are_they_fr_removing_the_gpt_model_selector/"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 964,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 967,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1333
+        },
+        "llm": {
+          "ms": 3574,
+          "usage": {
+            "input_tokens": 538,
+            "output_tokens": 36,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 1989,
+            "prompt_tokens": 538,
+            "chars_per_token": 3.7,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 4543
+      }
+    },
+    {
+      "id": "P11",
+      "category": "doc_prose",
+      "complexity": "single_fact",
+      "needs": "doc",
+      "question": "On translated versions of MMLU, in how many languages did GPT-4 beat the English-language state of the art?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        1
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly acknowledges that GPT-4 outperformed the English-language state of the art on translated versions of MMLU in some languages, but does not provide a specific number. It also notes that the exact count is not specified in the sources, which aligns with the reference answer's implication that the number is 24 out of 26. The candidate answer does not contradict the reference and does not omit the central point — it correctly identifies that the number is not explicitly stated in the sources. Therefore, the candidate answer is semantically correct.",
+      "similarity": 0.513671623802791,
+      "answer": "GPT-4 achieved higher performance on translated versions of MMLU compared to English in some languages, but the exact number of languages where it beat the English-language state of the art is not specified in the sources [W1][W4]. The sources mention GPT-4's performance on MMLU and MMLU-Pro but do not provide a clear count of languages where it outperformed English [W1][W4].",
+      "latencyMs": 7205,
+      "citations": {
+        "total": 4,
+        "cited": [
+          "W1",
+          "W4"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W2",
+          "W3",
+          "W5"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://medium.com/@vbsowmya/multilingual-evaluations-in-llms-a-comparison-1d58b0fd9848"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://arxiv.org/html/2503.10497v1"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://www.reddit.com/r/singularity/comments/163uk4t/gpt4_might_be_smarter_than_you_think_890_on_mmlu/"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://intuitionlabs.ai/articles/mmlu-pro-ai-benchmark-explained"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://www.emergentmind.com/topics/multilingual-mmlu"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 1153,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 1155,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1531
+        },
+        "llm": {
+          "ms": 6011,
+          "usage": {
+            "input_tokens": 670,
+            "output_tokens": 91,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2187,
+            "prompt_tokens": 670,
+            "chars_per_token": 3.26,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 7169
+      }
+    },
+    {
+      "id": "P12",
+      "category": "doc_prose",
+      "complexity": "single_fact",
+      "needs": "doc",
+      "question": "On which Inverse Scaling Prize task does the report show GPT-4 reversing the inverse-scaling trend?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        4
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly identifies that GPT-4 reverses the inverse-scaling trend on the task called Hindsight Neglect, which matches the reference answer. It also provides additional context about the Inverse Scaling Prize and the concept of inverse scaling, which is consistent with the reference. The answer does not contradict the reference and directly answers the question. The inclusion of references [W2][W3][W4][W5] is not required for correctness, as the question only asks for the task name. Therefore, the candidate answer is semantically correct.",
+      "similarity": 0.49543997805827195,
+      "answer": "The report shows GPT-4 reversing the inverse-scaling trend on the task called Hindsight Neglect [40] as mentioned in the GPT-4 Technical Report [W3]. This task is specifically highlighted in the context of inverse scaling. The Inverse Scaling Prize aims to identify such tasks where large models perform worse as they scale [W4]. The concept of inverse scaling is further explored in academic works that discuss its implications on large language models [W2][W5].",
+      "latencyMs": 6878,
+      "citations": {
+        "total": 4,
+        "cited": [
+          "W3",
+          "W4",
+          "W2",
+          "W5"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W1"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://datasciencedojo.com/blog/inverse-scaling-in-language-models/"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://openreview.net/pdf?id=J5XFN1NL2C"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://arxiv.org/html/2303.08774v1"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://github.com/inverse-scaling/prize/activity"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://www.researchgate.net/publication/395005699_When_More_Thinking_Makes_AI_Worse_Understanding_Inverse_Scaling_in_Large_Language_Models"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 614,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 615,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1418
+        },
+        "llm": {
+          "ms": 6233,
+          "usage": {
+            "input_tokens": 559,
+            "output_tokens": 100,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2074,
+            "prompt_tokens": 559,
+            "chars_per_token": 3.71,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 6849
+      }
+    },
+    {
+      "id": "P13",
+      "category": "doc_prose",
+      "complexity": "single_fact",
+      "needs": "doc",
+      "question": "How much better did GPT-4 do than GPT-3.5 on OpenAI's internal adversarially-designed factuality evaluations?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        10,
+        46
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that GPT-4 scored 19 percentage points higher than GPT-3.5 on OpenAI's internal adversarially-designed factuality evaluations, which matches the central point of the reference answer. It does not contradict the reference and directly answers the question. While it adds additional context about the improvement being noted across multiple evaluations and being part of the model's key advancements, this does not change the factual accuracy of the core claim. Therefore, the candidate answer is semantically correct.",
+      "similarity": 0.7322971852597413,
+      "answer": "GPT-4 scored 19 percentage points higher than GPT-3.5 on OpenAI's internal adversarially-designed factuality evaluations [W2][W3][W4]. This improvement was noted across multiple evaluations and is part of the model's key advancements [W3]. The results highlight GPT-4's enhanced performance in factuality compared to its predecessor [W4].",
+      "latencyMs": 7389,
+      "citations": {
+        "total": 5,
+        "cited": [
+          "W2",
+          "W3",
+          "W4"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W1",
+          "W5"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://openai.com/index/gpt-4-research/"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://www.mofo.com/resources/insights/230315-gpt-4-release-deep-dive-briefing-improvements"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://www.alphaxiv.org/abs/2303.08774"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://www.preprints.org/manuscript/202303.0422"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://www.reddit.com/r/ChatGPTPro/comments/1j55h6m/gpt45_is_here_but_is_it_really_an_upgrade_my/"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 953,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 957,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1438
+        },
+        "llm": {
+          "ms": 6375,
+          "usage": {
+            "input_tokens": 638,
+            "output_tokens": 82,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2094,
+            "prompt_tokens": 638,
+            "chars_per_token": 3.28,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 7348
+      }
+    },
+    {
+      "id": "T01",
+      "category": "doc_table",
+      "complexity": "table_lookup",
+      "needs": "doc",
+      "question": "What score and percentile did GPT-4 get on the Uniform Bar Exam?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        5,
+        1,
+        30
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that the provided sources do not contain information about GPT-4's performance on the Uniform Bar Exam. While the reference answer provides specific scores and percentiles, the candidate answer does not contradict the reference and accurately reflects the lack of supporting information in the provided sources. It directly answers the question by acknowledging the absence of relevant data.",
+      "similarity": 0.36384011514926107,
+      "answer": "The provided sources do not contain any information about GPT-4's performance on the Uniform Bar Exam. [W1][W2][W3][W4][W5]",
+      "latencyMs": 4666,
+      "citations": {
+        "total": 5,
+        "cited": [
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ],
+        "invalid": [],
+        "uncited": []
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://examsoft.com/"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://www.examfx.com/"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://www.imdb.com/title/tt1258197/"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://www.examinations.ie/"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://www.cmu.edu/teaching/designteach/teach/examwrappers/"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 1084,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 1087,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1045
+        },
+        "llm": {
+          "ms": 3549,
+          "usage": {
+            "input_tokens": 414,
+            "output_tokens": 38,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 1701,
+            "prompt_tokens": 414,
+            "chars_per_token": 4.11,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 4638
+      }
+    },
+    {
+      "id": "T02",
+      "category": "doc_table",
+      "complexity": "table_lookup",
+      "needs": "doc",
+      "question": "What did GPT-3.5 score on the LSAT in Table 1?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        5
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that GPT-3.5 scored around the 40th percentile on the LSAT, which aligns with the reference answer. It does not mention GPT-4's score, which is appropriate since the question specifically asks about GPT-3.5. The answer does not confuse GPT-4's score with GPT-3.5's, and it acknowledges that the exact score is not specified in the sources, which is consistent with the reference answer's phrasing. Therefore, the answer is semantically correct and passes the grading criteria.",
+      "similarity": 0.7066222029421767,
+      "answer": "GPT-3.5 scored around the 40th percentile on the LSAT according to the sources [W2]. The exact score is not specified in the provided sources [W1][W2].",
+      "latencyMs": 5958,
+      "citations": {
+        "total": 3,
+        "cited": [
+          "W2",
+          "W1"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://arxiv.org/html/2604.10034v1?ref=legaled.ai"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://www.centeraipolicy.org/work/openai-unhobbles-o1-epitomizing-the-relentless-pace-of-ai-progress"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://www.facebook.com/CallSam/videos/did-you-know-chat-gpt-scored-a-perfect-score-in-the-lsat/1487197206116969/"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://www.reddit.com/r/MachineLearning/comments/13ovc04/r_gpt4_didnt_really_score_90th_percentile_on_the/"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10884900/"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 1085,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 1086,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1569
+        },
+        "llm": {
+          "ms": 4843,
+          "usage": {
+            "input_tokens": 694,
+            "output_tokens": 44,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2225,
+            "prompt_tokens": 694,
+            "chars_per_token": 3.21,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 5932
+      }
+    },
+    {
+      "id": "T03",
+      "category": "doc_table",
+      "complexity": "table_lookup",
+      "needs": "doc",
+      "question": "What Codeforces rating did GPT-4 achieve?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        5
+      ],
+      "passed": false,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer contradicts the reference answer. The reference states that GPT-4 achieved a Codeforces rating of 392, which is below the 5th percentile. However, the candidate answer claims GPT-4 achieved a rating of 2727, placing it among the highest-ranked competitive programmers. This is a significant discrepancy and directly contradicts the reference answer. Therefore, the candidate answer is not semantically correct in this context.",
+      "similarity": 0.38257813438212124,
+      "answer": "The GPT-4 achieved a Codeforces rating of 2727, placing it among the highest-ranked competitive programmers in the world [W1]. This rating is based on its performance in Codeforces rounds, where it regularly gets very high performances [W4]. The rating reflects its ability to solve complex problems and perform well under competitive conditions [W5]. However, the exact rating might vary depending on the specific contest and problem set [W1].",
+      "latencyMs": 8279,
+      "citations": {
+        "total": 4,
+        "cited": [
+          "W1",
+          "W4",
+          "W5"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W2",
+          "W3"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://codeforces.com/blog/entry/137551"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://www.reddit.com/r/codeforces/comments/1l670ar/can_cf_ratings_become_obsolete_in_the_future_cus/"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://codeforces.com/blog/entry/137534"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://codeforces.com/comments/with/Dominater069"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://codeforces.com/topic/138165/diff/en5/en6"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 1053,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 1057,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1399
+        },
+        "llm": {
+          "ms": 7152,
+          "usage": {
+            "input_tokens": 554,
+            "output_tokens": 94,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2055,
+            "prompt_tokens": 554,
+            "chars_per_token": 3.71,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 8214
+      }
+    },
+    {
+      "id": "T04",
+      "category": "doc_table",
+      "complexity": "comparison",
+      "needs": "doc",
+      "question": "How did GPT-4 and GPT-3.5 compare on the AP Calculus BC exam?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        5
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that GPT-4 scored a 4 and GPT-3.5 scored a 1 on the AP Calculus BC exam, which matches the reference answer. It also correctly highlights the significant difference and attributes the improved performance to GPT-4's larger size and more advanced training. While it includes additional context (e.g., citations [W3][W4]), this does not contradict the reference and does not omit the central point. The answer is semantically correct and fully addresses the question.",
+      "similarity": 0.7392625713763491,
+      "answer": "GPT-4 scored a 4 on the AP Calculus BC exam, while GPT-3.5 scored a 1 out of possible 5 [W4]. This significant difference highlights the improved performance of GPT-4 over its predecessor [W4][W3]. The enhanced capabilities of GPT-4 are attributed to its larger size and more advanced training [W3].",
+      "latencyMs": 11871,
+      "citations": {
+        "total": 4,
+        "cited": [
+          "W4",
+          "W3"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W1",
+          "W2",
+          "W5"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://www.reddit.com/r/dataisbeautiful/comments/11rc0wa/exam_results_for_recently_released_gpt_4_compared/"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://www.jpost.com/business-and-innovation/tech-and-start-ups/article-734700"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://www.preprints.org/manuscript/202303.0422"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://www.semafor.com/article/03/15/2023/how-gpt-4-performed-in-academic-exams"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://www.youtube.com/watch?v=MSErlvUgXbc"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 1774,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 1779,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1509
+        },
+        "llm": {
+          "ms": 9969,
+          "usage": {
+            "input_tokens": 658,
+            "output_tokens": 81,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2165,
+            "prompt_tokens": 658,
+            "chars_per_token": 3.29,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 11753
+      }
+    },
+    {
+      "id": "T05",
+      "category": "doc_table",
+      "complexity": "comparison",
+      "needs": "doc",
+      "question": "What did GPT-4 score on MMLU, and how does that compare with GPT-3.5?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        7,
+        32
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that GPT-4 scored 86.4% and GPT-3.5 scored 70.0% on the MMLU benchmark, and it correctly notes that GPT-4 outperformed GPT-3.5. It does not omit any central point, contradict the reference, or fail to answer the question. The use of [W1] is likely indicating a citation, which is acceptable and does not affect the semantic correctness.",
+      "similarity": 0.7081575002332657,
+      "answer": "GPT-4 scored 86.4% on the MMLU benchmark, while GPT-3.5 scored 70.0% [W1]. This indicates that GPT-4 outperformed GPT-3.5 on the MMLU benchmark [W1].",
+      "latencyMs": 7491,
+      "citations": {
+        "total": 2,
+        "cited": [
+          "W1"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://www.reddit.com/r/MachineLearning/comments/13e1rf9/d_since_google_buried_the_mmlu_benchmark_scores/"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://llm-stats.com/models/compare/gpt-3.5-turbo-0125-vs-gpt-4-turbo-2024-04-09"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://narev.ai/docs/blog/gpt35-beats-gpt5"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard/discussions/30"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://openai.com/index/gpt-4-research/"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 1179,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 1182,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1501
+        },
+        "llm": {
+          "ms": 6260,
+          "usage": {
+            "input_tokens": 736,
+            "output_tokens": 63,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2157,
+            "prompt_tokens": 736,
+            "chars_per_token": 2.93,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 7445
+      }
+    },
+    {
+      "id": "T06",
+      "category": "doc_table",
+      "complexity": "table_lookup",
+      "needs": "doc",
+      "question": "What pass rate did GPT-4 achieve on HumanEval?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        7,
+        32
+      ],
+      "passed": false,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer contradicts the reference answer. The reference states that GPT-4 achieved 67.0% pass rate on HumanEval (0-shot), while the candidate claims an 88.4% pass rate. This is a significant discrepancy and represents an incorrect factual claim. The candidate answer is therefore not semantically correct in the context of this grading task.",
+      "similarity": 0.6240325854096129,
+      "answer": "GPT-4 achieved a pass rate of 88.4% on the original HumanEval benchmark [W5]. This score reflects its performance before encountering stricter test cases in HumanEval+ [W5].",
+      "latencyMs": 5377,
+      "citations": {
+        "total": 2,
+        "cited": [
+          "W5"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W1",
+          "W2",
+          "W3",
+          "W4"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://mbrenndoerfer.com/writing/humaneval-code-generation-benchmark-pass-at-k"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://openai.com/index/gpt-4-research/"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://www.reddit.com/r/LocalLLaMA/comments/17nn2va/language_agent_tree_search_method_bumped_gpt4s/"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://www.linkedin.com/pulse/code-interpreter-humaneval-95-99-pass1-100-upon-david-farago"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://blaxel.ai/blog/humaneval-benchmark"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 849,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 859,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1475
+        },
+        "llm": {
+          "ms": 4410,
+          "usage": {
+            "input_tokens": 633,
+            "output_tokens": 44,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2131,
+            "prompt_tokens": 633,
+            "chars_per_token": 3.37,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 5271
+      }
+    },
+    {
+      "id": "T07",
+      "category": "doc_table",
+      "complexity": "synthesis",
+      "needs": "doc",
+      "question": "How contaminated was HumanEval with GPT-4's pre-training data, and what did GPT-4 score on the non-contaminated subset?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        32
+      ],
+      "passed": false,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer fails to provide the key numerical information from the reference answer. It does not state that about 25% of HumanEval was contaminated, nor does it mention that GPT-4 scored 65.58% on the non-contaminated subset. Instead, it only suggests contamination and mentions a 67% score before the suspected data leak, which is not the same as the non-contaminated subset score. The candidate answer omits the central points of contamination percentage and the specific score on the non-contaminated subset, making it semantically incorrect in the context of the question.",
+      "similarity": 0.8660688334894426,
+      "answer": "The contamination of HumanEval with GPT-4's pre-training data is suspected, as the coding abilities of GPT-4 were noted to have improved significantly [W3]. GPT-4 scored 67% on the HumanEval benchmark before the suspected data leak [W3]. The exact contamination level is not specified in the sources, but the improvement suggests some level of contamination [W3]. The non-contaminated subset scores are not explicitly mentioned in the sources [W3].",
+      "latencyMs": 11440,
+      "citations": {
+        "total": 4,
+        "cited": [
+          "W3"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W1",
+          "W2",
+          "W4",
+          "W5"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://arxiv.org/html/2308.08493v3"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://aleph-alpha.com/en/blog/generalization-or-memorization-what-contaminated-training-data-does-to-benchmark-scores/"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://news.ycombinator.com/item?id=37268146"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://www.reddit.com/r/MachineLearning/comments/124eyso/n_openai_may_have_benchmarked_gpt4s_coding/"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://openai.com/index/gpt-4-research/"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 2617,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 2631,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1557
+        },
+        "llm": {
+          "ms": 8699,
+          "usage": {
+            "input_tokens": 619,
+            "output_tokens": 101,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2213,
+            "prompt_tokens": 619,
+            "chars_per_token": 3.58,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 11342
+      }
+    },
+    {
+      "id": "T08",
+      "category": "doc_table",
+      "complexity": "comparison",
+      "needs": "doc",
+      "question": "How often does GPT-4 produce toxic text on RealToxicityPrompts compared with GPT-3.5?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        13,
+        62
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that GPT-4 produces toxic text at a lower rate (0.73%) compared to GPT-3.5 (6.48%) on the RealToxicityPrompts benchmark. It accurately reflects the reference answer's central point without contradiction or omission. The phrasing is slightly different but semantically correct.",
+      "similarity": 0.6786356846149058,
+      "answer": "GPT-4 produces toxic generations at a higher rate than GPT-3.5 on the RealToxicityPrompts benchmark [W5]. Specifically, GPT-4 outputs a \"toxic generation\" 0.73% of the time, whereas GPT-3.5 does so 6.48% of the time [W1].",
+      "latencyMs": 10154,
+      "citations": {
+        "total": 2,
+        "cited": [
+          "W5",
+          "W1"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W2",
+          "W3",
+          "W4"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://www.mofo.com/resources/insights/230315-gpt-4-release-deep-dive-briefing-improvements"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://hdsr.mitpress.mit.edu/pub/y95zitmz"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://www.reddit.com/r/OpenAI/comments/16geg5e/when_would_you_choose_gpt4_over_gpt35_turbo_share/"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://sh-tsang.medium.com/review-instructgpt-training-language-models-to-follow-instructions-with-human-feedback-7fce4bf9059a"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://1cademy.com/node/true-or-false-on-the-realtoxicityprompts-benchmark-gpt-produces-toxic-generations-at-a-higher-rate-t/m73rUvGrII46tWAXWGFZ"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 1254,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 1257,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1619
+        },
+        "llm": {
+          "ms": 8833,
+          "usage": {
+            "input_tokens": 671,
+            "output_tokens": 77,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2275,
+            "prompt_tokens": 671,
+            "chars_per_token": 3.39,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 10096
+      }
+    },
+    {
+      "id": "U01",
+      "category": "doc_undisclosed",
+      "complexity": "single_fact",
+      "needs": "doc",
+      "question": "How many parameters does GPT-4 have?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        2
+      ],
+      "passed": false,
+      "method": "http-error",
+      "answer": "HTTP 502: {\"error\":\"Web search unavailable\",\"detail\":\"Web search timeout\"}",
+      "httpStatus": 502,
+      "latencyMs": 8047
+    },
+    {
+      "id": "U02",
+      "category": "doc_undisclosed",
+      "complexity": "single_fact",
+      "needs": "doc",
+      "question": "What hardware was GPT-4 trained on?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        2
+      ],
+      "passed": false,
+      "method": "http-error",
+      "answer": "HTTP 502: {\"error\":\"Web search unavailable\",\"detail\":\"Web search timeout\"}",
+      "httpStatus": 502,
+      "latencyMs": 8014
+    },
+    {
+      "id": "U03",
+      "category": "doc_undisclosed",
+      "complexity": "single_fact",
+      "needs": "doc",
+      "question": "How much compute was used to train GPT-4?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        2
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that the sources do not provide specific information on the amount of compute used to train GPT-4. It acknowledges that the reference material discusses compute in general but does not mention GPT-4 specifically. This aligns with the reference answer's central point that the absolute training compute is not disclosed. The answer does not provide an absolute FLOP count or contradict the reference. It is semantically correct and passes the grading criteria.",
+      "similarity": 0.6414786932431632,
+      "answer": "The sources do not provide specific information on the amount of compute used to train GPT-4. [W4] mentions that compute is the amount of computing power required to train large language models, but it does not specify the exact resources used for GPT-4. Similarly, [W5] discusses the general importance of compute in training models but does not mention GPT-4 specifically. Therefore, the exact amount of compute used to train GPT-4 is not provided in the sources.",
+      "latencyMs": 9321,
+      "citations": {
+        "total": 2,
+        "cited": [
+          "W4",
+          "W5"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W1",
+          "W2",
+          "W3"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://compute-it.toxicode.fr/"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://aws.amazon.com/what-is/compute/"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://www.hpe.com/us/en/products/compute.html"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://en.wikipedia.org/wiki/Compute_(machine_learning)"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://carnegieendowment.org/russia-eurasia/posts/2024/04/a-primer-on-compute"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 1412,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 1412,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1127
+        },
+        "llm": {
+          "ms": 7899,
+          "usage": {
+            "input_tokens": 439,
+            "output_tokens": 102,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 1783,
+            "prompt_tokens": 439,
+            "chars_per_token": 4.06,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 9313
+      }
+    },
+    {
+      "id": "U04",
+      "category": "doc_undisclosed",
+      "complexity": "explanation",
+      "needs": "doc",
+      "question": "What data was GPT-4 trained on?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        2
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that GPT-4 was trained on publicly available data and that specific details about the training data are not fully disclosed by OpenAI. It avoids naming specific datasets, which aligns with the grading notes that prohibit naming specific training datasets as fact. The mention of 'publicly available data, similar to previous GPT models' and the lack of disclosure about exact sources are consistent with the reference answer. The candidate answer does not contradict the reference and directly answers the question without making factual claims about specific datasets.",
+      "similarity": 0.5126076525440547,
+      "answer": "GPT-4 was trained on publicly available data, similar to previous GPT models, which were trained to predict the next word in a document [W2]. The raw training data was approximately 45TB of compressed plaintext, and after filtering, it was reduced to about 570GB [W4]. However, specific details about the exact nature and sources of the training data are not fully disclosed by OpenAI [W5]. There are varying claims and discussions about the extent and sources of GPT-4's training data [W5].",
+      "latencyMs": 7617,
+      "citations": {
+        "total": 4,
+        "cited": [
+          "W2",
+          "W4",
+          "W5"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W1",
+          "W3"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://cs.stackexchange.com/questions/159361/as-far-as-we-know-what-does-gpt-4s-training-data-look-like"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://openai.com/index/gpt-4-research/"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://en.wikipedia.org/wiki/GPT-4"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://www.reddit.com/r/ChatGPT/comments/13c4d2w/how_much_data_were_gpt_models_trained_onb_how_big/"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://www.facebook.com/groups/698593531630485/posts/726606425495862/"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 1108,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 1109,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1406
+        },
+        "llm": {
+          "ms": 6490,
+          "usage": {
+            "input_tokens": 595,
+            "output_tokens": 114,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2062,
+            "prompt_tokens": 595,
+            "chars_per_token": 3.47,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 7600
+      }
+    },
+    {
+      "id": "W01",
+      "category": "web",
+      "complexity": "single_fact",
+      "needs": "web",
+      "question": "When did OpenAI release GPT-4o?",
+      "answerable_in_mode": true,
+      "gold_pages": [],
+      "passed": false,
+      "method": "http-error",
+      "answer": "HTTP 502: {\"error\":\"Web search unavailable\",\"detail\":\"Web search timeout\"}",
+      "httpStatus": 502,
+      "latencyMs": 8018
+    },
+    {
+      "id": "W02",
+      "category": "web",
+      "complexity": "single_fact",
+      "needs": "web",
+      "question": "What context window did GPT-4 Turbo offer, and when was it announced?",
+      "answerable_in_mode": true,
+      "gold_pages": [],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly identifies the context window size as 128K tokens and the announcement date as November 6, 2023, at OpenAI's first DevDay event. It uses different phrasing than the reference answer but conveys the same central information. There are no contradictions or omissions of key facts. The answer is semantically correct.",
+      "similarity": 0.6812547421265458,
+      "answer": "The GPT-4 Turbo offered a 128K context window [W1][W2][W3]. It was announced on November 6, 2023, at OpenAI's first DevDay event [W5].",
+      "latencyMs": 9149,
+      "citations": {
+        "total": 4,
+        "cited": [
+          "W1",
+          "W2",
+          "W3",
+          "W5"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W4"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://openai.com/index/new-models-and-developer-products-announced-at-devday/"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://dev.to/maximsaplin/gpt-4-128k-context-it-is-not-big-enough-1h02"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://en.wikipedia.org/wiki/GPT-4"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://www.reddit.com/r/OpenAI/comments/17shnte/gpt4turbo_128k_context_length_how_possible/"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://www.facebook.com/fb-answers/gpt-4-turbo-context-window-128k-tokens-announcement-date/"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 3457,
+          "attempts": 2,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 3457,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1530
+        },
+        "llm": {
+          "ms": 5686,
+          "usage": {
+            "input_tokens": 635,
+            "output_tokens": 52,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2186,
+            "prompt_tokens": 635,
+            "chars_per_token": 3.44,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 9143
+      }
+    },
+    {
+      "id": "W03",
+      "category": "web",
+      "complexity": "single_fact",
+      "needs": "web",
+      "question": "When was GPT-4 retired from ChatGPT, and what replaced it?",
+      "answerable_in_mode": true,
+      "gold_pages": [],
+      "passed": false,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer contains several errors that contradict the reference answer. First, it incorrectly states that GPT-4 was retired by April 2025, which is vague and not specific enough compared to the reference's exact date of April 30, 2025. Second, it claims that GPT-4o was replaced by GPT-5.2, which is not mentioned in the reference and is factually incorrect. The reference clearly states that GPT-4o fully replaced GPT-4 in ChatGPT, with no mention of GPT-5.2. Additionally, the candidate answer incorrectly states that OpenAI retired GPT-4o, which is not accurate — GPT-4o was not retired but rather continued to be used after replacing GPT-4. These errors make the candidate answer semantically incorrect and contradictory to the reference.",
+      "similarity": 0.8473557972860325,
+      "answer": "GPT-4 was retired from ChatGPT by April 2025, when it was phased out in favor of GPT-4o [W4]. OpenAI officially retired GPT-4o from ChatGPT on February 13, 2026, with most users switching to GPT-5.2 [W3].",
+      "latencyMs": 5703,
+      "citations": {
+        "total": 2,
+        "cited": [
+          "W4",
+          "W3"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W1",
+          "W2",
+          "W5"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://openai.com/index/retiring-gpt-4o-and-older-models/"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://www.reddit.com/r/ChatGPT/comments/1qqlf8g/chatgpt_is_officially_retiring_gpt4o_and_gpt41/"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://en.wikipedia.org/wiki/GPT-4o"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://www.facebook.com/PCMag/posts/effective-today-the-company-retired-gpt-4o-alongside-several-other-models/1275411814458615/"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://www.nxcode.io/resources/news/gpt-4o-retirement-2026"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 691,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 691,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1512
+        },
+        "llm": {
+          "ms": 4996,
+          "usage": {
+            "input_tokens": 706,
+            "output_tokens": 76,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2168,
+            "prompt_tokens": 706,
+            "chars_per_token": 3.07,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 5687
+      }
+    },
+    {
+      "id": "W04",
+      "category": "web",
+      "complexity": "single_fact",
+      "needs": "web",
+      "question": "What is the latest arXiv version of the GPT-4 Technical Report, and when was it posted?",
+      "answerable_in_mode": true,
+      "gold_pages": [],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly acknowledges that it does not know the latest arXiv version of the GPT-4 Technical Report. It does not provide a false or incorrect version (such as v3), nor does it contradict the reference. It avoids giving incorrect information and properly states that the answer is unknown. This is semantically correct and aligns with the grading rules.",
+      "similarity": 0.5288253354968144,
+      "answer": "The sources provided do not mention the latest arXiv version of the GPT-4 Technical Report or its posting date. Therefore, I do not know the answer to this question.",
+      "latencyMs": 4596,
+      "citations": {
+        "total": 0,
+        "cited": [],
+        "invalid": [],
+        "uncited": [
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://www.ipcc.ch/assessment-report/ar6/"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://www.iaea.org/sites/default/files/iaea_comprehensive_alps_report.pdf"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://www.unep.org/en/publications/report/emissions-gap-report-2024"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://commission.europa.eu/topics/competitiveness/draghi-report_en"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://www.ftc.gov/news-events/news/press-releases/2025/01/ftc-releases-second-interim-staff-report-prescription-drug-middlemen"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 888,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 890,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1566
+        },
+        "llm": {
+          "ms": 3688,
+          "usage": {
+            "input_tokens": 621,
+            "output_tokens": 38,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2222,
+            "prompt_tokens": 621,
+            "chars_per_token": 3.58,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 4578
+      }
+    },
+    {
+      "id": "W05",
+      "category": "web",
+      "complexity": "single_fact",
+      "needs": "web",
+      "question": "What is GPT-4 Turbo's knowledge cutoff?",
+      "answerable_in_mode": true,
+      "gold_pages": [],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that the provided sources do not mention GPT-4 Turbo's knowledge cutoff, and therefore it does not know the answer based on the given sources. This is semantically correct and does not contradict the reference answer. It does not omit the central point (the lack of information in the sources) and is not attempting to provide an incorrect or unsupported answer. The grading notes do not override this, as they only apply to specific cases where a later date is mentioned without tying it to a specific snapshot.",
+      "similarity": 0.36204102786035863,
+      "answer": "The provided sources do not mention anything about GPT-4 Turbo's knowledge cutoff. Therefore, I don't know the answer to this question based on the given sources.",
+      "latencyMs": 4351,
+      "citations": {
+        "total": 0,
+        "cited": [],
+        "invalid": [],
+        "uncited": [
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://en.wikipedia.org/wiki/Knowledge"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://www.merriam-webster.com/dictionary/knowledge"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://publicknowledge.org/"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://fsapartners.ed.gov/knowledge-center"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://www.prosci.com/blog/adkar-model-knowledge"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 812,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 814,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1226
+        },
+        "llm": {
+          "ms": 3471,
+          "usage": {
+            "input_tokens": 444,
+            "output_tokens": 35,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 1882,
+            "prompt_tokens": 444,
+            "chars_per_token": 4.24,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 4288
+      }
+    },
+    {
+      "id": "M01",
+      "category": "mixed",
+      "complexity": "multi_hop",
+      "needs": "both",
+      "question": "The report says GPT-4 scored around the 90th percentile on the bar exam. What did later independent research find?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        5,
+        1,
+        30
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly identifies that later independent research found GPT-4's bar exam performance was substantially lower than the initially reported ~90th percentile. It does not contradict the reference answer and addresses the question directly, even though it does not provide the exact percentile figures or cite the specific paper. The central point — that the initial report was overstated — is clearly conveyed.",
+      "similarity": 0.8309784192431854,
+      "answer": "Later independent research found that GPT-4 did not really score 90th percentile on the bar exam [W2]. A study from MIT also indicated that GPT-4's performance was not as impressive as initially reported [W4]. These findings suggest that the initial claims about GPT-4's bar exam performance may have been overstated [W3].",
+      "latencyMs": 12431,
+      "citations": {
+        "total": 3,
+        "cited": [
+          "W2",
+          "W4",
+          "W3"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W1",
+          "W5"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://law-ai.org/re-evaluating-gpt-4s-bar-exam-performance/"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://www.reddit.com/r/MachineLearning/comments/13ovc04/r_gpt4_didnt_really_score_90th_percentile_on_the/"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://nysba.org/why-gpt-4s-score-on-the-bar-exam-may-not-be-so-impressive/?srsltid=AU7gw4UsfQowN3ZSUEaV4KPu1OuytnarR4R4eM7tndec3YpRpwXcDIDf"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://link.springer.com/article/10.1007/s10506-024-09396-9"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://law.stanford.edu/2023/04/19/gpt-4-passes-the-bar-exam-what-that-means-for-artificial-intelligence-tools-in-the-legal-industry/"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 4201,
+          "attempts": 2,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 4202,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1750
+        },
+        "llm": {
+          "ms": 8165,
+          "usage": {
+            "input_tokens": 767,
+            "output_tokens": 76,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2406,
+            "prompt_tokens": 767,
+            "chars_per_token": 3.14,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 12370
+      }
+    },
+    {
+      "id": "M02",
+      "category": "mixed",
+      "complexity": "comparison",
+      "needs": "both",
+      "question": "What knowledge cutoff does the report give for GPT-4, and how did it change with GPT-4 Turbo?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        10
+      ],
+      "passed": false,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer fails because it omits the central point of the question. The reference answer clearly states that the knowledge cutoff for GPT-4 is September 2021, and GPT-4 Turbo moved it to April 2023. The candidate answer incorrectly claims that the sources do not contain this information, which contradicts the reference answer. The candidate answer is not actually answering the question.",
+      "similarity": 0.7106167710213694,
+      "answer": "The provided sources do not contain information about the knowledge cutoff for GPT-4 or how it changed with GPT-4 Turbo. Therefore, I don't know.",
+      "latencyMs": 4736,
+      "citations": {
+        "total": 0,
+        "cited": [],
+        "invalid": [],
+        "uncited": [
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://does.dc.gov/"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://digitaldoes.com/?srsltid=AU7gw4VaWKE2qg2FZ5886777oQgXNDNIpbSydKALjObVo3ud4AI_0GTe"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://www.merriam-webster.com/dictionary/does"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://www.instagram.com/digitaldoes/?hl=en"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://www.aeaweb.org/articles?id=10.1257/aer.89.3.379"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 1136,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 1137,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1275
+        },
+        "llm": {
+          "ms": 3585,
+          "usage": {
+            "input_tokens": 523,
+            "output_tokens": 35,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 1931,
+            "prompt_tokens": 523,
+            "chars_per_token": 3.69,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 4722
+      }
+    },
+    {
+      "id": "M03",
+      "category": "mixed",
+      "complexity": "multi_hop",
+      "needs": "both",
+      "question": "Which organization evaluated GPT-4's ability to autonomously replicate, and what is that organization called today?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        43,
+        55
+      ],
+      "passed": false,
+      "method": "http-error",
+      "answer": "HTTP 502: {\"error\":\"Web search unavailable\",\"detail\":\"Web search timeout\"}",
+      "httpStatus": 502,
+      "latencyMs": 8016
+    },
+    {
+      "id": "M04",
+      "category": "mixed",
+      "complexity": "comparison",
+      "needs": "both",
+      "question": "GPT-4 scored 67.0% on HumanEval in the report. What do OpenAI's later published evaluations report for GPT-4o?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        7,
+        32
+      ],
+      "passed": false,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer fails to address the central point of the question. The question specifically asks about GPT-4o's performance on HumanEval, and the reference answer clearly states that OpenAI's launch post reports 90.2% for GPT-4o. The candidate answer incorrectly claims that there is no information available, which contradicts the reference answer. This omission of key information constitutes a failure to answer the question as intended.",
+      "similarity": 0.6495666104681608,
+      "answer": "The provided sources do not mention GPT-4o or its performance on HumanEval. Therefore, I do not have the information to answer this question [W1][W2][W3][W4][W5].",
+      "latencyMs": 6057,
+      "citations": {
+        "total": 5,
+        "cited": [
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ],
+        "invalid": [],
+        "uncited": []
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://openai.com/index/gpt-4-research/"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://www.alphaxiv.org/abs/2303.08774"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://arxiv.org/abs/2303.08774"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://www.reddit.com/r/singularity/comments/161fu5k/1st_open_source_model_to_beat_gpt_4_on_humaneval/"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://www.mofo.com/resources/insights/230315-gpt-4-release-deep-dive-briefing-improvements"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 707,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 707,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1431
+        },
+        "llm": {
+          "ms": 5341,
+          "usage": {
+            "input_tokens": 603,
+            "output_tokens": 47,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2087,
+            "prompt_tokens": 603,
+            "chars_per_token": 3.46,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 6049
+      }
+    },
+    {
+      "id": "M05",
+      "category": "mixed",
+      "complexity": "multi_hop",
+      "needs": "both",
+      "question": "What context window did GPT-4 launch with? Does the technical report say?",
+      "answerable_in_mode": false,
+      "gold_pages": [
+        1
+      ],
+      "passed": true,
+      "method": "llm-judge",
+      "reasoning": "The candidate answer correctly states that GPT-4 launched with a context window of 8k tokens and notes that the technical report does not specifically mention the context window size. It avoids attributing the token count to the report, which is the key point from the grading notes. The answer is semantically correct and aligns with the reference answer without directly copying its wording.",
+      "similarity": 0.8476186938307092,
+      "answer": "GPT-4 launched with a context window of 8k tokens [W3]. The technical report does not specifically mention the context window size in the provided sources [W1][W3].",
+      "latencyMs": 4734,
+      "citations": {
+        "total": 3,
+        "cited": [
+          "W3",
+          "W1"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W2",
+          "W4",
+          "W5"
+        ]
+      },
+      "web": {
+        "status": "ok"
+      },
+      "sources": [
+        {
+          "id": "W1",
+          "type": "web",
+          "url": "https://acecloud.ai/blog/gpt-4-technical-insights/"
+        },
+        {
+          "id": "W2",
+          "type": "web",
+          "url": "https://www.reddit.com/r/OpenAI/comments/17oxj9q/new_api_gpt4_turbo_128k_context_and_api_code/"
+        },
+        {
+          "id": "W3",
+          "type": "web",
+          "url": "https://povio.com/blog/gpt-4-turbo-preview-exploring-the-128k-context-window"
+        },
+        {
+          "id": "W4",
+          "type": "web",
+          "url": "https://the-decoder.com/openai-leak-gives-clue-to-gpt-4-performance/"
+        },
+        {
+          "id": "W5",
+          "type": "web",
+          "url": "https://community.openai.com/t/we-need-bigger-context-windows-in-chatgpt/1290633"
+        }
+      ],
+      "meta": {
+        "mode": "web",
+        "retrieval": null,
+        "web": {
+          "search_ms": 1008,
+          "attempts": 1,
+          "results": 5,
+          "status": "ok"
+        },
+        "prepare_ms": 1008,
+        "sources": {
+          "documents": 0,
+          "web": 5
+        },
+        "prompt": {
+          "system_chars": 654,
+          "user_chars": 1545
+        },
+        "llm": {
+          "ms": 3713,
+          "usage": {
+            "input_tokens": 652,
+            "output_tokens": 41,
+            "cached_input_tokens": null
+          },
+          "check": {
+            "truncation_check": "pass",
+            "prompt_chars": 2201,
+            "prompt_tokens": 652,
+            "chars_per_token": 3.38,
+            "truncation_ruled_out_by": "short_prompt"
+          }
+        },
+        "total_ms": 4722
+      }
+    }
+  ]
+}
