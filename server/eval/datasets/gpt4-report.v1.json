@@ -1,7 +1,8 @@
 {
   "name": "gpt4-report",
-  "version": "1-draft",
-  "status": "DRAFT — questions, references and gold pages need human review before use",
+  "version": "1",
+  "status": "APPROVED",
+  "approved": "2026-10-19 by the project owner, after review of questions, references, gold pages and web sources",
   "document": {
     "title": "GPT-4 Technical Report (OpenAI)",
     "source": "https://arxiv.org/abs/2303.08774v3",

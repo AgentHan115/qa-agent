@@ -15,8 +15,8 @@ Facts are verified from the repo (code, commit messages, `server/results/`, READ
 3. **Run the checks.** `npm test --prefix server` should give 59 pass. One integration test needs Chroma and the demo PDF, otherwise it's skipped. `CI=true npm test` should give 4 pass.
 4. **Check the dataset:** `npm run eval:validate --prefix server` should print "All gold pages verified". It needs `sh server/scripts/fetch-demo-doc.sh` first.
 5. **Current task: Step 4 (evaluation).**
-   - **Blocked on the user's review** of the draft dataset [server/eval/datasets/gpt4-report.v1.json](server/eval/datasets/gpt4-report.v1.json) (status `DRAFT`).
-   - Don't run Step 4 numbers as final until the user approves the questions and references.
+   - The dataset [server/eval/datasets/gpt4-report.v1.json](server/eval/datasets/gpt4-report.v1.json) was **approved by the user on 2026-10-19** (status `APPROVED`), after a source review recorded in commit `f25e5b9`.
+   - Next: adapt [server/scripts/eval.js](server/scripts/eval.js) to the dataset (§11 step 2 onwards).
    - Plan: [§11](#11-step-4-plan-measure-before-changing-architecture).
 6. **Local services:** `docker compose up -d postgres redis chroma`. Ollama runs on the host. Model setup: [§4](#4-runtime--model-setup).
    - [conversation-only] The previous session ran the API through a Claude preview config named `agentai-api` in `~/.claude/launch.json`, with cwd `server/`. Run it from `server/`, because `dotenv` reads `./.env`.
@@ -253,7 +253,7 @@ All runs: the Mac setup above, the **earlier HBS demo document** (Lean Startup n
 - A copy saved from the arXiv submission preview differs only in the page-1 margin stamp, so page numbers are the same.
 - It's the server's `DEFAULT_DOCUMENT`. The previous HBS note is no longer in the repo or its history.
 
-**Dataset:** [server/eval/datasets/gpt4-report.v1.json](server/eval/datasets/gpt4-report.v1.json). Status `DRAFT`, awaiting the user's review. 35 questions:
+**Dataset:** [server/eval/datasets/gpt4-report.v1.json](server/eval/datasets/gpt4-report.v1.json). Status `APPROVED` (2026-10-19). 35 questions:
 
 | Category | Count | Notes |
 |---|---|---|
@@ -289,7 +289,7 @@ Each of these changes retrieval or answer behaviour, so it should be measured in
 
 ## 11. Step 4 plan: measure before changing architecture
 
-1. **Dataset:** get the user's approval, then remove the `DRAFT` status.
+1. **Dataset:** approved and `DRAFT` removed (2026-10-19).
 2. **Harness:** run [server/scripts/eval.js](server/scripts/eval.js) on the JSON dataset, once per mode (`docs`, `web`, `hybrid`).
 3. **Metrics, by category and complexity:**
    - answer correctness (judge plus the per-question `grading` notes);
