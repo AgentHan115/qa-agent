@@ -51,9 +51,12 @@ export const retrieveDocuments = async (question, documentId, meta) => {
     throw new VectorsMissingError(documentId);
   }
 
-  return results.map(([doc, distance]) => ({
+  const docs = results.map(([doc, distance]) => ({
     text: doc.pageContent,
     page: typeof doc.metadata?.page === "number" ? doc.metadata.page : null,
     distance,
   }));
+  // Ranked pages before deduplication, so retrieval metrics see the raw top-k.
+  meta.hits = docs.map(({ page, distance }) => ({ page, distance }));
+  return docs;
 };

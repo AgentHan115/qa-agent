@@ -1,4 +1,18 @@
-// Retrieval eval harness — 10 fixed questions about the HBS Lean Startup PDF.
+// Eval harness: asks every question of a labelled dataset through /chat and
+// grades the answers. Default dataset: eval/datasets/gpt4-report.v1.json
+// (35 questions about the GPT-4 Technical Report, approved 2026-10-19).
+//
+// Per question it records:
+//   - correctness: an LLM judge compares the answer with the reference, using the
+//     question's `grading` notes when it has them
+//   - retrieval: rank of the first retrieved chunk on a gold page, recall@k
+//     (hit@k: gold pages are alternatives) and reciprocal rank, from the raw
+//     ranked hits in meta.retrieval.hits (needs a server with that field)
+//   - whether the answer cited a document source on a gold page
+//   - whether the mode's sources can answer it at all (`answerable_in_mode`):
+//     `docs` can't answer web questions, `web` can't answer document ones
+// and summarizes them overall, by category and by complexity, plus P50/P95
+// per pipeline stage. See eval/metrics.js for the definitions.
 //
 // Grading modes (EVAL_GRADING):
 //   judge (default) — every answer is graded by the LLM judge. The embedding
@@ -13,14 +27,14 @@
 //   3. Similarity inside the band is ambiguous -> escalate to an LLM judge that reads
 //      the question, the reference answer, and the candidate, and decides whether they
 //      are semantically equivalent (same key facts, different wording is fine).
-// This avoids the false negatives flat keyword matching produced when a correct
-// answer used a synonym or different phrasing than the expected keyword.
 //
-// Usage:
-//   1. Upload the PDF and wait for status=ready:
-//      curl -F "file=@uploads/<file>.pdf" http://localhost:5001/upload
-//   2. Run:
-//      node scripts/eval.js --documentId=<uuid>
+// Usage (from server/, with the API running and the document ready):
+//   node scripts/eval.js --documentId=<uuid>
+//
+// Options:
+//   --dataset=<path>                  (default: eval/datasets/gpt4-report.v1.json)
+//   --ids=P01,T02                     only these questions (smoke tests)
+//   --allow-draft                     run a dataset whose status isn't APPROVED
 //
 // Optional env vars:
 //   SERVER_URL=http://localhost:5001  (default)
@@ -28,19 +42,29 @@
 //   EVAL_GRADING=judge|layered        (default: judge)
 //   EVAL_MODE=docs|web|hybrid         (default: hybrid) — which sources /chat may use
 //
-// Each run writes results/eval-<timestamp>.json with the server's /runtime
-// record and the git commit, so results can be tied to an exact configuration.
+// Each run writes results/eval-<timestamp>.json with the dataset version, the
+// server's /runtime record and the git commit, so results can be tied to an
+// exact configuration.
 
 import dotenv from "dotenv";
 dotenv.config();
 
-import { mkdirSync, writeFileSync } from "fs";
+import { mkdirSync, readFileSync, writeFileSync } from "fs";
+import { createHash } from "crypto";
 import { execSync } from "child_process";
 import http from "http";
 
 import { PromptTemplate } from "@langchain/core/prompts";
 import { createChatModel, createEmbeddings, llmConfig } from "../lib/llm.js";
 import { z } from "zod";
+import {
+  answerableInMode,
+  citedGoldPage,
+  retrievalApplies,
+  retrievalScores,
+  stageLatencies,
+  summarize,
+} from "../eval/metrics.js";
 
 const SERVER_URL = process.env.SERVER_URL || "http://localhost:5001";
 const JUDGE_MODEL = process.env.EVAL_JUDGE_MODEL || llmConfig().model;
@@ -52,82 +76,32 @@ const MODE = process.env.EVAL_MODE || "hybrid";
 const HIGH_CONFIDENCE_SIM = 0.85; // >= this: confidently correct, skip judge
 const LOW_CONFIDENCE_SIM = 0.6; // <= this: confidently wrong, skip judge
 
-// Parse --documentId=<uuid> from argv
-const arg = process.argv.find((a) => a.startsWith("--documentId="));
-if (!arg) {
-  console.error("Usage: node scripts/eval.js --documentId=<uuid>");
+const argValue = (name) => process.argv.find((a) => a.startsWith(`--${name}=`))?.split("=")[1];
+
+const documentId = argValue("documentId");
+if (!documentId) {
+  console.error("Usage: node scripts/eval.js --documentId=<uuid> [--dataset=<path>] [--ids=P01,T02] [--allow-draft]");
   process.exit(1);
 }
-const documentId = arg.split("=")[1];
 
 // ---------------------------------------------------------------------------
-// 10 eval cases — each has a question and a reference answer written from the
-// source PDF's concepts. The reference is what a correct answer should convey,
-// not a required wording.
+// Dataset — each question has a reference answer (what a correct answer should
+// convey, not a required wording), gold pages and optional grading notes.
 // ---------------------------------------------------------------------------
-const CASES = [
-  {
-    id: 1,
-    question: "What is the Build-Measure-Learn feedback loop?",
-    reference:
-      "It is the core iterative cycle of the Lean Startup method: build a minimum viable product, measure how customers actually respond to it, and use that data to learn whether to persevere or pivot, then repeat.",
-  },
-  {
-    id: 2,
-    question: "What is a Minimum Viable Product (MVP)?",
-    reference:
-      "The MVP is the version of a new product that lets a team collect the maximum amount of validated learning about customers with the least effort and development time.",
-  },
-  {
-    id: 3,
-    question: "What is validated learning?",
-    reference:
-      "Validated learning is the process of empirically demonstrating, through rigorous experiments, that a team has discovered valuable truths about a startup's current and future business prospects.",
-  },
-  {
-    id: 4,
-    question: "What is a pivot in the context of the lean startup?",
-    reference:
-      "A pivot is a structured course correction designed to test a new fundamental hypothesis about the product, strategy, or engine of growth, while keeping what has already been learned.",
-  },
-  {
-    id: 5,
-    question: "What is innovation accounting?",
-    reference:
-      "Innovation accounting is a quantitative approach that lets startups operating under uncertainty measure progress, set milestones, and prioritize work using actionable metrics instead of vanity metrics.",
-  },
-  {
-    id: 6,
-    question:
-      "What is the difference between vanity metrics and actionable metrics?",
-    reference:
-      "Vanity metrics look good on paper (e.g. total signups or pageviews) but don't show clear cause and effect or guide decisions. Actionable metrics tie a specific action to an observed result, so they can inform real business decisions.",
-  },
-  {
-    id: 7,
-    question: "How does the lean startup define waste?",
-    reference:
-      "Waste is any activity that does not contribute to validated learning about customers — for example building features or products that customers ultimately do not want.",
-  },
-  {
-    id: 8,
-    question: "What is a split test or A/B test according to the lean startup?",
-    reference:
-      "A split test offers different variants of a product to different customer segments at the same time and measures the effect of the change on customer behavior, used to test a hypothesis with real data.",
-  },
-  {
-    id: 9,
-    question: "What does it mean to persevere vs pivot?",
-    reference:
-      "Perseverance means keeping the current strategic hypothesis and continuing to optimize and improve execution. Pivoting means changing the fundamental hypothesis while carrying forward what has already been learned from prior experiments.",
-  },
-  {
-    id: 10,
-    question: "What is the role of customers in the lean startup methodology?",
-    reference:
-      "Customers are the primary source of feedback and validated learning; the startup engages them early and continuously through MVPs, interviews, and usage data to test hypotheses, rather than relying on internal assumptions or long-range planning.",
-  },
-];
+const datasetPath = argValue("dataset") || "eval/datasets/gpt4-report.v1.json";
+const datasetText = readFileSync(datasetPath, "utf8");
+const dataset = JSON.parse(datasetText);
+if (dataset.status !== "APPROVED" && !process.argv.includes("--allow-draft")) {
+  console.error(`Dataset ${datasetPath} has status "${dataset.status}", not APPROVED. Pass --allow-draft to run it anyway.`);
+  process.exit(1);
+}
+const onlyIds = argValue("ids")?.split(",");
+const CASES = onlyIds ? dataset.questions.filter((q) => onlyIds.includes(q.id)) : dataset.questions;
+if (onlyIds && CASES.length !== onlyIds.length) {
+  const known = new Set(dataset.questions.map((q) => q.id));
+  console.error(`Unknown question ids: ${onlyIds.filter((id) => !known.has(id)).join(", ")}`);
+  process.exit(1);
+}
 
 // ---------------------------------------------------------------------------
 // Grading helpers
@@ -157,16 +131,22 @@ const JUDGE_PROMPT = `You are grading a RAG system's answer against a reference 
 
 Question: {question}
 Reference answer (ground truth): {reference}
-Candidate answer (to grade): {candidate}
+{grading}Candidate answer (to grade): {candidate}
 
 Judge whether the candidate answer is semantically correct. It does not need to
 match the wording of the reference — different phrasing, synonyms, or a more
 concise answer are all fine. Fail it only if it omits the central point,
-contradicts the reference, or is not actually answering the question.`;
+contradicts the reference, or is not actually answering the question.
+Grading notes, when given, override these general rules.`;
 
-const llmJudge = async (judgeModel, question, reference, candidate) => {
+const llmJudge = async (judgeModel, { question, reference, grading }, candidate) => {
   const prompt = PromptTemplate.fromTemplate(JUDGE_PROMPT);
-  const formatted = await prompt.format({ question, reference, candidate });
+  const formatted = await prompt.format({
+    question,
+    reference,
+    grading: grading ? `Grading notes: ${grading}\n` : "",
+    candidate,
+  });
   const structuredModel = judgeModel.withStructuredOutput(judgeSchema);
   return structuredModel.invoke(formatted);
 };
@@ -219,7 +199,9 @@ async function runCase(c, embeddings, judgeModel) {
   const grounding = {
     citations: body.citations,
     web: body.web,
-    sources: body.sources.map((s) => (s.type === "document" ? { id: s.id, page: s.page } : { id: s.id, url: s.url })),
+    sources: body.sources.map((s) =>
+      s.type === "document" ? { id: s.id, type: s.type, page: s.page } : { id: s.id, type: s.type, url: s.url }
+    ),
   };
   const meta = body.meta;
 
@@ -237,7 +219,7 @@ async function runCase(c, embeddings, judgeModel) {
   }
 
   // Judge mode, or the ambiguous zone in layered mode
-  const judgment = await llmJudge(judgeModel, c.question, c.reference, answer);
+  const judgment = await llmJudge(judgeModel, c, answer);
   return {
     passed: judgment.passed,
     method: "llm-judge",
@@ -253,7 +235,8 @@ async function runCase(c, embeddings, judgeModel) {
 // ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
-console.log(`\nEval harness — documentId: ${documentId}`);
+console.log(`\nEval harness — documentId: ${documentId}, mode: ${MODE}`);
+console.log(`Dataset: ${dataset.name} v${dataset.version} (${dataset.status}), ${CASES.length} questions`);
 console.log(`Server: ${SERVER_URL}`);
 console.log(
   GRADING === "layered"
@@ -279,53 +262,97 @@ console.log("─".repeat(72));
 const embeddings = createEmbeddings();
 const judgeModel = createChatModel({ model: JUDGE_MODEL });
 
-let passed = 0;
+// Retrieval cut-offs, up to the server's top-k.
+const topK = runtime.retrieval?.top_k ?? 5;
+const KS = [...new Set([1, 3, topK])].filter((k) => k <= topK).sort((a, b) => a - b);
+
+// Adds the dataset-derived scores to one case's result.
+const score = (c, result) => {
+  const record = {
+    id: c.id,
+    category: c.category,
+    complexity: c.complexity,
+    needs: c.needs,
+    question: c.question,
+    answerable_in_mode: answerableInMode(c, MODE),
+    gold_pages: c.gold_pages,
+    ...result,
+  };
+  const hits = result.meta?.retrieval?.hits;
+  if (retrievalApplies(c, MODE) && hits) {
+    record.retrieval_scores = { hit_pages: hits.map((h) => h.page), ...retrievalScores(hits.map((h) => h.page), c.gold_pages, KS) };
+  }
+  if (retrievalApplies(c, MODE) && result.sources) {
+    record.cited_gold_page = citedGoldPage(result.citations, result.sources, c.gold_pages);
+  }
+  return record;
+};
+
 let embeddingDecided = 0;
 let judgeEscalated = 0;
-const latencies = [];
 const records = [];
 
 for (const c of CASES) {
-  const result = await runCase(c, embeddings, judgeModel);
-  latencies.push(result.latencyMs);
-  records.push({ id: c.id, question: c.question, ...result });
+  const record = score(c, await runCase(c, embeddings, judgeModel));
+  records.push(record);
 
-  if (result.method === "embedding") embeddingDecided++;
-  if (result.method === "llm-judge") judgeEscalated++;
+  if (record.method === "embedding") embeddingDecided++;
+  if (record.method === "llm-judge") judgeEscalated++;
 
-  const status = result.passed ? "PASS" : "FAIL";
-  if (result.passed) passed++;
-
-  console.log(`[${status}] Q${c.id}: ${c.question}`);
+  console.log(`[${record.passed ? "PASS" : "FAIL"}] ${c.id} (${c.category}${record.answerable_in_mode ? "" : ", not answerable in this mode"}): ${c.question}`);
   console.log(
-    `       Method: ${result.method}${
-      result.similarity !== undefined ? ` (similarity: ${result.similarity.toFixed(3)})` : ""
+    `       Method: ${record.method}${
+      record.similarity !== undefined ? ` (similarity: ${record.similarity.toFixed(3)})` : ""
     }`
   );
-  if (result.reasoning) console.log(`       Judge reasoning: ${result.reasoning}`);
-  if (!result.passed) {
+  if (record.reasoning) console.log(`       Judge reasoning: ${record.reasoning}`);
+  if (!record.passed) {
     console.log(`       Reference: ${c.reference}`);
-    console.log(`       Answer: ${result.answer?.slice(0, 160)}...`);
+    console.log(`       Answer: ${record.answer?.slice(0, 160)}...`);
   }
-  if (result.citations) {
-    const { cited, invalid } = result.citations;
-    console.log(`       Cited: ${cited.join(" ") || "(none)"}${invalid.length ? ` | INVALID: ${invalid.join(" ")}` : ""} | web: ${result.web?.status ?? "n/a"}`);
+  if (record.retrieval_scores) {
+    const { hit_pages, first_gold_rank } = record.retrieval_scores;
+    console.log(`       Retrieved pages: ${hit_pages.join(" ")} | gold: ${c.gold_pages.join(" ")} | first gold rank: ${first_gold_rank ?? "none"}`);
   }
-  console.log(`       Latency: ${result.latencyMs}ms`);
+  if (record.citations) {
+    const { cited, invalid } = record.citations;
+    console.log(
+      `       Cited: ${cited.join(" ") || "(none)"}${invalid.length ? ` | INVALID: ${invalid.join(" ")}` : ""}${
+        record.cited_gold_page !== undefined ? ` | gold page cited: ${record.cited_gold_page ? "yes" : "no"}` : ""
+      } | web: ${record.web?.status ?? "n/a"}`
+    );
+  }
+  console.log(`       Latency: ${record.latencyMs}ms`);
   console.log();
 }
 
-const accuracy = ((passed / CASES.length) * 100).toFixed(0);
-const avgLatency = Math.round(
-  latencies.reduce((a, b) => a + b, 0) / latencies.length
-);
+const missingHits = records.filter((r) => retrievalApplies(r, MODE) && r.meta?.retrieval?.status === "ok" && !r.meta.retrieval.hits).length;
+const groupBy = (key) =>
+  Object.fromEntries(
+    [...new Set(records.map((r) => r[key]))].map((value) => [value, summarize(records.filter((r) => r[key] === value), KS)])
+  );
+const overall = summarize(records, KS);
+const byCategory = groupBy("category");
+const byComplexity = groupBy("complexity");
+const latency = stageLatencies(records);
+
+const fmtRetrieval = (r) =>
+  r ? `MRR ${r.mrr} | ${KS.map((k) => `R@${k} ${r.recall_at[k]}`).join(" ")} (n=${r.n})` : "n/a";
 
 console.log("─".repeat(72));
-console.log(`Result: ${passed}/${CASES.length} passed — ${accuracy}% accuracy`);
+console.log(`Result: ${overall.passed}/${overall.n} passed; answerable in ${MODE} mode: ${overall.answerable.passed}/${overall.answerable.n}`);
+console.log(`Retrieval: ${fmtRetrieval(overall.retrieval)}`);
+if (overall.cited_gold_page) console.log(`Gold page cited: ${overall.cited_gold_page.yes}/${overall.cited_gold_page.n}`);
+for (const [category, s] of Object.entries(byCategory)) {
+  console.log(`  ${category.padEnd(16)} ${s.passed}/${s.n} passed | ${fmtRetrieval(s.retrieval)}`);
+}
 console.log(
   `Grading breakdown: ${embeddingDecided}/${CASES.length} resolved by embedding pre-filter, ${judgeEscalated}/${CASES.length} escalated to LLM judge`
 );
-console.log(`Avg latency per question: ${avgLatency}ms`);
+for (const [stage, l] of Object.entries(latency)) console.log(`  ${stage.padEnd(11)} P50 ${l.p50}ms  P95 ${l.p95}ms (n=${l.n})`);
+if (missingHits) {
+  console.log(`WARNING: ${missingHits} responses had no meta.retrieval.hits; restart the server on this commit for retrieval metrics.`);
+}
 console.log("─".repeat(72));
 
 // Persist raw per-case results (answers, grading, server-side stage timings
@@ -342,15 +369,26 @@ writeFileSync(
       documentId,
       git,
       runtime,
+      dataset: {
+        path: datasetPath,
+        name: dataset.name,
+        version: dataset.version,
+        status: dataset.status,
+        sha1: createHash("sha1").update(datasetText).digest("hex"),
+        ids: onlyIds ?? "all",
+      },
       judgeModel: JUDGE_MODEL,
       mode: MODE,
       grading: { mode: GRADING, low: LOW_CONFIDENCE_SIM, high: HIGH_CONFIDENCE_SIM },
       summary: {
-        passed,
-        total: CASES.length,
+        ...overall,
+        retrieval_ks: KS,
+        by_category: byCategory,
+        by_complexity: byComplexity,
+        latency_ms: latency,
         httpErrors: records.filter((r) => r.method === "http-error").length,
         requestErrors: records.filter((r) => r.method === "request-error").length,
-        avgLatencyMs: avgLatency,
+        responsesMissingHits: missingHits,
         answersWithValidCitation: records.filter((r) => r.citations?.cited.length > 0).length,
         invalidCitationLabels: records.reduce((n, r) => n + (r.citations?.invalid.length ?? 0), 0),
         webStatus: records.reduce((acc, r) => {
