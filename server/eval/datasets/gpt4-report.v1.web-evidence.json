@@ -1,0 +1,95 @@
+{
+  "name": "gpt4-report web evidence",
+  "version": "1",
+  "status": "APPROVED",
+  "approved": "2026-10-21 by the project owner, as drafted (review notes kept)",
+  "for_dataset": "eval/datasets/gpt4-report.v1.json (version 1)",
+  "purpose": "Oracle web evidence for eval/capture-contexts.js: one short excerpt per web/mixed question, shaped like a search result, inserted in place of the lowest-ranked web results. Excerpts are verbatim unless kind is \"transcribed\".",
+  "collected_on": "2026-10-21",
+  "evidence": [
+    {
+      "id": "W01",
+      "title": "Hello GPT-4o | OpenAI",
+      "url": "https://openai.com/index/hello-gpt-4o/",
+      "date": "May 13, 2024",
+      "kind": "verbatim",
+      "excerpt": "We’re announcing GPT‑4o, our new flagship model that can reason across audio, vision, and text in real time."
+    },
+    {
+      "id": "W02",
+      "title": "OpenAI debuts GPT-4 Turbo and fine-tuning program for GPT-4 | TechCrunch",
+      "url": "https://techcrunch.com/2023/11/06/openai-launches-gpt-4-turbo-and-launches-fine-tuning-program-for-gpt-4",
+      "date": "Nov 6, 2023",
+      "kind": "verbatim",
+      "excerpt": "GPT-4 Turbo offers a 128,000-token context window — four times the size of GPT-4’s",
+      "review_note": "The announcement date is carried only by the result date; the excerpt doesn't name DevDay."
+    },
+    {
+      "id": "W03",
+      "title": "ChatGPT release notes | OpenAI Help Center",
+      "url": "https://help.openai.com/en/articles/6825453-chatgpt-release-notes",
+      "date": "April 10, 2025",
+      "kind": "verbatim",
+      "excerpt": "Effective April 30, 2025, GPT‑4 will be retired from ChatGPT and fully replaced by GPT‑4o."
+    },
+    {
+      "id": "W04",
+      "title": "[2303.08774] GPT-4 Technical Report",
+      "url": "https://arxiv.org/abs/2303.08774",
+      "date": null,
+      "kind": "verbatim",
+      "excerpt": "Submission history … [v5] Fri, 1 Mar 2024 16:30:27 UTC (3,849 KB) [v6] Mon, 4 Mar 2024 06:01:33 UTC (3,849 KB)"
+    },
+    {
+      "id": "W05",
+      "title": "OpenAI debuts GPT-4 Turbo and fine-tuning program for GPT-4 | TechCrunch",
+      "url": "https://techcrunch.com/2023/11/06/openai-launches-gpt-4-turbo-and-launches-fine-tuning-program-for-gpt-4",
+      "date": "Nov 6, 2023",
+      "kind": "verbatim",
+      "excerpt": "GPT-4 Turbo’s knowledge cut-off is April 2023."
+    },
+    {
+      "id": "M01",
+      "title": "Re-evaluating GPT-4’s bar exam performance (Martínez, Artificial Intelligence and Law, CC BY 4.0)",
+      "url": "https://dspace.mit.edu/handle/1721.1/153986",
+      "date": "Mar 30, 2024",
+      "kind": "verbatim",
+      "excerpt": "GPT-4’s performance against first-time test takers is estimated to be ∼ 62nd percentile … GPT-4’s performance is estimated to drop to ∼ 48th percentile overall",
+      "review_note": "The second fragment refers to those who passed the exam, which the fragment itself doesn't say."
+    },
+    {
+      "id": "M02",
+      "title": "OpenAI debuts GPT-4 Turbo and fine-tuning program for GPT-4 | TechCrunch",
+      "url": "https://techcrunch.com/2023/11/06/openai-launches-gpt-4-turbo-and-launches-fine-tuning-program-for-gpt-4",
+      "date": "Nov 6, 2023",
+      "kind": "verbatim",
+      "excerpt": "GPT-4 Turbo’s knowledge cut-off is April 2023."
+    },
+    {
+      "id": "M03",
+      "title": "ARC Evals is now METR",
+      "url": "https://metr.org/blog/2023-12-04-metr-announcement",
+      "date": "Dec 4, 2023",
+      "kind": "verbatim",
+      "excerpt": "ARC Evals is wrapping up our incubation period at ARC (the Alignment Research Center) … spinning off into our own standalone nonprofit 501(c)(3) organization.",
+      "review_note": "The new name METR appears only in the title."
+    },
+    {
+      "id": "M04",
+      "title": "Hello GPT-4o | OpenAI",
+      "url": "https://openai.com/index/hello-gpt-4o/",
+      "date": "May 13, 2024",
+      "kind": "transcribed",
+      "excerpt": "Text Evaluation, HumanEval (%): GPT-4o 90.2, GPT-4T 87.1, GPT-4 (Initial release 23-03-14) 67.0",
+      "review_note": "Transcribed from a chart (fourth group of values, columns in the chart's legend order); not a sentence on the page."
+    },
+    {
+      "id": "M05",
+      "title": "GPT-4 | OpenAI",
+      "url": "https://openai.com/index/gpt-4-research/",
+      "date": "Mar 14, 2023",
+      "kind": "verbatim",
+      "excerpt": "gpt-4 has a context length of 8,192 tokens. We are also providing limited access to our 32,768–context (about 50 pages of text) version, gpt-4-32k"
+    }
+  ]
+}

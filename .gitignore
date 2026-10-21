@@ -27,3 +27,7 @@ server/.env
 # user uploads (may contain personal documents) and the downloaded demo PDF
 # (server/scripts/fetch-demo-doc.sh); nothing in uploads/ is committed
 server/uploads/*
+
+# frozen prompt captures (server/eval/capture-contexts.js) contain document
+# text and third-party search snippets; results record their SHA-256 instead
+server/eval/frozen/
