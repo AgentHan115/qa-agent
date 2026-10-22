@@ -1,0 +1,780 @@
+{
+  "sheet": "eval/frozen/labels/replay-2026-10-21T10-55-01-709Z.graded.csv",
+  "replay": {
+    "path": "results/replay-2026-10-21T10-55-01-709Z.json",
+    "frozen_sha256": "8b9409d9517cdcf466a8f9042afeb4031a9d064803ed39a9df7b97d1b5bd7107",
+    "stub": false
+  },
+  "labelled": 56,
+  "unlabelled": [],
+  "layer1_end_to_end": {
+    "n": 35,
+    "graded": 35,
+    "correct": 21,
+    "partial": 4,
+    "incorrect": 6,
+    "abstained": 4,
+    "grounded_correct": 20,
+    "correct_but_ungrounded": 1,
+    "by_category": {
+      "doc_prose": {
+        "n": 13,
+        "graded": 13,
+        "correct": 11,
+        "partial": 0,
+        "incorrect": 1,
+        "abstained": 1,
+        "grounded_correct": 10,
+        "correct_but_ungrounded": 1
+      },
+      "doc_table": {
+        "n": 8,
+        "graded": 8,
+        "correct": 4,
+        "partial": 0,
+        "incorrect": 2,
+        "abstained": 2,
+        "grounded_correct": 4,
+        "correct_but_ungrounded": 0
+      },
+      "doc_undisclosed": {
+        "n": 4,
+        "graded": 4,
+        "correct": 3,
+        "partial": 0,
+        "incorrect": 1,
+        "abstained": 0,
+        "grounded_correct": 3,
+        "correct_but_ungrounded": 0
+      },
+      "web": {
+        "n": 5,
+        "graded": 5,
+        "correct": 1,
+        "partial": 2,
+        "incorrect": 2,
+        "abstained": 0,
+        "grounded_correct": 1,
+        "correct_but_ungrounded": 0
+      },
+      "mixed": {
+        "n": 5,
+        "graded": 5,
+        "correct": 2,
+        "partial": 2,
+        "incorrect": 0,
+        "abstained": 1,
+        "grounded_correct": 2,
+        "correct_but_ungrounded": 0
+      }
+    }
+  },
+  "layer2_retrieval": {
+    "n": 35,
+    "sufficient": 18,
+    "partial": 1,
+    "missing": 16,
+    "by_category": {
+      "doc_prose": {
+        "n": 13,
+        "sufficient": 10,
+        "partial": 0,
+        "missing": 3
+      },
+      "doc_table": {
+        "n": 8,
+        "sufficient": 4,
+        "partial": 0,
+        "missing": 4
+      },
+      "doc_undisclosed": {
+        "n": 4,
+        "sufficient": 0,
+        "partial": 0,
+        "missing": 4
+      },
+      "web": {
+        "n": 5,
+        "sufficient": 2,
+        "partial": 0,
+        "missing": 3
+      },
+      "mixed": {
+        "n": 5,
+        "sufficient": 2,
+        "partial": 1,
+        "missing": 2
+      }
+    }
+  },
+  "layer3_generator": {
+    "n": 35,
+    "graded": 35,
+    "correct": 29,
+    "partial": 4,
+    "incorrect": 2,
+    "abstained": 0,
+    "grounded_correct": 26,
+    "correct_but_ungrounded": 3,
+    "by_category": {
+      "doc_prose": {
+        "n": 13,
+        "graded": 13,
+        "correct": 12,
+        "partial": 1,
+        "incorrect": 0,
+        "abstained": 0,
+        "grounded_correct": 11,
+        "correct_but_ungrounded": 1
+      },
+      "doc_table": {
+        "n": 8,
+        "graded": 8,
+        "correct": 8,
+        "partial": 0,
+        "incorrect": 0,
+        "abstained": 0,
+        "grounded_correct": 8,
+        "correct_but_ungrounded": 0
+      },
+      "doc_undisclosed": {
+        "n": 4,
+        "graded": 4,
+        "correct": 3,
+        "partial": 0,
+        "incorrect": 1,
+        "abstained": 0,
+        "grounded_correct": 2,
+        "correct_but_ungrounded": 1
+      },
+      "web": {
+        "n": 5,
+        "graded": 5,
+        "correct": 3,
+        "partial": 2,
+        "incorrect": 0,
+        "abstained": 0,
+        "grounded_correct": 2,
+        "correct_but_ungrounded": 1
+      },
+      "mixed": {
+        "n": 5,
+        "graded": 5,
+        "correct": 3,
+        "partial": 1,
+        "incorrect": 1,
+        "abstained": 0,
+        "grounded_correct": 3,
+        "correct_but_ungrounded": 0
+      }
+    }
+  },
+  "oracle_contexts_not_sufficient": [],
+  "retrieved_abstention": {
+    "appropriate": 23,
+    "answered-without-evidence": 12
+  },
+  "diagnosis": {
+    "retrieval": 7,
+    "works": 19,
+    "generation-or-reference": 8,
+    "oracle-worse": 1
+  },
+  "questions": [
+    {
+      "id": "P10",
+      "category": "doc_prose",
+      "retrieved_evidence": "missing",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": false,
+      "retrieved": {
+        "correct": "abstained",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "retrieval"
+    },
+    {
+      "id": "P13",
+      "category": "doc_prose",
+      "retrieved_evidence": "sufficient",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": true,
+      "retrieved": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "works"
+    },
+    {
+      "id": "T03",
+      "category": "doc_table",
+      "retrieved_evidence": "missing",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": false,
+      "retrieved": {
+        "correct": "abstained",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "retrieval"
+    },
+    {
+      "id": "U01",
+      "category": "doc_undisclosed",
+      "retrieved_evidence": "missing",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": false,
+      "retrieved": {
+        "correct": "incorrect",
+        "grounded": false
+      },
+      "oracle": {
+        "correct": "incorrect",
+        "grounded": false
+      },
+      "retrieved_abstention": "answered-without-evidence",
+      "diagnosis": "generation-or-reference"
+    },
+    {
+      "id": "W04",
+      "category": "web",
+      "retrieved_evidence": "missing",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": false,
+      "retrieved": {
+        "correct": "incorrect",
+        "grounded": false
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "answered-without-evidence",
+      "diagnosis": "retrieval"
+    },
+    {
+      "id": "P06",
+      "category": "doc_prose",
+      "retrieved_evidence": "missing",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": false,
+      "retrieved": {
+        "correct": "incorrect",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "partial",
+        "grounded": true
+      },
+      "retrieved_abstention": "answered-without-evidence",
+      "diagnosis": "generation-or-reference"
+    },
+    {
+      "id": "M03",
+      "category": "mixed",
+      "retrieved_evidence": "partial",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": false,
+      "retrieved": {
+        "correct": "partial",
+        "grounded": false
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "retrieval"
+    },
+    {
+      "id": "W05",
+      "category": "web",
+      "retrieved_evidence": "sufficient",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": false,
+      "retrieved": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "works"
+    },
+    {
+      "id": "M01",
+      "category": "mixed",
+      "retrieved_evidence": "missing",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": false,
+      "retrieved": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "answered-without-evidence",
+      "diagnosis": "works"
+    },
+    {
+      "id": "M02",
+      "category": "mixed",
+      "retrieved_evidence": "sufficient",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": false,
+      "retrieved": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "works"
+    },
+    {
+      "id": "U03",
+      "category": "doc_undisclosed",
+      "retrieved_evidence": "missing",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": false,
+      "retrieved": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": false
+      },
+      "retrieved_abstention": "answered-without-evidence",
+      "diagnosis": "oracle-worse"
+    },
+    {
+      "id": "T04",
+      "category": "doc_table",
+      "retrieved_evidence": "missing",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": false,
+      "retrieved": {
+        "correct": "abstained",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "retrieval"
+    },
+    {
+      "id": "P01",
+      "category": "doc_prose",
+      "retrieved_evidence": "sufficient",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": true,
+      "retrieved": {
+        "correct": "correct",
+        "grounded": false
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": false
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "generation-or-reference"
+    },
+    {
+      "id": "P07",
+      "category": "doc_prose",
+      "retrieved_evidence": "sufficient",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": true,
+      "retrieved": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "works"
+    },
+    {
+      "id": "P09",
+      "category": "doc_prose",
+      "retrieved_evidence": "sufficient",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": true,
+      "retrieved": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "works"
+    },
+    {
+      "id": "P12",
+      "category": "doc_prose",
+      "retrieved_evidence": "sufficient",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": true,
+      "retrieved": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "works"
+    },
+    {
+      "id": "U04",
+      "category": "doc_undisclosed",
+      "retrieved_evidence": "missing",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": false,
+      "retrieved": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "answered-without-evidence",
+      "diagnosis": "works"
+    },
+    {
+      "id": "W01",
+      "category": "web",
+      "retrieved_evidence": "missing",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": false,
+      "retrieved": {
+        "correct": "partial",
+        "grounded": false
+      },
+      "oracle": {
+        "correct": "partial",
+        "grounded": false
+      },
+      "retrieved_abstention": "answered-without-evidence",
+      "diagnosis": "generation-or-reference"
+    },
+    {
+      "id": "P05",
+      "category": "doc_prose",
+      "retrieved_evidence": "sufficient",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": true,
+      "retrieved": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "works"
+    },
+    {
+      "id": "P02",
+      "category": "doc_prose",
+      "retrieved_evidence": "missing",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": false,
+      "retrieved": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "answered-without-evidence",
+      "diagnosis": "works"
+    },
+    {
+      "id": "T02",
+      "category": "doc_table",
+      "retrieved_evidence": "sufficient",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": true,
+      "retrieved": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "works"
+    },
+    {
+      "id": "W03",
+      "category": "web",
+      "retrieved_evidence": "missing",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": false,
+      "retrieved": {
+        "correct": "incorrect",
+        "grounded": false
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": false
+      },
+      "retrieved_abstention": "answered-without-evidence",
+      "diagnosis": "generation-or-reference"
+    },
+    {
+      "id": "M04",
+      "category": "mixed",
+      "retrieved_evidence": "missing",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": false,
+      "retrieved": {
+        "correct": "abstained",
+        "grounded": false
+      },
+      "oracle": {
+        "correct": "incorrect",
+        "grounded": true
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "generation-or-reference"
+    },
+    {
+      "id": "M05",
+      "category": "mixed",
+      "retrieved_evidence": "sufficient",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": false,
+      "retrieved": {
+        "correct": "partial",
+        "grounded": false
+      },
+      "oracle": {
+        "correct": "partial",
+        "grounded": false
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "generation-or-reference"
+    },
+    {
+      "id": "P03",
+      "category": "doc_prose",
+      "retrieved_evidence": "sufficient",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": true,
+      "retrieved": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "works"
+    },
+    {
+      "id": "T05",
+      "category": "doc_table",
+      "retrieved_evidence": "missing",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": false,
+      "retrieved": {
+        "correct": "incorrect",
+        "grounded": false
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "answered-without-evidence",
+      "diagnosis": "retrieval"
+    },
+    {
+      "id": "W02",
+      "category": "web",
+      "retrieved_evidence": "sufficient",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": false,
+      "retrieved": {
+        "correct": "partial",
+        "grounded": false
+      },
+      "oracle": {
+        "correct": "partial",
+        "grounded": false
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "generation-or-reference"
+    },
+    {
+      "id": "T06",
+      "category": "doc_table",
+      "retrieved_evidence": "missing",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": false,
+      "retrieved": {
+        "correct": "incorrect",
+        "grounded": false
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "answered-without-evidence",
+      "diagnosis": "retrieval"
+    },
+    {
+      "id": "U02",
+      "category": "doc_undisclosed",
+      "retrieved_evidence": "missing",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": false,
+      "retrieved": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "answered-without-evidence",
+      "diagnosis": "works"
+    },
+    {
+      "id": "P08",
+      "category": "doc_prose",
+      "retrieved_evidence": "sufficient",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": true,
+      "retrieved": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "works"
+    },
+    {
+      "id": "T08",
+      "category": "doc_table",
+      "retrieved_evidence": "sufficient",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": true,
+      "retrieved": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "works"
+    },
+    {
+      "id": "P11",
+      "category": "doc_prose",
+      "retrieved_evidence": "sufficient",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": true,
+      "retrieved": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "works"
+    },
+    {
+      "id": "T01",
+      "category": "doc_table",
+      "retrieved_evidence": "sufficient",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": true,
+      "retrieved": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "works"
+    },
+    {
+      "id": "T07",
+      "category": "doc_table",
+      "retrieved_evidence": "sufficient",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": true,
+      "retrieved": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "works"
+    },
+    {
+      "id": "P04",
+      "category": "doc_prose",
+      "retrieved_evidence": "sufficient",
+      "oracle_evidence": "sufficient",
+      "oracle_reused_retrieved_answer": true,
+      "retrieved": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "oracle": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "retrieved_abstention": "appropriate",
+      "diagnosis": "works"
+    }
+  ]
+}

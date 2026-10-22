@@ -23,7 +23,9 @@ if (!sheetPath) {
   console.error("Usage: node eval/score-replay.js --sheet=eval/frozen/labels/replay-<run>.csv");
   process.exit(1);
 }
-const run = basename(sheetPath, ".csv").replace(/^replay-/, "");
+// The run id is what follows "replay-"; a suffix such as ".graded" (a saved
+// copy of the sheet) is ignored.
+const run = basename(sheetPath, ".csv").replace(/^replay-/, "").replace(/\.[^.]+$/, "");
 const key = JSON.parse(readFileSync(`eval/labels/replay-${run}.key.json`, "utf8"));
 const keyById = new Map(key.rows.map((r) => [r.answer_id, r]));
 

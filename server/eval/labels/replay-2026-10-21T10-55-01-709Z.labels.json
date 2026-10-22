@@ -1,0 +1,341 @@
+{
+  "sheet": "eval/frozen/labels/replay-2026-10-21T10-55-01-709Z.graded.csv",
+  "labels": [
+    {
+      "answer_id": "R01",
+      "correct": "abstained",
+      "grounded": true,
+      "notes": "Did not give >50; answer abstains because selected snippets omit count."
+    },
+    {
+      "answer_id": "R02",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "19 percentage points directly supported; ancillary factuality/TruthfulQA discussion supported."
+    },
+    {
+      "answer_id": "R03",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "392/below fifth supported by D5; 344.7 is explicitly stated as current model benchmark average in W1, though not the same metric as GPT-4 Codeforces rating."
+    },
+    {
+      "answer_id": "R04",
+      "correct": "incorrect",
+      "grounded": false,
+      "notes": "States speculative 1.8T GPT-4 parameter count as fact; report explicitly withholds model size."
+    },
+    {
+      "answer_id": "R05",
+      "correct": "incorrect",
+      "grounded": false,
+      "notes": "Wrong latest version/date; 2023 date is not the v6 release date."
+    },
+    {
+      "answer_id": "R06",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "Captures substring comparison but omits normalization and three random 50-character substrings."
+    },
+    {
+      "answer_id": "R07",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D1-D4 identify ARC; W5 confirms ARC Evals spun off as METR."
+    },
+    {
+      "answer_id": "R08",
+      "correct": "incorrect",
+      "grounded": false,
+      "notes": "States speculative GPT-4 parameter count as fact; report withholds it."
+    },
+    {
+      "answer_id": "R09",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "April 2023 supported by W5; extra meaning of knowledge cutoff is conventional."
+    },
+    {
+      "answer_id": "R10",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "Says the reported 90th percentile was disputed/lower; grading notes do not require exact lower percentile; W2 supports dispute."
+    },
+    {
+      "answer_id": "R11",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "GPT-4 Turbo April 2023, original GPT-4 September 2021 supported in web/doc context."
+    },
+    {
+      "answer_id": "R12",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "Both September 2021 and April 2023 are present in cited doc/web context."
+    },
+    {
+      "answer_id": "R13",
+      "correct": "correct",
+      "grounded": false,
+      "notes": "Correctly says compute is not disclosed, but adds GPT-5-vs-GPT-4 compute assertion from a social-media headline, which does not substantiate it."
+    },
+    {
+      "answer_id": "R14",
+      "correct": "abstained",
+      "grounded": true,
+      "notes": "Does not supply either AP Calculus BC exam score; says unavailable in visible sources."
+    },
+    {
+      "answer_id": "R15",
+      "correct": "correct",
+      "grounded": false,
+      "notes": "September 2021 is correct; W4 defines cutoff generally, but does not support specific GPT-4 cutoff; answer cites W4 for that claim."
+    },
+    {
+      "answer_id": "R16",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "Correct direction (calibration worsened after post-training) and document evidence includes ECE plot."
+    },
+    {
+      "answer_id": "R17",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "Accurately summarizes preliminary ARC conclusion; limitations omitted but not asked explicitly."
+    },
+    {
+      "answer_id": "R18",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "Hindsight Neglect supported by D1; stray [46] reference is citation formatting issue, not false factual claim."
+    },
+    {
+      "answer_id": "R19",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "Public/licensed sources supported; GSM-8K and MATH explicitly discussed as mixed into training in report."
+    },
+    {
+      "answer_id": "R20",
+      "correct": "partial",
+      "grounded": false,
+      "notes": "Correct month/year but wrong exact announcement date (May 15 instead of May 13); rollout-order detail not established in cited snippet."
+    },
+    {
+      "answer_id": "R21",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "82% and safety context directly supported by report."
+    },
+    {
+      "answer_id": "R22",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "Gives 90th initial claim and substantially lower 62nd later estimate; W2/W5 support reevaluation."
+    },
+    {
+      "answer_id": "R23",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "RLHF fine-tuning described correctly with supported SFT/reward-model/PPO detail."
+    },
+    {
+      "answer_id": "R24",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "149 and around 40th percentile are in D3 table."
+    },
+    {
+      "answer_id": "R25",
+      "correct": "correct",
+      "grounded": false,
+      "notes": "Core April 30 2025/GPT-4o correct; extra specific GPT-4o retirement claim not adequately substantiated by supplied W1-W3 snippets."
+    },
+    {
+      "answer_id": "R26",
+      "correct": "incorrect",
+      "grounded": true,
+      "notes": "Both 67.0% and 90.2% figures are correct, but the answer explicitly calls the difference a performance improvement; grading notes say to fail a seemingly like-for-like improvement comparison without evaluation-setup caveat."
+    },
+    {
+      "answer_id": "R27",
+      "correct": "partial",
+      "grounded": false,
+      "notes": "8K launch window correct, but falsely claims the technical report explicitly gives 8,192 tokens."
+    },
+    {
+      "answer_id": "R28",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "1,000x–10,000x less compute supported by report."
+    },
+    {
+      "answer_id": "R29",
+      "correct": "partial",
+      "grounded": false,
+      "notes": "Correct that technical report does not specify size, but confuses 8K tokens with about 8,000 words."
+    },
+    {
+      "answer_id": "R30",
+      "correct": "incorrect",
+      "grounded": true,
+      "notes": "Describes filtering/reporting contaminated exam scores, not how they detected overlap (normalization/substring matching)."
+    },
+    {
+      "answer_id": "R31",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "Broadly states public and licensed data; MATH/GSM-8K exception is allowed by grading notes. Ancillary claims traceable to report."
+    },
+    {
+      "answer_id": "R32",
+      "correct": "incorrect",
+      "grounded": false,
+      "notes": "Does not provide 86.4 vs 70.0 and invents top/bottom 10% on MMLU; confused with bar exam."
+    },
+    {
+      "answer_id": "R33",
+      "correct": "partial",
+      "grounded": false,
+      "notes": "Correctly identifies ARC as evaluator but incorrectly renames it CARA instead of METR."
+    },
+    {
+      "answer_id": "R34",
+      "correct": "partial",
+      "grounded": false,
+      "notes": "128K correct; wrong announcement date November 7 vs November 6."
+    },
+    {
+      "answer_id": "R35",
+      "correct": "incorrect",
+      "grounded": false,
+      "notes": "Wrong GPT-4 retirement date and replacement."
+    },
+    {
+      "answer_id": "R36",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "67.0% explicitly supported by D5."
+    },
+    {
+      "answer_id": "R37",
+      "correct": "partial",
+      "grounded": false,
+      "notes": "Correct month/year but incorrect precise May 15 announcement (May 13 reference)."
+    },
+    {
+      "answer_id": "R38",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "September 2021 and April 2023 supported by cited sources."
+    },
+    {
+      "answer_id": "R39",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "No training-hardware disclosure is consistent with report; no fabricated hardware specified."
+    },
+    {
+      "answer_id": "R40",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "Over 50 experts and domains explicitly given in D5."
+    },
+    {
+      "answer_id": "R41",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "Both benchmark scores explicitly in D5."
+    },
+    {
+      "answer_id": "R42",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D5 explicitly says the report withholds hardware information."
+    },
+    {
+      "answer_id": "R43",
+      "correct": "abstained",
+      "grounded": true,
+      "notes": "Does not give 392; declines to answer and distinguishes unrelated leaderboard average."
+    },
+    {
+      "answer_id": "R44",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "Describes instruction-following early model vs mitigated helpful/harmless launch model, supported."
+    },
+    {
+      "answer_id": "R45",
+      "correct": "abstained",
+      "grounded": false,
+      "notes": "Does not provide GPT-4o ~90%; introduces unrelated claim about GPT-4.1 nearly doubling a score on verified tasks not established as HumanEval."
+    },
+    {
+      "answer_id": "R46",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "SFT, reward model, PPO/RLHF are explicitly discussed in D3."
+    },
+    {
+      "answer_id": "R47",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "Both AP Calculus BC exam scores and ranges are supported by D5."
+    },
+    {
+      "answer_id": "R48",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "Both toxicity percentages supported by report."
+    },
+    {
+      "answer_id": "R49",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "24 of 26 directly supported. Supplemental benchmark details supported by report."
+    },
+    {
+      "answer_id": "R50",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "298/400 and ~90th supported; equal scores for no-vision and noncontaminated variants supported by cited table."
+    },
+    {
+      "answer_id": "R51",
+      "correct": "partial",
+      "grounded": false,
+      "notes": "128K correct; November 7 date conflicts with Nov 6 announcement; W4 is article published Nov 7, not event date."
+    },
+    {
+      "answer_id": "R52",
+      "correct": "incorrect",
+      "grounded": false,
+      "notes": "100% HumanEval confuses third-party leaderboard with GPT-4 result; actual GPT-4 67.0%."
+    },
+    {
+      "answer_id": "R53",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "v6/March 4 2024 directly supported by W5."
+    },
+    {
+      "answer_id": "R54",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "25% contamination and 65.58% supported by table."
+    },
+    {
+      "answer_id": "R55",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "RBRM definition and safe/unsafe refusal training supported by D2/D3."
+    },
+    {
+      "answer_id": "R56",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "States absolute training compute not disclosed, and normalized figure axis supported by D1/D2."
+    }
+  ]
+}
