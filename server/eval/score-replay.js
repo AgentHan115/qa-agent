@@ -95,18 +95,18 @@ const oracle = byCondition("oracle");
 const questionIds = [...new Set(key.rows.map((r) => r.id))];
 const perQuestion = questionIds.map((id) => {
   const ret = retrieved.find((o) => o.id === id);
-  const ora = oracle.find((o) => o.id === id);
+  const ora = oracle.find((o) => o.id === id); // absent in a retrieved-only run
   const row = {
     id,
     category: ret.category,
     retrieved_evidence: ret.evidence,
-    oracle_evidence: ora.evidence,
-    oracle_reused_retrieved_answer: ora.answer_id === ret.answer_id,
+    oracle_evidence: ora?.evidence ?? null,
+    oracle_reused_retrieved_answer: ora ? ora.answer_id === ret.answer_id : null,
     retrieved: ret.label && { correct: ret.label.correct, grounded: ret.label.grounded },
-    oracle: ora.label && { correct: ora.label.correct, grounded: ora.label.grounded },
+    oracle: ora?.label ? { correct: ora.label.correct, grounded: ora.label.grounded } : null,
   };
   if (ret.label) row.retrieved_abstention = abstentionCheck(ret.evidence, ret.label.correct);
-  if (ret.label && ora.label) row.diagnosis = diagnose(groundedCorrect(ret.label), groundedCorrect(ora.label));
+  if (ret.label && ora?.label) row.diagnosis = diagnose(groundedCorrect(ret.label), groundedCorrect(ora.label));
   return row;
 });
 

@@ -33,6 +33,12 @@ test("planCalls makes one call per distinct prompt", () => {
   assert.deepEqual(planCalls(frozen, ["B"]).map((c) => c.condition), ["retrieved", "oracle"]);
 });
 
+test("planCalls can be limited to one condition", () => {
+  assert.deepEqual(planCalls(frozen, null, ["retrieved"]).map((c) => `${c.id}:${c.condition}`), ["A:retrieved", "B:retrieved"]);
+  // Oracle alone still calls for an oracle prompt identical to the retrieved one.
+  assert.deepEqual(planCalls(frozen, null, ["oracle"]).map((c) => `${c.id}:${c.condition}`), ["A:oracle", "B:oracle"]);
+});
+
 test("promptText matches the pipeline's system + blank line + user layout", () => {
   assert.equal(promptText("S", "U"), "S\n\nU");
 });

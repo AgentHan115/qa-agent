@@ -11,6 +11,7 @@
 //
 // Options:
 //   --ids=P01,T05   only these questions
+//   --conditions=retrieved   only these conditions (default retrieved,oracle)
 //   --stub          don't call a model; answer with a fixed string (dry runs)
 //   --out=<path>    default results/replay-<timestamp>.json
 //
@@ -29,7 +30,7 @@ import { createChatModel, invokeGuarded, llmConfig } from "../lib/llm.js";
 import { usageFrom } from "../lib/usage.js";
 import { describeRuntime } from "../lib/runtime-info.js";
 import { parseCitations } from "../pipeline/citations.js";
-import { planCalls, promptText, sha1 } from "./replay.js";
+import { CONDITIONS, planCalls, promptText, sha1 } from "./replay.js";
 
 const argValue = (name) => process.argv.find((a) => a.startsWith(`--${name}=`))?.split("=").slice(1).join("=");
 const stub = process.argv.includes("--stub");
@@ -47,7 +48,12 @@ if (sha1(frozen.system) !== frozen.system_sha1) {
 }
 
 const ids = argValue("ids")?.split(",");
-const calls = planCalls(frozen, ids);
+const conditions = argValue("conditions")?.split(",") ?? CONDITIONS;
+if (conditions.some((c) => !CONDITIONS.includes(c))) {
+  console.error(`--conditions must be from: ${CONDITIONS.join(", ")}`);
+  process.exit(1);
+}
+const calls = planCalls(frozen, ids, conditions);
 const model = stub ? null : createChatModel();
 const config = llmConfig();
 
@@ -102,10 +108,15 @@ const out = {
   frozen: { path: frozenPath, sha256: createHash("sha256").update(frozenText).digest("hex"), created: frozen.created },
   model: stub ? null : config,
   runtime: stub ? null : await describeRuntime().catch((err) => ({ error: err.message })),
-  reused: frozen.questions
-    .filter((q) => !ids || ids.includes(q.id))
-    .filter((q) => !calls.some((c) => c.id === q.id && c.condition === "oracle"))
-    .map((q) => q.id),
+  conditions,
+  // Questions whose oracle prompt equals the retrieved one: the retrieved
+  // answer stands for both (only when both conditions were run).
+  reused: conditions.length === CONDITIONS.length
+    ? frozen.questions
+        .filter((q) => !ids || ids.includes(q.id))
+        .filter((q) => !calls.some((c) => c.id === q.id && c.condition === "oracle"))
+        .map((q) => q.id)
+    : [],
   answers,
 };
 mkdirSync("results", { recursive: true });

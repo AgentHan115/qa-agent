@@ -15,6 +15,7 @@
 //   node eval/retrieval-sweep.js --documentId=<uuid> [--ks=5,8,10] [--methods=vector,bm25,rrf,interleave]
 //                                [--compare=results/eval-<ts>.json]
 //
+// --stopwords=generic (default) or tuned (the list the 41847ec results used).
 // --compare checks that vector at the smallest k reproduces the pages an
 // earlier eval retrieved. Writes results/retrieval-sweep-<timestamp>.json
 // (pages, ranks and chunk lengths only; no chunk text).
@@ -27,7 +28,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "fs";
 import { Chroma } from "@langchain/community/vectorstores/chroma";
 import { ChromaClient } from "chromadb";
 import { createEmbeddings, embeddingConfig, formatQuery } from "../lib/llm.js";
-import { createBm25, interleave, reciprocalRankFusion } from "./bm25.js";
+import { createBm25, DATASET_TUNED_STOPWORDS, GENERIC_STOPWORDS, interleave, reciprocalRankFusion } from "./bm25.js";
 
 const argValue = (name) => process.argv.find((a) => a.startsWith(`--${name}=`))?.split("=").slice(1).join("=");
 const documentId = argValue("documentId");
@@ -62,7 +63,11 @@ const all = await collection.get({ include: ["documents", "metadatas"] });
 const chunks = all.ids.map((id, i) => ({ id, text: all.documents[i], page: all.metadatas[i]?.page ?? null }));
 const indexByText = new Map();
 chunks.forEach((c, i) => indexByText.has(c.text) || indexByText.set(c.text, i));
-const bm25 = createBm25(chunks.map((c) => c.text));
+const stopwordsName = argValue("stopwords") || "generic";
+const bm25 = createBm25(
+  chunks.map((c) => c.text),
+  { stopwords: stopwordsName === "tuned" ? DATASET_TUNED_STOPWORDS : GENERIC_STOPWORDS }
+);
 
 const vectorIndices = async (vector, k) =>
   (await store.similaritySearchVectorWithScore(vector, k)).map(([doc]) => {
@@ -205,6 +210,7 @@ writeFileSync(
       ks,
       methods,
       fusion_depth: FUSION_DEPTH,
+      stopwords: stopwordsName,
       compared_with: argValue("compare") ?? null,
       summary,
       questions: records,

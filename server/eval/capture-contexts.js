@@ -30,6 +30,13 @@
 //   --ids=P01,W05           only these questions
 //   --allow-draft           accept a dataset or web-evidence file that isn't APPROVED
 //   --out=<path>            default eval/frozen/contexts-<timestamp>.json
+//   --retriever=<name>      vector (default, what production does) or vector+bm25
+//                           (eval/retrievers.js: production's vector top-k plus the
+//                           best --keyword-k BM25 chunks not already included)
+//   --keyword-k=<n>         default 3, for --retriever=vector+bm25
+//   --web-from=<path>       reuse the web results (and their status) captured in an
+//                           earlier frozen file instead of searching, so only the
+//                           document retrieval differs between the two captures
 //
 // SEARCH_PROVIDER=fake runs everything without spending search quota.
 // The output contains document text and third-party snippets, so eval/frozen/
@@ -46,6 +53,7 @@ import { ChromaClient } from "chromadb";
 
 import { prepareContext } from "../pipeline/answer.js";
 import { retrieveDocuments, TOP_K } from "../pipeline/retrieve.js";
+import { createVectorPlusKeywordRetriever } from "./retrievers.js";
 import { INSTRUCTIONS } from "../pipeline/context.js";
 import { normalizeResult } from "../search/provider.js";
 import { createSerpApiProvider } from "../search/serpapi.js";
@@ -269,14 +277,57 @@ const git = (() => {
   }
 })();
 
-console.log(`Capturing ${questions.length} questions (search: ${providerName}, budget ${timeoutMs} ms, ${attemptTimeoutMs} ms per attempt, ${retries} retries)`);
+// Document retriever under test; the default is production's.
+const retrieverName = argValue("retriever") || "vector";
+const keywordK = parseInt(argValue("keyword-k") || "3", 10);
+const RETRIEVERS = {
+  vector: () => retrieveDocuments,
+  "vector+bm25": () => createVectorPlusKeywordRetriever({ vectorK: TOP_K, keywordK }),
+};
+if (!RETRIEVERS[retrieverName]) {
+  console.error(`Unknown --retriever=${retrieverName} (expected: ${Object.keys(RETRIEVERS).join(", ")})`);
+  process.exit(1);
+}
+const retrieveUnderTest = RETRIEVERS[retrieverName]();
+
+// Web results reused from an earlier capture, by question id.
+const webFromPath = argValue("web-from");
+const webFrom = (() => {
+  if (!webFromPath) return null;
+  const text = readFileSync(webFromPath, "utf8");
+  const earlier = JSON.parse(text);
+  if (earlier.documentId !== documentId || earlier.dataset?.sha1 !== dataset.sha1) {
+    console.error(`${webFromPath} was captured for a different document or dataset; refusing to reuse its web results.`);
+    process.exit(1);
+  }
+  return {
+    path: webFromPath,
+    sha256: createHash("sha256").update(text).digest("hex"),
+    byId: new Map(earlier.questions.map((q) => [q.id, q])),
+  };
+})();
+
+console.log(
+  `Capturing ${questions.length} questions (retriever: ${retrieverName}${retrieverName === "vector" ? "" : `, keyword k ${keywordK}`}, top-k ${TOP_K}; ` +
+    (webFrom ? `web results from ${webFrom.path})` : `search: ${providerName}, budget ${timeoutMs} ms, ${attemptTimeoutMs} ms per attempt, ${retries} retries)`)
+);
 const records = [];
 for (const q of questions) {
   searchLog = [];
   let retrieved = [];
   let web = { status: "error", results: [] };
-  const recordRetrieve = async (question, id, meta) => (retrieved = await retrieveDocuments(question, id, meta));
+  const recordRetrieve = async (question, id, meta) => (retrieved = await retrieveUnderTest(question, id, meta));
+  const earlier = webFrom?.byId.get(q.id);
+  if (webFrom && !earlier) {
+    console.error(`${q.id} isn't in ${webFrom.path}`);
+    process.exit(1);
+  }
   const recordSearch = async (query, opts) => {
+    if (earlier) {
+      // Same results and status as the earlier capture, through the same replay.
+      web = { status: earlier.search.status, results: earlier.retrieved.web };
+      return replaySearch(web)(query, opts);
+    }
     try {
       const out = await liveSearch(query, opts);
       web = { status: out.results.length ? "ok" : "empty", results: out.results };
@@ -300,7 +351,9 @@ for (const q of questions) {
     category: q.category,
     needs: q.needs,
     question: q.question,
-    search: { query: q.question, status: web.status, attempts: searchLog },
+    search: earlier
+      ? { query: q.question, status: web.status, replayed_from: webFrom.path, attempts: earlier.search.attempts }
+      : { query: q.question, status: web.status, attempts: searchLog },
     retrieved: { docs: retrieved, web: web.results },
     contexts: {
       retrieved: {
@@ -341,7 +394,10 @@ const output = {
     llm_model: llmConfig().model,
     embedding: embeddingConfig(),
     top_k: TOP_K,
-    search: { provider: providerName, transport: "direct (capture)", num, timeoutMs, attemptTimeoutMs, retries },
+    retrieval: { method: retrieverName, vector_k: TOP_K, keyword_k: retrieverName === "vector" ? 0 : keywordK },
+    search: webFrom
+      ? { replayed_from: webFrom.path, replayed_from_sha256: webFrom.sha256, timeoutMs }
+      : { provider: providerName, transport: "direct (capture)", num, timeoutMs, attemptTimeoutMs, retries },
   },
   system: INSTRUCTIONS,
   system_sha1: sha1(INSTRUCTIONS),

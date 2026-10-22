@@ -7,17 +7,23 @@
 // PDF extraction glued together ("86.4%70.0%") still splits at the "%".
 const TOKEN = /[a-z0-9]+(?:\.[0-9]+)?/g;
 
-// Question words and function words that would otherwise match everywhere
+// Generic question and function words that would otherwise match everywhere
 // ("how did ..." matching "DID"); IDF alone doesn't remove all of them.
-const STOPWORDS = new Set(
-  "a an and are as at be by did do does for from had has have how in is it its of on or that the their this to was were what when where which who why with according report".split(" ")
+// Deliberately not tuned to the dataset's phrasing. (The 41847ec sweep also
+// dropped "according" and "report"; that list is kept as DATASET_TUNED_STOPWORDS for
+// reproducing it.)
+export const GENERIC_STOPWORDS = new Set(
+  "a an and are as at be by did do does for from had has have how in is it its of on or that the their this to was were what when where which who why with".split(" ")
 );
+export const DATASET_TUNED_STOPWORDS = new Set([...GENERIC_STOPWORDS, "according", "report"]);
 
-export const tokenize = (text) => (text.toLowerCase().match(TOKEN) ?? []).filter((t) => !STOPWORDS.has(t));
+export const tokenize = (text, stopwords = GENERIC_STOPWORDS) =>
+  (text.toLowerCase().match(TOKEN) ?? []).filter((t) => !stopwords.has(t));
 
 // Returns search(query, k) -> [{ index, score }], best first.
-export const createBm25 = (texts, { k1 = 1.2, b = 0.75 } = {}) => {
-  const docs = texts.map(tokenize);
+export const createBm25 = (texts, { k1 = 1.2, b = 0.75, stopwords = GENERIC_STOPWORDS } = {}) => {
+  const tokens = (text) => tokenize(text, stopwords);
+  const docs = texts.map(tokens);
   const avgLen = docs.reduce((n, d) => n + d.length, 0) / Math.max(docs.length, 1);
   const termFreqs = docs.map((d) => d.reduce((m, t) => m.set(t, (m.get(t) ?? 0) + 1), new Map()));
   const docFreq = new Map();
@@ -28,7 +34,7 @@ export const createBm25 = (texts, { k1 = 1.2, b = 0.75 } = {}) => {
   };
 
   return (query, k) => {
-    const terms = [...new Set(tokenize(query))];
+    const terms = [...new Set(tokens(query))];
     const scored = termFreqs.map((tf, index) => {
       let score = 0;
       for (const t of terms) {

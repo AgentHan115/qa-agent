@@ -2,11 +2,14 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createBm25, interleave, reciprocalRankFusion, tokenize } from "../eval/bm25.js";
+import { createBm25, DATASET_TUNED_STOPWORDS, interleave, reciprocalRankFusion, tokenize } from "../eval/bm25.js";
 
 test("tokenize keeps decimals and names, splits glued table values, drops stopwords", () => {
   assert.deepEqual(tokenize("MMLU [49]86.4%70.0%"), ["mmlu", "49", "86.4", "70.0"]);
   assert.deepEqual(tokenize("How did the authors check HumanEval?"), ["authors", "check", "humaneval"]);
+  // Generic by default; the dataset-tuned list also drops "according" and "report".
+  assert.deepEqual(tokenize("According to the report"), ["according", "report"]);
+  assert.deepEqual(tokenize("According to the report", DATASET_TUNED_STOPWORDS), []);
 });
 
 test("BM25 ranks the chunk with the rare matching term first", () => {

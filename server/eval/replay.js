@@ -14,14 +14,17 @@ export const CONDITIONS = ["retrieved", "oracle"];
 // One call per distinct prompt. When the oracle didn't change the hybrid
 // context (the evidence was already retrieved), its prompt is byte-identical
 // to the retrieved one, so the retrieved answer is reused for the oracle.
-export const planCalls = (frozen, ids) =>
+// `conditions` limits the run, e.g. ["retrieved"] to test a retriever only.
+export const planCalls = (frozen, ids, conditions = CONDITIONS) =>
   frozen.questions
     .filter((q) => !ids || ids.includes(q.id))
     .flatMap((q) => {
       const retrieved = q.contexts.retrieved.hybrid;
       const oracle = q.contexts.oracle.hybrid;
-      const calls = [{ id: q.id, condition: "retrieved", context: retrieved }];
-      if (oracle.prompt_sha1 !== retrieved.prompt_sha1) calls.push({ id: q.id, condition: "oracle", context: oracle });
+      const calls = conditions.includes("retrieved") ? [{ id: q.id, condition: "retrieved", context: retrieved }] : [];
+      if (conditions.includes("oracle") && (oracle.prompt_sha1 !== retrieved.prompt_sha1 || !conditions.includes("retrieved"))) {
+        calls.push({ id: q.id, condition: "oracle", context: oracle });
+      }
       return calls;
     });
 
