@@ -1,6 +1,6 @@
 # Project Handoff — Agent AI (Hybrid Document + Web Q&A)
 
-Written 2026-10-19 so a fresh Claude session can continue the work from the repository alone.
+Written 2026-10-19 and updated 2026-10-22 (Step 4 results) so a fresh Claude session can continue the work from the repository alone.
 
 Facts are verified from the repo (code, commit messages, `server/results/`, README) unless marked **[conversation-only]**. Those come from earlier chat sessions, aren't recorded in the repo, and should be re-verified before you rely on them.
 
@@ -11,18 +11,17 @@ Facts are verified from the repo (code, commit messages, `server/results/`, READ
 1. **Read** this file, then [README.md](README.md) (the integration guide).
 2. **Check git state.** Work happens on branch `qa-agent-hardening`; `main` is the untouched original snapshot.
    - Tags: `baseline-dual`, `step1-hybrid`, `step2-reliability`.
-   - Last commit when this was written: `e2511b0` (draft dataset).
-3. **Run the checks.** `npm test --prefix server` should give 59 pass. One integration test needs Chroma and the demo PDF, otherwise it's skipped. `CI=true npm test` should give 4 pass.
+   - Last results commit when this was updated: `f8a0b43` (human-graded Step 4 scores).
+3. **Run the checks.** `npm test --prefix server` should give 79 pass. One integration test needs Chroma and the demo PDF, otherwise it's skipped. `CI=true npm test` should give 4 pass.
 4. **Check the dataset:** `npm run eval:validate --prefix server` should print "All gold pages verified". It needs `sh server/scripts/fetch-demo-doc.sh` first.
-5. **Current task: Step 4 (evaluation).**
-   - The dataset [server/eval/datasets/gpt4-report.v1.json](server/eval/datasets/gpt4-report.v1.json) was **approved by the user on 2026-10-19** (status `APPROVED`), after a source review recorded in commit `f25e5b9`.
-   - Next: adapt [server/scripts/eval.js](server/scripts/eval.js) to the dataset (§11 step 2 onwards).
-   - Plan: [§11](#11-step-4-plan-measure-before-changing-architecture).
+5. **Current state: Step 4 (evaluation) is measured; next is a retrieval round.**
+   - Human-graded results: end-to-end **20/35** grounded-correct, **26/35** with gold evidence; 7 failures trace to retrieval and 8 to generation. Details in [§8](#8-benchmark-results-and-how-to-read-them).
+   - Next steps, in order: [§11](#11-step-4-status-and-next-steps). SGLang: [§13](#13-future-sglang-experiment).
 6. **Local services:** `docker compose up -d postgres redis chroma`. Ollama runs on the host. Model setup: [§4](#4-runtime--model-setup).
    - [conversation-only] The previous session ran the API through a Claude preview config named `agentai-api` in `~/.claude/launch.json`, with cwd `server/`. Run it from `server/`, because `dotenv` reads `./.env`.
 7. **Read [§14](#14-do-not-accidentally-change) before changing anything.**
 
-Key files: [server/pipeline/answer.js](server/pipeline/answer.js) · [server/pipeline/context.js](server/pipeline/context.js) · [server/search/](server/search/) · [server/lib/llm.js](server/lib/llm.js) · [server/lib/guards.js](server/lib/guards.js) · [server/ingest.js](server/ingest.js) · [server/server.js](server/server.js) · [server/scripts/eval.js](server/scripts/eval.js)
+Key files: [server/eval/](server/eval/) (capture, replay, grading, scoring) · [server/pipeline/answer.js](server/pipeline/answer.js) · [server/pipeline/context.js](server/pipeline/context.js) · [server/search/](server/search/) · [server/lib/llm.js](server/lib/llm.js) · [server/lib/guards.js](server/lib/guards.js) · [server/ingest.js](server/ingest.js) · [server/server.js](server/server.js) · [server/scripts/eval.js](server/scripts/eval.js)
 
 ---
 
@@ -228,6 +227,49 @@ Code: [server/ingest.js](server/ingest.js), [server/lib/queue.js](server/lib/que
 
 ## 8. Benchmark results and how to read them
 
+### Step 4: GPT-4 report dataset, human-graded (the numbers to quote)
+
+**Method** (code in [server/eval/](server/eval/), also described in the README's Evaluation section):
+- [capture-contexts.js](server/eval/capture-contexts.js) ran the production `prepareContext` once per question on 2026-10-21 (commit `4c9f804`): real retrieval, one real SerpAPI search (production budgets), raw SerpAPI metadata kept. It also built **oracle** contexts (gold evidence chunks replace the lowest-ranked chunks; a reviewed web excerpt replaces the lowest-ranked web result) and a no-sources control. Output: `server/eval/frozen/contexts-2026-10-21T10-03-05-839Z.json`, **git-ignored** (report text and snippets), SHA-256 `8b9409d9517cdcf466a8f9042afeb4031a9d064803ed39a9df7b97d1b5bd7107`. Retrieval reproduces exactly (35/35 identical to the 2026-10-20 runs).
+- [replay-contexts.js](server/eval/replay-contexts.js) sent the frozen hybrid prompts to Qwen3-8B Q4_K_M (commit `29963b5`, results `3b3a4a8`). Every prompt matched its frozen SHA-1. 56 calls: 35 retrieved, 21 oracle; for the other 14 the oracle prompt is identical, so the retrieved answer is reused.
+- The user graded all 56 answers blind: `correct` (correct/partial/incorrect/abstained) and `grounded` (every claim supported by the sources shown). Labels with notes: [server/eval/labels/replay-2026-10-21T10-55-01-709Z.labels.json](server/eval/labels/replay-2026-10-21T10-55-01-709Z.labels.json). Scores: [server/results/replay-score-2026-10-21T10-55-01-709Z.json](server/results/replay-score-2026-10-21T10-55-01-709Z.json) (`f8a0b43`).
+
+**Results (hybrid mode):**
+
+| Layer | Result |
+|---|---|
+| 1. End-to-end (retrieved evidence) | **20/35 grounded-correct** (21 correct, 4 partial, 6 incorrect, 4 abstained) |
+| 2. Retrieval (gold evidence in context) | 18 sufficient, 1 partial, 16 missing; document evidence 17/30, web 4/10 |
+| 3. Generator (gold evidence present) | **26/35 grounded-correct** (29 correct, 4 partial, 2 incorrect) |
+
+| Category | End-to-end | With gold evidence |
+|---|---|---|
+| doc_prose (13) | 10 | 11 |
+| doc_table (8) | 4 | 8 |
+| doc_undisclosed (4) | 3 | 2 |
+| web (5) | 1 | 2 |
+| mixed (5) | 2 | 3 |
+
+**Diagnosis per question** (grounded-correct on retrieved vs oracle): works 19; **retrieval 7** (P10, T03, T04, T05, T06, W04, M03); **generation-or-reference 8** (P01, P06, U01, W01, W02, W03, M04, M05); oracle-worse 1 (U03).
+
+**How to read it:**
+- **Retrieval is the larger bottleneck.** Every evidence quote is stored in Chroma (the oracle found all of them); the failures are ranking. Table questions: 4/8 → 8/8 with the right chunk.
+- **Generation failures are mostly source conflicts**, from the user's notes: an unofficial web figure stated as fact despite the report's "not disclosed" sentence (U01); the wrong date picked among sources (W01 May 15 vs 13; W02 Nov 7 vs 6); a web figure attributed to the report (M05); unsupported extra claims or a wrong citation (W03, U03, P01); the like-for-like improvement wording the grading notes forbid (M04); an incomplete method description (P06).
+- **Abstention:** with evidence missing, Qwen abstained correctly on P10, T03, T04, but used misleading numbers when the context had them (T05 "top 10%", T06 a leaderboard's "100%", W04 a 2023 date).
+- **Latency (replay, generation only):** P50 5.9 s, P95 8.5 s on retrieved contexts, ~1.2k input tokens. Capture searches: P50 0.75 s when they succeeded; P06 and P12 timed out on all three 3 s attempts.
+
+**Caveats:**
+- The layer-2 check counts only the chunk holding the dataset's evidence quote. P02, U02, U04 and M01 are "missing" by that check but grounded-correct from other evidence, so usable evidence is closer to 22/35. U02 may be right for the wrong reason (no hardware mentioned ≈ "not disclosed").
+- The oracle keeps the other retrieved sources, so layer 3 is "gold evidence among noise", not clean evidence.
+- One grader, n = 35, one run; a few labels are judgement calls (W02's date, M04's wording rule, W03's extra claim).
+- **No other model has been run on these contexts.** Nothing here says how much GPT-4o would help.
+
+### Step 4: the 2026-10-20 live runs (judge-graded, superseded)
+
+[server/scripts/eval.js](server/scripts/eval.js) on commit `c239d93`, results `56069a8`: judged pass docs 30/35, web 23/35, hybrid 29/35. **The judge (the same Qwen3-8B) is too lenient**: it passed 12 of 15 abstentions in docs mode and some wrong facts, so these pass rates are not quality numbers. Page-level retrieval from those runs (MRR 0.639, R@1 0.5, R@3 0.767, R@5 0.833) overstates evidence recall; see the chunk-level 17/30 above. In web mode, 7 of 31 completed searches returned pages matching only one word of the question (e.g. "does" → does.dc.gov) and 4 timed out; the one-word results didn't recur on 2026-10-21 except T01's, which SerpAPI's metadata shows Google ranked for the full question. The judge-calibration sheet from `b796421` was never labelled; the replay labels replace it as the calibration set.
+
+### Earlier results (HBS document, before Step 4)
+
 All runs: the Mac setup above, the **earlier HBS demo document** (Lean Startup note, 26 pages, 212 chunks), the 10 questions in [server/scripts/eval.js](server/scripts/eval.js), one run each. Grading used the same Qwen3-8B as an LLM judge, **not calibrated against human labels**. Files are in [server/results/](server/results/); commits are mapped in COMMIT_MAP.md.
 
 | Run (file) | Completed | Judged correct | LLM calls per question | Input tokens | Warm median latency |
@@ -245,7 +287,7 @@ All runs: the Mac setup above, the **earlier HBS demo document** (Lean Startup n
 - **No retrieval metrics** (recall@k, MRR) exist yet. There is no concurrency or throughput measurement.
 - [conversation-only] SerpAPI may serve cached results for repeated identical queries, so search latency on repeated queries may be optimistic.
 
-## 9. Demo document and the draft Step 4 dataset
+## 9. Demo document and the Step 4 dataset
 
 **Document:** "GPT-4 Technical Report", arXiv:2303.08774**v3**; 100 pages, 682 chunks, about 71k tokens.
 - **Not committed:** arXiv's non-exclusive license doesn't extend to redistribution.
@@ -266,46 +308,48 @@ All runs: the Mac setup above, the **earlier HBS demo document** (Lean Startup n
 - **Fields:** `gold_pages` (1-based PDF pages), `evidence` (verbatim quotes), `needs`, `grading` notes, and `web_sources` (verified on 2026-10-19).
 - **Check:** `npm run eval:validate --prefix server` verifies the PDF checksum and that every evidence quote appears on a gold page. It has been shown to fail on a wrong page.
 - **[conversation-only] The user was asked to look closely at M01** (bar-exam percentiles, which differ across paper versions) **and M04** (GPT-4o's HumanEval score depends on the snapshot).
-- **Contamination risk:** Qwen3-8B has probably seen this report in training. Grading must reward page-grounded citations, exact table values, and "not disclosed" answers, not just correct-sounding text.
+- **Contamination risk:** Qwen3-8B has probably seen this report in training. Grading must reward page-grounded citations, exact table values, and "not disclosed" answers, not just correct-sounding text. The replay grading does this with the separate `grounded` label.
+- **Web evidence for the oracle:** [server/eval/datasets/gpt4-report.v1.web-evidence.json](server/eval/datasets/gpt4-report.v1.web-evidence.json), one short excerpt per web/mixed question, approved by the user on 2026-10-21. Verbatim except M04, which is transcribed from OpenAI's GPT-4o chart. `review_note` fields record known weaknesses (e.g. W02's date comes only from the result date).
+- **Dataset revision history:** `f25e5b9` revised M01, M04, M05, W03 and T01 after a source review, before any answers were seen; `81f829c` approved it.
 
 ## 10. Known issues found but intentionally not fixed
 
 Each of these changes retrieval or answer behaviour, so it should be measured in Step 4 before and after.
 
 - **Junk chunks and repeated headers/footers.** The GPT-4 PDF produces 1-character chunks (e.g. `"9"`; 2 chunks under 16 characters). The old HBS note repeated a licensing line on many pages. Both waste top-k slots. A fix (minimum chunk content, stripping headers and footers) changes chunk IDs, so it needs re-ingestion and re-baselining.
-- **The raw question is used as the search query.** "…what are some well-known examples?" returned Wells Fargo and wellness sites; "Is the author of this paper currently a professor?" returned generic pages with no person attached. [conversation-only, observed live]
+- **The raw question is used as the search query**, with no rewriting, entity anchoring or reranking. Measured: web evidence present for 4 of 10 web/mixed questions; T01's question returns ExamSoft/ExamFX/IMDb. Document-relative phrasing ("according to the report", "the authors", "in Table 1") means nothing to a search engine.
+- **Document retrieval ranks the gold chunk too low** (17/30 in top 5). Candidate fixes, unmeasured: larger top-k, larger or table-aware chunks, junk-chunk filtering, keyword (BM25) retrieval for exact values.
+- **The model trusts the wrong source when sources conflict** (see §8). Candidate fix, unmeasured: instructions that prefer the document for claims about the report and label unofficial estimates.
+- **The search adapter discards SerpAPI's `related_questions`.** `ai_overview` arrives only as a `page_token` and would need a second paid request.
 - **No automatic routing:** every `hybrid` request searches; instructions like "only from this PDF" aren't parsed.
 - **No sequential document→web retrieval:** search runs in parallel with retrieval, so it can't use facts from the document (e.g. the author's name). There's only one round of gathering sources.
 - **Citation validity is not faithfulness:** the checker confirms labels exist, not that the source supports the sentence. One answer cited page 5 for "actionable metrics", but the page discusses the metrics without that word.
-- **Eval judge:** the same 8B model, uncalibrated. The layered similarity thresholds (0.6/0.85) were tuned for ada-002 and are unused (`EVAL_GRADING=judge` is the default).
+- **Eval judge:** the same 8B model, shown to be too lenient (§8). The layered similarity thresholds (0.6/0.85) were tuned for ada-002 and are unused (`EVAL_GRADING=judge` is the default). The 56 human replay labels are the calibration set for any replacement judge.
 - **Chroma upsert ceiling** and **multiple ingestion workers across processes:** see §5.
 - **Smaller items:**
   - `multer` 1.x has published vulnerabilities;
   - `benchmark.js` measures end-to-end `/chat` latency only;
   - `regenerator-runtime` is used by the frontend tests but is only a transitive dependency;
-  - the `pdf` metadata string is stored on every chunk;
-  - the old eval questions in `eval.js` are about HBS and must be replaced by the dataset.
+  - the `pdf` metadata string is stored on every chunk.
 - **[conversation-only] Local data, not in the repo:** Postgres still has rows and Chroma has collections for HBS-era documents (e.g. `6428a0e7…`, `ready`). They're harmless but stale.
 
-## 11. Step 4 plan: measure before changing architecture
+## 11. Step 4 status and next steps
 
-1. **Dataset:** approved and `DRAFT` removed (2026-10-19).
-2. **Harness:** run [server/scripts/eval.js](server/scripts/eval.js) on the JSON dataset, once per mode (`docs`, `web`, `hybrid`).
-3. **Metrics, by category and complexity:**
-   - answer correctness (judge plus the per-question `grading` notes);
-   - **retrieval recall@k and MRR** against `gold_pages`;
-   - citation validity, and whether the gold page was cited;
-   - "not disclosed" handling;
-   - web status and attempts;
-   - per-stage latency (P50/P95), time to first token, input/output tokens, and LLM and tool calls per question.
-4. **Judge calibration:** the user hand-labels about 20 answers; report agreement between judge and human before trusting judge accuracy.
-5. **Then the baseline experiments**, comparing configurations with the same harness:
-   - top-k and chunk size;
-   - filtering junk chunks and headers/footers;
-   - `SEARCH_TRANSPORT=mcp` vs `direct` (what the MCP hop costs);
-   - concurrency with the fake provider;
-   - cold vs warm runs.
-6. **Each architecture change** (§12) is only justified by a measured gap. Results go in `server/results/` with their commit and `/runtime` record.
+**Done:** dataset approved; `eval.js` runs it with page-level retrieval metrics and P50/P95 per stage; frozen capture with oracle and no-sources variants; Qwen replay; blind human grading of all 56 answers; three-layer scores (§8). The judge calibration planned here is superseded: the replay labels are the calibration set.
+
+**Evaluation story** agreed with the user [conversation-only]: (1) how good is the QA agent end to end; (2) if it fails, is retrieval or generation responsible; (3) only then, would a stronger model help. Layer 4 (Qwen vs GPT-4o on the same frozen evidence) is deliberately deferred.
+
+**Next, in order** (suggested to the user on 2026-10-22; the user approved step 1):
+1. **Write up Step 4** in the README and this file. Done 2026-10-22.
+2. **One retrieval round**, iterating on layer 2 first (no grading needed), then grading only the winning configuration end to end:
+   - document: top-k 5 → 8/10 (no re-ingestion), then chunk size / table-aware chunks / junk filtering (re-ingest and re-baseline);
+   - web: a query built from the question (strip document-relative phrases, add the entity), search timeouts, optionally `related_questions`;
+   - to keep grading cheap, calibrate a stronger LLM judge against the 56 human labels and spot-check it.
+   - A Querit adapter, compared with SerpAPI on the same questions, would be the most role-relevant result, but needs Querit's API docs or a key.
+3. **Generator fix, optional:** a source-conflict instruction tested by replaying the oracle contexts only (needs a replay option for a different system prompt; the replay currently enforces the frozen one). GPT-4o (layer 4) only on the ~9 generation-failure questions plus controls (~12–15 calls), and only if the prompt change doesn't close the gap. Needs an OpenAI key; check that the API still serves a pinned `gpt-4o` snapshot first.
+4. **SGLang** (§13), independent of 2–3.
+
+Remaining baseline experiments from the original plan, not yet done: `SEARCH_TRANSPORT=mcp` vs `direct`; concurrency with the fake provider; cold vs warm runs. Each architecture change (§12) is only justified by a measured gap; results go in `server/results/` with their commit and runtime record.
 
 ## 12. Deferred ideas: benchmark first, don't build by default
 
@@ -320,10 +364,12 @@ Each of these changes retrieval or answer behaviour, so it should be measured in
 ## 13. Future SGLang experiment
 
 [conversation-only plan, agreed with the user] Only after the QA Agent is measured (Step 4):
-1. Save workload traces that keep **the actual prompt parts** (system message, sources, question, settings), not just token counts, so SGLang can re-tokenize and replay them. The pipeline already returns the system and user parts separately (`buildContext`).
+1. Save workload traces that keep **the actual prompt parts** (system message, sources, question, settings), not just token counts, so SGLang can re-tokenize and replay them. **Largely done:** the frozen capture (§8) stores the system message once and every question's user prompt per mode, with prompt hashes. Still missing: request arrival times, needed to replay them as a realistic workload. `replay-contexts.js` reaches the model through the app's model settings, so pointing it at SGLang should be configuration only (`LLM_BASE_URL`, `LLM_RUNTIME=sglang`).
 2. Serve `Qwen/Qwen3-8B-FP8` with SGLang on the RTX 4070 Ti SUPER via `LLM_BASE_URL` / `LLM_RUNTIME=sglang`.
 3. **First verify** thinking-off and how SGLang behaves on an over-long prompt (the guard currently fails closed for `sglang`).
-4. Study prefix-cache hit rate, time to first token and throughput against request rate, with SGLang's prefix (radix) cache on and off and different prompt layouts, plus API vs self-hosted cost.
+4. Replay the same frozen prompts for a quality-parity check against Q4_K_M (grade only answers that differ, or use a judge calibrated on the human labels).
+5. Study prefix-cache hit rate, time to first token and throughput against request rate, with SGLang's prefix (radix) cache on and off and different prompt layouts, plus API vs self-hosted cost. **Expectation:** the shared prefix is only the ~650-character system message against ~1.2k-token prompts, so the cache has little to reuse in today's layout; layout experiments are where it can matter.
+6. **Open question for the user:** whether the GPU machine runs Linux (SGLang needs it; otherwise WSL2 or a dual boot first).
 
 **Never compare Mac/Ollama/Q4_K_M numbers with GPU/SGLang/FP8 numbers as an "SGLang speedup".** Hardware, quantization, runtime and batching all differ at once. Re-run the baseline on SGLang; compare only within one environment.
 
@@ -338,6 +384,8 @@ Each of these changes retrieval or answer behaviour, so it should be measured in
   - Keep the model, embedding model, context and judge the same within any comparison.
   - Changing `EMBEDDING_MODEL`, the chunking, or anything in `ingest.js` changes vectors and chunk IDs. Re-ingest and re-baseline.
   - Don't edit dataset references after seeing system answers without recording why.
+  - Don't regenerate or edit the frozen capture, the replay results, or `eval/labels/*.labels.json` (the human labels). New captures and runs get new files. `make-replay-sheet.js` refuses to overwrite a sheet.
+  - Never commit `server/eval/frozen/` (report text and third-party snippets); record its SHA-256 instead.
 - **Guards:**
   - Don't weaken the truncation guard or `assertNoThinking`.
   - Don't change `cached_input_tokens: null` to 0.
@@ -347,6 +395,8 @@ Each of these changes retrieval or answer behaviour, so it should be measured in
   - Never put the SerpAPI URL (it contains the key) in errors or logs.
 - **Claims to avoid:**
   - Any accuracy number from the 10-question HBS set presented as quality.
+  - The judge-graded 2026-10-20 pass rates presented as quality.
+  - Any claim that a stronger model would or wouldn't help (no other model has been measured on these contexts).
   - "Retries with backoff" for code before `69124af`.
   - The MCP race as an observed bug fix.
   - Any SGLang speedup across environments.
@@ -372,6 +422,21 @@ Run the eval from `server/`, with the API running:
 
 ```bash
 EVAL_MODE=hybrid node scripts/eval.js --documentId=<id>
+```
+
+Step 4 pipeline from `server/` (capture needs Chroma and the embedding model; replay needs the chat model):
+
+```bash
+node eval/capture-contexts.js --documentId=<id>
+```
+```bash
+node eval/replay-contexts.js --frozen=eval/frozen/contexts-<ts>.json
+```
+```bash
+node eval/make-replay-sheet.js --replay=results/replay-<ts>.json
+```
+```bash
+node eval/score-replay.js --sheet=eval/frozen/labels/replay-<run>.csv
 ```
 
 Fault testing from `server/`, with no search quota spent:

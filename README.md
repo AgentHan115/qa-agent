@@ -293,7 +293,7 @@ npm test --prefix server
 CI=true npm test
 ```
 
-The first runs the server suite: 59 tests with Node's built-in test runner. It covers retries and backoff, SerpAPI status classification, cancellation, both fallbacks, the time budget, MCP concurrency and cancellation, context building, citations, the truncation guards, and reconciliation. One integration test needs Chroma running and is skipped otherwise.
+The first runs the server suite: 79 tests with Node's built-in test runner. It covers retries and backoff, SerpAPI status classification, cancellation, both fallbacks, the time budget, MCP concurrency and cancellation, context building, citations, the truncation guards, reconciliation, and the evaluation scoring helpers. One integration test needs Chroma running and is skipped otherwise.
 
 The second runs the frontend suite (4 component tests): citation tags, source list and fallback notices.
 
@@ -307,26 +307,85 @@ SEARCH_PROVIDER=fake FAKE_SEARCH_MODE=transient PORT=5002 node server.js
 
 ## Evaluation
 
+**Dataset:** [server/eval/datasets/gpt4-report.v1.json](server/eval/datasets/gpt4-report.v1.json), 35 questions about the GPT-4 Technical Report, reviewed and approved by hand. Each document question has gold pages and a verbatim evidence quote; `npm run eval:validate --prefix server` checks every quote against the PDF.
+
+| Category | Questions | Where the answer is |
+|---|---|---|
+| `doc_prose` | 13 | the report's text |
+| `doc_table` | 8 | a table in the report (columns come out glued together) |
+| `doc_undisclosed` | 4 | the report says it withholds this (model size, hardware, compute, data) |
+| `web` | 5 | only on the web (after March 2023) |
+| `mixed` | 5 | one part in the report, one part on the web |
+
+### Three questions, measured separately
+
+1. **End-to-end:** with the evidence the system actually retrieves, does the answer match the reference?
+2. **Retrieval:** was the gold evidence in that context at all?
+3. **Generator:** with the gold evidence guaranteed present, does the model answer correctly?
+
+How it's measured, from `server/`:
+
+1. **Capture** every question's prompts once ([eval/capture-contexts.js](server/eval/capture-contexts.js)). This runs the production `prepareContext` with real retrieval and one real search, then builds an **oracle** variant: chunks containing each evidence quote replace the lowest-ranked retrieved chunks, and a reviewed excerpt ([web-evidence file](server/eval/datasets/gpt4-report.v1.web-evidence.json)) replaces the lowest-ranked web result. Raw SerpAPI metadata is kept; the output is git-ignored because it contains report text.
+2. **Replay** the frozen prompts to the model ([eval/replay-contexts.js](server/eval/replay-contexts.js)). Each prompt must match its recorded SHA-1, and nothing is retrieved or searched again.
+3. **Grade blind** by hand ([eval/make-replay-sheet.js](server/eval/make-replay-sheet.js)): `correct` (correct / partial / incorrect / abstained) and `grounded` (every claim supported by the sources shown; a true fact from the model's memory counts as ungrounded).
+4. **Score** ([eval/score-replay.js](server/eval/score-replay.js)). The headline metric is **grounded-correct**: correct and grounded.
+
 ```bash
-EVAL_MODE=hybrid node scripts/eval.js --documentId=<id>
+node eval/capture-contexts.js --documentId=<id>
+```
+```bash
+node eval/replay-contexts.js --frozen=eval/frozen/contexts-<ts>.json
+```
+```bash
+node eval/score-replay.js --sheet=eval/frozen/labels/replay-<run>.csv
 ```
 
-Run that from `server/`. It asks the 10 questions in [scripts/eval.js](server/scripts/eval.js) through `/chat`, has an LLM judge grade each answer against a reference, and writes `server/results/eval-<timestamp>.json`. Each file contains every answer, its sources, citations, per-stage timings, token counts, the server's `/runtime` record (model digests, quantization, context size) and the git commit.
+### Results (2026-10-21, hybrid mode)
 
-Results so far come from the **earlier demo document** (an HBS teaching note on the Lean Startup, since removed because its license didn't allow redistribution). The 10 questions in `scripts/eval.js` are about that note and are being replaced with a labelled dataset for the GPT-4 report. Environment: MacBook M3 Pro 18 GB, Ollama 0.33.2, Qwen3-8B Q4_K_M with a 32k context, Qwen3-Embedding-0.6B, top-5 chunks. One run each. The judge is the same Qwen3-8B model and **has not been calibrated against human labels**.
+Qwen3-8B Q4_K_M on Ollama 0.33.2 (MacBook M3 Pro 18 GB), Qwen3-Embedding-0.6B, top-5 chunks, 500-character chunks. One capture, one run, 56 answers graded by one person. Results: [replay](server/results/replay-2026-10-21T10-55-01-709Z.json), [scores](server/results/replay-score-2026-10-21T10-55-01-709Z.json), [labels](server/eval/labels/replay-2026-10-21T10-55-01-709Z.labels.json).
 
-| Run | Requests completed | Judged correct | LLM calls per question | Input tokens per question | Median latency (warm) |
-|---|---|---|---|---|---|
-| Original design: two pipelines, two answers ([`baseline-dual`](server/results/eval-2026-10-18T06-07-34-126Z.json)) | 3/10 | 3/10 | 2 | ~29.5k (web) + ~0.6k (doc) | 263–332 s (all 3) |
-| Original document pipeline only ([results](server/results/eval-2026-10-18T06-14-01-156Z.json)) | 10/10 | 10/10 | 1 | 542–723 | 9.8 s |
-| `docs` mode ([results](server/results/eval-2026-10-18T07-16-11-627Z.json)) | 10/10 | 8/10 | 1 | 707–890 | 7.3 s |
-| `hybrid` mode ([results](server/results/eval-2026-10-18T07-18-49-182Z.json)) | 10/10 | 10/10 | 1 | 1,036–1,235 | 7.8 s |
+| Layer | Result |
+|---|---|
+| **1. End-to-end** (retrieved evidence) | **20/35 grounded-correct** (21/35 correct) |
+| **2. Retrieval** (gold evidence in the retrieved context) | 18/35 sufficient, 1 partial, 16 missing; document evidence 17/30, web evidence 4/10 |
+| **3. Generator** (gold evidence present) | **26/35 grounded-correct** (29/35 correct) |
 
-How to read this:
-- **The original design** sent SerpAPI's raw JSON to the model, 50–74k characters per question. That exceeded the 32k context for 7 of 10 questions, and those requests failed on the truncation guard. Ollama processes one request at a time here (`OLLAMA_NUM_PARALLEL=1`), so its two "parallel" pipelines actually ran one after the other.
-- **`docs` mode's 8/10 is grounded behaviour, not a regression.** Q5 and Q6 ask about "innovation accounting" and "vanity/actionable metrics", which the HBS note never mentions. The original pipeline's passes on them came from the model's own knowledge. `hybrid` answers both from cited web sources.
-- **These questions are too easy** to tell configurations apart. A harder, labelled dataset is the next step.
-- These numbers come from one local machine. Don't compare them with measurements from a different model server or GPU.
+| Category | End-to-end | With gold evidence |
+|---|---|---|
+| `doc_prose` (13) | 10 | 11 |
+| `doc_table` (8) | 4 | **8** |
+| `doc_undisclosed` (4) | 3 | 2 |
+| `web` (5) | 1 | 2 |
+| `mixed` (5) | 2 | 3 |
+
+**Per question:** 19 work end to end. **7 fail because of retrieval** (P10, T03, T04, T05, T06, W04, M03): wrong with the retrieved evidence, grounded-correct with the gold evidence. **8 fail even with the gold evidence** (P01, P06, U01, W01, W02, W03, M04, M05), and in 1 the extra evidence made the answer worse (U03).
+
+What this shows:
+- **Retrieval is the larger bottleneck.** Every evidence quote is stored in Chroma; the failures are ranking (the right chunk isn't in the top 5), not ingestion. Table questions go from 4/8 to 8/8 with the right chunk.
+- **The model's failures are mostly source conflicts:** stating an unofficial web figure as fact even with the report's "not disclosed" sentence in context (U01), picking the wrong date when sources disagree (W01, W02), attributing a web figure to the report (M05), or adding unsupported claims (W03, U03).
+- **With evidence missing, Qwen abstained correctly on P10, T03 and T04**, but used misleading numbers instead of abstaining when the context offered them (T05, T06, W04).
+- **Latency:** generation P50 5.9 s, P95 8.5 s on retrieved contexts; about 1.2k input tokens per question. Searches that succeeded took P50 0.75 s; 2 of 35 timed out against the 3 s per-attempt limit.
+
+Caveats:
+- **The layer-2 check is strict:** it only counts the chunk holding the dataset's evidence quote. Four questions it calls "missing" were answered correctly and grounded from other chunks (P02, U02, U04, M01), so usable evidence is closer to 22/35.
+- **The oracle adds the gold evidence but leaves the other sources in place**, so layer 3 measures the model with gold evidence among noise.
+- **One grader, n = 35, one run.** A few labels are judgement calls (noted per answer in the labels file).
+- **No other model has been measured on these contexts**, so these results don't say how much a stronger model would help.
+
+### Earlier results
+
+[scripts/eval.js](server/scripts/eval.js) runs the dataset live through `/chat` and grades with an LLM judge. Its 2026-10-20 runs ([docs](server/results/eval-2026-10-20T00-56-34-170Z.json), [web](server/results/eval-2026-10-20T01-07-20-397Z.json), [hybrid](server/results/eval-2026-10-20T01-20-53-949Z.json)) used the same Qwen3-8B as judge, which turned out **too lenient to trust**: it passed most "I don't know" answers and some wrong facts. Their judged pass rates (30/35, 23/35, 29/35) are not quality numbers. The retrieval metrics and latencies in those files are still valid.
+
+The first runs used the **earlier demo document** (an HBS teaching note on the Lean Startup, removed because its license didn't allow redistribution) and 10 easy questions. They show the effect of the redesign on prompt size and latency, not answer quality:
+
+| Run | Requests completed | LLM calls per question | Input tokens per question | Median latency (warm) |
+|---|---|---|---|---|
+| Original design: two pipelines, two answers ([`baseline-dual`](server/results/eval-2026-10-18T06-07-34-126Z.json)) | 3/10 | 2 | ~29.5k (web) + ~0.6k (doc) | 263–332 s (all 3) |
+| `hybrid` mode after the redesign ([results](server/results/eval-2026-10-18T07-18-49-182Z.json)) | 10/10 | 1 | 1,036–1,235 | 7.8 s |
+
+The original design sent SerpAPI's raw JSON to the model, 50–74k characters per question, which exceeded the 32k context for 7 of 10 questions; the truncation guard caught each one.
+
+These numbers come from one local machine. Don't compare them with measurements from a different model server or GPU.
 
 ## Project layout
 
@@ -344,7 +403,11 @@ server/
   ingest.js             PDF -> chunks -> embeddings -> Chroma (idempotent)
   db/                   Postgres document records
   models/               Ollama Modelfile (context window)
-  scripts/              eval.js, benchmark.js
+  scripts/              eval.js (live eval through /chat), benchmark.js
+  eval/                 datasets/ (questions, gold evidence, web excerpts),
+                        capture-contexts.js, replay-contexts.js, make-replay-sheet.js,
+                        score-replay.js, validate-dataset.js, labels/ (human labels),
+                        frozen/ (captured prompts, git-ignored)
   results/              committed eval results
   test/                 node:test suites
 src/                    React UI (ChatComponent, RenderQA, PdfUploader)
@@ -353,9 +416,11 @@ docker-compose.yml      postgres, redis, chroma, server, prometheus, grafana
 
 ## Known limitations
 
-- **Search query quality.** The raw question is sent as the search query. A long natural-language question can return irrelevant results; one asking for "well-known examples" returned Wells Fargo and wellness sites. The model ignored them, but query rewriting would cost an extra LLM call and hasn't been measured yet.
+- **Search query quality.** The raw question is sent as the search query, with no rewriting. "What score and percentile did GPT-4 get on the Uniform Bar Exam?" returned ExamSoft, ExamFX and an IMDb page in two captures; SerpAPI's metadata confirms Google received the full question. Web evidence for the dataset's web and mixed questions was present for only 4 of 10. Query rewriting would cost an extra LLM call and hasn't been measured yet.
+- **Document retrieval ranks the right chunk too low.** The gold evidence chunk was in the top 5 for 17 of 30 questions that need the report, although every one is stored. Top-k, chunk size and table handling haven't been tuned yet.
+- **Conflicting sources.** The model sometimes prefers an unofficial or wrong-entity web figure over the document, or picks the wrong one of two dates (see [Evaluation](#evaluation)).
 - **Citation validity is not faithfulness.** The checker confirms that labels exist, not that the cited source supports the sentence.
-- **The eval is small:** 10 easy definition questions, two of them not answerable from the document, graded by an uncalibrated judge, with no retrieval metrics yet.
+- **The eval is small:** 35 questions, one run, graded by one person. The LLM judge in `scripts/eval.js` hasn't been calibrated and is too lenient to use for quality numbers.
 - **SGLang and vLLM thinking control and overflow behaviour aren't verified yet.** Until they are, the truncation check fails closed on long prompts for those runtimes.
 - **`benchmark.js`** only measures end-to-end `/chat` latency (default `hybrid`, sequential). It doesn't break down stages or compare modes, and doesn't test concurrency yet.
 - **`multer` 1.x** (the upload handler) has published vulnerabilities fixed in 2.x and should be upgraded.
