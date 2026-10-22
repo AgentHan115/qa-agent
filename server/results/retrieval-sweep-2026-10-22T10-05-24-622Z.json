@@ -1,0 +1,5131 @@
+{
+  "runAt": "2026-10-22T10:05:24.622Z",
+  "git": {
+    "commit": "806e6ddc76411f57bdf3f80d66cbb4595e2f8032",
+    "dirty": false
+  },
+  "documentId": "4f6d1f1d-569a-46b1-aef9-0ce5ced915f9",
+  "chunks": 682,
+  "dataset": {
+    "path": "eval/datasets/gpt4-report.v1.json",
+    "version": "1"
+  },
+  "embedding": {
+    "baseURL": "http://localhost:11434/v1",
+    "model": "qwen3-embedding:0.6b",
+    "queryInstruction": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+    "batchSize": 32
+  },
+  "ks": [
+    5,
+    8
+  ],
+  "methods": [
+    "vector",
+    "bm25",
+    "rrf",
+    "interleave"
+  ],
+  "fusion_depth": 50,
+  "compared_with": "results/eval-2026-10-20T00-56-34-170Z.json",
+  "summary": {
+    "vector": {
+      "5": {
+        "all": {
+          "n": 30,
+          "sufficient": 17,
+          "partial": 0,
+          "missing": 13,
+          "evidence_mrr": 0.322,
+          "gold_page_hit": 25,
+          "median_chunk_chars": 2087
+        },
+        "by_category": {
+          "doc_prose": {
+            "n": 13,
+            "sufficient": 10,
+            "partial": 0,
+            "missing": 3,
+            "evidence_mrr": 0.468,
+            "gold_page_hit": 10,
+            "median_chunk_chars": 2230
+          },
+          "doc_table": {
+            "n": 8,
+            "sufficient": 4,
+            "partial": 0,
+            "missing": 4,
+            "evidence_mrr": 0.198,
+            "gold_page_hit": 8,
+            "median_chunk_chars": 2084
+          },
+          "doc_undisclosed": {
+            "n": 4,
+            "sufficient": 0,
+            "partial": 0,
+            "missing": 4,
+            "evidence_mrr": 0,
+            "gold_page_hit": 2,
+            "median_chunk_chars": 2133
+          },
+          "mixed": {
+            "n": 5,
+            "sufficient": 3,
+            "partial": 0,
+            "missing": 2,
+            "evidence_mrr": 0.4,
+            "gold_page_hit": 5,
+            "median_chunk_chars": 2067
+          }
+        }
+      },
+      "8": {
+        "all": {
+          "n": 30,
+          "sufficient": 20,
+          "partial": 0,
+          "missing": 10,
+          "evidence_mrr": 0.337,
+          "gold_page_hit": 27,
+          "median_chunk_chars": 3356
+        },
+        "by_category": {
+          "doc_prose": {
+            "n": 13,
+            "sufficient": 11,
+            "partial": 0,
+            "missing": 2,
+            "evidence_mrr": 0.481,
+            "gold_page_hit": 12,
+            "median_chunk_chars": 3536
+          },
+          "doc_table": {
+            "n": 8,
+            "sufficient": 5,
+            "partial": 0,
+            "missing": 3,
+            "evidence_mrr": 0.216,
+            "gold_page_hit": 8,
+            "median_chunk_chars": 3249
+          },
+          "doc_undisclosed": {
+            "n": 4,
+            "sufficient": 0,
+            "partial": 0,
+            "missing": 4,
+            "evidence_mrr": 0,
+            "gold_page_hit": 2,
+            "median_chunk_chars": 3126
+          },
+          "mixed": {
+            "n": 5,
+            "sufficient": 4,
+            "partial": 0,
+            "missing": 1,
+            "evidence_mrr": 0.425,
+            "gold_page_hit": 5,
+            "median_chunk_chars": 3451
+          }
+        }
+      }
+    },
+    "bm25": {
+      "5": {
+        "all": {
+          "n": 30,
+          "sufficient": 20,
+          "partial": 1,
+          "missing": 9,
+          "evidence_mrr": 0.544,
+          "gold_page_hit": 24,
+          "median_chunk_chars": 2186
+        },
+        "by_category": {
+          "doc_prose": {
+            "n": 13,
+            "sufficient": 11,
+            "partial": 1,
+            "missing": 1,
+            "evidence_mrr": 0.737,
+            "gold_page_hit": 12,
+            "median_chunk_chars": 2186
+          },
+          "doc_table": {
+            "n": 8,
+            "sufficient": 3,
+            "partial": 0,
+            "missing": 5,
+            "evidence_mrr": 0.313,
+            "gold_page_hit": 5,
+            "median_chunk_chars": 2243
+          },
+          "doc_undisclosed": {
+            "n": 4,
+            "sufficient": 2,
+            "partial": 0,
+            "missing": 2,
+            "evidence_mrr": 0.375,
+            "gold_page_hit": 3,
+            "median_chunk_chars": 2259
+          },
+          "mixed": {
+            "n": 5,
+            "sufficient": 4,
+            "partial": 0,
+            "missing": 1,
+            "evidence_mrr": 0.55,
+            "gold_page_hit": 4,
+            "median_chunk_chars": 2075
+          }
+        }
+      },
+      "8": {
+        "all": {
+          "n": 30,
+          "sufficient": 21,
+          "partial": 0,
+          "missing": 9,
+          "evidence_mrr": 0.544,
+          "gold_page_hit": 25,
+          "median_chunk_chars": 3486
+        },
+        "by_category": {
+          "doc_prose": {
+            "n": 13,
+            "sufficient": 12,
+            "partial": 0,
+            "missing": 1,
+            "evidence_mrr": 0.737,
+            "gold_page_hit": 12,
+            "median_chunk_chars": 3547
+          },
+          "doc_table": {
+            "n": 8,
+            "sufficient": 3,
+            "partial": 0,
+            "missing": 5,
+            "evidence_mrr": 0.313,
+            "gold_page_hit": 6,
+            "median_chunk_chars": 3492
+          },
+          "doc_undisclosed": {
+            "n": 4,
+            "sufficient": 2,
+            "partial": 0,
+            "missing": 2,
+            "evidence_mrr": 0.375,
+            "gold_page_hit": 3,
+            "median_chunk_chars": 3691
+          },
+          "mixed": {
+            "n": 5,
+            "sufficient": 4,
+            "partial": 0,
+            "missing": 1,
+            "evidence_mrr": 0.55,
+            "gold_page_hit": 4,
+            "median_chunk_chars": 3423
+          }
+        }
+      }
+    },
+    "rrf": {
+      "5": {
+        "all": {
+          "n": 30,
+          "sufficient": 19,
+          "partial": 0,
+          "missing": 11,
+          "evidence_mrr": 0.388,
+          "gold_page_hit": 24,
+          "median_chunk_chars": 2179
+        },
+        "by_category": {
+          "doc_prose": {
+            "n": 13,
+            "sufficient": 11,
+            "partial": 0,
+            "missing": 2,
+            "evidence_mrr": 0.558,
+            "gold_page_hit": 11,
+            "median_chunk_chars": 2308
+          },
+          "doc_table": {
+            "n": 8,
+            "sufficient": 3,
+            "partial": 0,
+            "missing": 5,
+            "evidence_mrr": 0.188,
+            "gold_page_hit": 6,
+            "median_chunk_chars": 2016
+          },
+          "doc_undisclosed": {
+            "n": 4,
+            "sufficient": 1,
+            "partial": 0,
+            "missing": 3,
+            "evidence_mrr": 0.05,
+            "gold_page_hit": 2,
+            "median_chunk_chars": 2325
+          },
+          "mixed": {
+            "n": 5,
+            "sufficient": 4,
+            "partial": 0,
+            "missing": 1,
+            "evidence_mrr": 0.54,
+            "gold_page_hit": 5,
+            "median_chunk_chars": 2143
+          }
+        }
+      },
+      "8": {
+        "all": {
+          "n": 30,
+          "sufficient": 20,
+          "partial": 0,
+          "missing": 10,
+          "evidence_mrr": 0.392,
+          "gold_page_hit": 26,
+          "median_chunk_chars": 3448
+        },
+        "by_category": {
+          "doc_prose": {
+            "n": 13,
+            "sufficient": 11,
+            "partial": 0,
+            "missing": 2,
+            "evidence_mrr": 0.558,
+            "gold_page_hit": 11,
+            "median_chunk_chars": 3596
+          },
+          "doc_table": {
+            "n": 8,
+            "sufficient": 4,
+            "partial": 0,
+            "missing": 4,
+            "evidence_mrr": 0.203,
+            "gold_page_hit": 8,
+            "median_chunk_chars": 3227
+          },
+          "doc_undisclosed": {
+            "n": 4,
+            "sufficient": 1,
+            "partial": 0,
+            "missing": 3,
+            "evidence_mrr": 0.05,
+            "gold_page_hit": 2,
+            "median_chunk_chars": 3548
+          },
+          "mixed": {
+            "n": 5,
+            "sufficient": 4,
+            "partial": 0,
+            "missing": 1,
+            "evidence_mrr": 0.54,
+            "gold_page_hit": 5,
+            "median_chunk_chars": 3462
+          }
+        }
+      }
+    },
+    "interleave": {
+      "5": {
+        "all": {
+          "n": 30,
+          "sufficient": 21,
+          "partial": 0,
+          "missing": 9,
+          "evidence_mrr": 0.378,
+          "gold_page_hit": 26,
+          "median_chunk_chars": 2107
+        },
+        "by_category": {
+          "doc_prose": {
+            "n": 13,
+            "sufficient": 11,
+            "partial": 0,
+            "missing": 2,
+            "evidence_mrr": 0.519,
+            "gold_page_hit": 11,
+            "median_chunk_chars": 2187
+          },
+          "doc_table": {
+            "n": 8,
+            "sufficient": 4,
+            "partial": 0,
+            "missing": 4,
+            "evidence_mrr": 0.188,
+            "gold_page_hit": 7,
+            "median_chunk_chars": 2088
+          },
+          "doc_undisclosed": {
+            "n": 4,
+            "sufficient": 2,
+            "partial": 0,
+            "missing": 2,
+            "evidence_mrr": 0.208,
+            "gold_page_hit": 3,
+            "median_chunk_chars": 2043
+          },
+          "mixed": {
+            "n": 5,
+            "sufficient": 4,
+            "partial": 0,
+            "missing": 1,
+            "evidence_mrr": 0.45,
+            "gold_page_hit": 5,
+            "median_chunk_chars": 2025
+          }
+        }
+      },
+      "8": {
+        "all": {
+          "n": 30,
+          "sufficient": 24,
+          "partial": 0,
+          "missing": 6,
+          "evidence_mrr": 0.394,
+          "gold_page_hit": 28,
+          "median_chunk_chars": 3412
+        },
+        "by_category": {
+          "doc_prose": {
+            "n": 13,
+            "sufficient": 12,
+            "partial": 0,
+            "missing": 1,
+            "evidence_mrr": 0.532,
+            "gold_page_hit": 12,
+            "median_chunk_chars": 3412
+          },
+          "doc_table": {
+            "n": 8,
+            "sufficient": 5,
+            "partial": 0,
+            "missing": 3,
+            "evidence_mrr": 0.208,
+            "gold_page_hit": 8,
+            "median_chunk_chars": 3428
+          },
+          "doc_undisclosed": {
+            "n": 4,
+            "sufficient": 2,
+            "partial": 0,
+            "missing": 2,
+            "evidence_mrr": 0.208,
+            "gold_page_hit": 3,
+            "median_chunk_chars": 3078
+          },
+          "mixed": {
+            "n": 5,
+            "sufficient": 5,
+            "partial": 0,
+            "missing": 0,
+            "evidence_mrr": 0.479,
+            "gold_page_hit": 5,
+            "median_chunk_chars": 3421
+          }
+        }
+      }
+    }
+  },
+  "questions": [
+    {
+      "id": "P01",
+      "category": "doc_prose",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              32,
+              10,
+              3,
+              61,
+              46
+            ],
+            "chunk_chars": 2067,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              32,
+              10,
+              3,
+              61,
+              46,
+              62,
+              1,
+              6
+            ],
+            "chunk_chars": 3472,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              10,
+              32,
+              32,
+              10,
+              28
+            ],
+            "chunk_chars": 1802,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              10,
+              32,
+              32,
+              10,
+              28,
+              24,
+              2,
+              29
+            ],
+            "chunk_chars": 3224,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              32,
+              10,
+              32,
+              61,
+              6
+            ],
+            "chunk_chars": 2326,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              32,
+              10,
+              32,
+              61,
+              6,
+              1,
+              3,
+              2
+            ],
+            "chunk_chars": 3525,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              32,
+              10,
+              3,
+              32,
+              61
+            ],
+            "chunk_chars": 2089,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              32,
+              10,
+              3,
+              32,
+              61,
+              10,
+              46,
+              28
+            ],
+            "chunk_chars": 2926,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "P02",
+      "category": "doc_prose",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              37,
+              42,
+              62,
+              1,
+              6
+            ],
+            "chunk_chars": 2330,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          },
+          "8": {
+            "pages": [
+              37,
+              42,
+              62,
+              1,
+              6,
+              2,
+              42,
+              61
+            ],
+            "chunk_chars": 3719,
+            "quote_ranks": [
+              6
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 6,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              2,
+              43,
+              42,
+              42,
+              10
+            ],
+            "chunk_chars": 2331,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              2,
+              43,
+              42,
+              42,
+              10,
+              61,
+              32,
+              61
+            ],
+            "chunk_chars": 3710,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              2,
+              42,
+              42,
+              61,
+              32
+            ],
+            "chunk_chars": 2332,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              2,
+              42,
+              42,
+              61,
+              32,
+              61,
+              37,
+              62
+            ],
+            "chunk_chars": 3730,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              37,
+              2,
+              42,
+              43,
+              62
+            ],
+            "chunk_chars": 2282,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              37,
+              2,
+              42,
+              43,
+              62,
+              42,
+              1,
+              42
+            ],
+            "chunk_chars": 3717,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "P03",
+      "category": "doc_prose",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              3,
+              2,
+              3,
+              2,
+              1
+            ],
+            "chunk_chars": 2045,
+            "quote_ranks": [
+              5,
+              4
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 4,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              3,
+              2,
+              3,
+              2,
+              1,
+              1,
+              3,
+              4
+            ],
+            "chunk_chars": 3460,
+            "quote_ranks": [
+              5,
+              4
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 4,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              2,
+              3,
+              3,
+              1,
+              3
+            ],
+            "chunk_chars": 2016,
+            "quote_ranks": [
+              4,
+              null
+            ],
+            "evidence": "partial",
+            "first_evidence_rank": 4,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              2,
+              3,
+              3,
+              1,
+              3,
+              2,
+              42,
+              2
+            ],
+            "chunk_chars": 3356,
+            "quote_ranks": [
+              4,
+              6
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 4,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              2,
+              3,
+              3,
+              1,
+              2
+            ],
+            "chunk_chars": 2045,
+            "quote_ranks": [
+              4,
+              5
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 4,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              2,
+              3,
+              3,
+              1,
+              2,
+              3,
+              4,
+              4
+            ],
+            "chunk_chars": 3422,
+            "quote_ranks": [
+              4,
+              5
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 4,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              3,
+              2,
+              3,
+              2,
+              1
+            ],
+            "chunk_chars": 2045,
+            "quote_ranks": [
+              5,
+              4
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 4,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              3,
+              2,
+              3,
+              2,
+              1,
+              3,
+              1,
+              42
+            ],
+            "chunk_chars": 3412,
+            "quote_ranks": [
+              5,
+              4
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 4,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "P04",
+      "category": "doc_prose",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              62,
+              12,
+              13,
+              37,
+              62
+            ],
+            "chunk_chars": 2361,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              62,
+              12,
+              13,
+              37,
+              62,
+              62,
+              62,
+              62
+            ],
+            "chunk_chars": 3805,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              12,
+              62,
+              37,
+              37,
+              32
+            ],
+            "chunk_chars": 2401,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              12,
+              62,
+              37,
+              37,
+              32,
+              1,
+              50,
+              1
+            ],
+            "chunk_chars": 3746,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              62,
+              12,
+              37,
+              13,
+              37
+            ],
+            "chunk_chars": 2398,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              62,
+              12,
+              37,
+              13,
+              37,
+              62,
+              62,
+              1
+            ],
+            "chunk_chars": 3817,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              62,
+              12,
+              13,
+              37,
+              37
+            ],
+            "chunk_chars": 2398,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              62,
+              12,
+              13,
+              37,
+              37,
+              62,
+              32,
+              62
+            ],
+            "chunk_chars": 3798,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "P05",
+      "category": "doc_prose",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              62,
+              13,
+              62,
+              13,
+              10
+            ],
+            "chunk_chars": 2419,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              62,
+              13,
+              62,
+              13,
+              10,
+              50,
+              44,
+              47
+            ],
+            "chunk_chars": 3749,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              62,
+              13,
+              14,
+              63,
+              47
+            ],
+            "chunk_chars": 2242,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              62,
+              13,
+              14,
+              63,
+              47,
+              62,
+              60,
+              63
+            ],
+            "chunk_chars": 3628,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              62,
+              13,
+              62,
+              47,
+              60
+            ],
+            "chunk_chars": 2352,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              62,
+              13,
+              62,
+              47,
+              60,
+              13,
+              42,
+              63
+            ],
+            "chunk_chars": 3641,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              62,
+              13,
+              62,
+              14,
+              13
+            ],
+            "chunk_chars": 2401,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              62,
+              13,
+              62,
+              14,
+              13,
+              63,
+              10,
+              47
+            ],
+            "chunk_chars": 3717,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "P06",
+      "category": "doc_prose",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              4,
+              32,
+              6,
+              30,
+              6
+            ],
+            "chunk_chars": 2314,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          },
+          "8": {
+            "pages": [
+              4,
+              32,
+              6,
+              30,
+              6,
+              5,
+              29,
+              28
+            ],
+            "chunk_chars": 3558,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              24,
+              10,
+              6,
+              32,
+              1
+            ],
+            "chunk_chars": 2003,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          },
+          "8": {
+            "pages": [
+              24,
+              10,
+              6,
+              32,
+              1,
+              6,
+              30,
+              32
+            ],
+            "chunk_chars": 3376,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              6,
+              6,
+              32,
+              30,
+              4
+            ],
+            "chunk_chars": 2314,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          },
+          "8": {
+            "pages": [
+              6,
+              6,
+              32,
+              30,
+              4,
+              7,
+              32,
+              1
+            ],
+            "chunk_chars": 3759,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              4,
+              24,
+              32,
+              10,
+              6
+            ],
+            "chunk_chars": 2026,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          },
+          "8": {
+            "pages": [
+              4,
+              24,
+              32,
+              10,
+              6,
+              6,
+              30,
+              32
+            ],
+            "chunk_chars": 3419,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "P07",
+      "category": "doc_prose",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              11,
+              12,
+              12,
+              10,
+              46
+            ],
+            "chunk_chars": 2243,
+            "quote_ranks": [
+              1,
+              3
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              11,
+              12,
+              12,
+              10,
+              46,
+              32,
+              43,
+              14
+            ],
+            "chunk_chars": 3591,
+            "quote_ranks": [
+              1,
+              3
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              12,
+              11,
+              10,
+              12,
+              10
+            ],
+            "chunk_chars": 1939,
+            "quote_ranks": [
+              2,
+              4
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              12,
+              11,
+              10,
+              12,
+              10,
+              28,
+              8,
+              1
+            ],
+            "chunk_chars": 2972,
+            "quote_ranks": [
+              2,
+              4
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              11,
+              12,
+              12,
+              2,
+              10
+            ],
+            "chunk_chars": 2232,
+            "quote_ranks": [
+              1,
+              3
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              11,
+              12,
+              12,
+              2,
+              10,
+              10,
+              28,
+              2
+            ],
+            "chunk_chars": 3596,
+            "quote_ranks": [
+              1,
+              3
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              11,
+              12,
+              12,
+              10,
+              10
+            ],
+            "chunk_chars": 2262,
+            "quote_ranks": [
+              1,
+              3
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              11,
+              12,
+              12,
+              10,
+              10,
+              46,
+              10,
+              32
+            ],
+            "chunk_chars": 3359,
+            "quote_ranks": [
+              1,
+              3
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "P08",
+      "category": "doc_prose",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              40,
+              43,
+              42,
+              41,
+              92
+            ],
+            "chunk_chars": 1615,
+            "quote_ranks": [
+              3
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 3,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              40,
+              43,
+              42,
+              41,
+              92,
+              47,
+              2,
+              43
+            ],
+            "chunk_chars": 2942,
+            "quote_ranks": [
+              3
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 3,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              42,
+              43,
+              40,
+              39,
+              61
+            ],
+            "chunk_chars": 1971,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              42,
+              43,
+              40,
+              39,
+              61,
+              47,
+              48,
+              2
+            ],
+            "chunk_chars": 3151,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              40,
+              42,
+              43,
+              47,
+              2
+            ],
+            "chunk_chars": 1861,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              40,
+              42,
+              43,
+              47,
+              2,
+              44,
+              41,
+              45
+            ],
+            "chunk_chars": 3280,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              40,
+              42,
+              43,
+              41,
+              39
+            ],
+            "chunk_chars": 1988,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              40,
+              42,
+              43,
+              41,
+              39,
+              92,
+              61,
+              47
+            ],
+            "chunk_chars": 3038,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "P09",
+      "category": "doc_prose",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              43,
+              56,
+              45,
+              14,
+              55
+            ],
+            "chunk_chars": 2230,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              43,
+              56,
+              45,
+              14,
+              55,
+              11,
+              1,
+              55
+            ],
+            "chunk_chars": 3659,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              43,
+              55,
+              52,
+              43,
+              55
+            ],
+            "chunk_chars": 2284,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              43,
+              55,
+              52,
+              43,
+              55,
+              76,
+              31,
+              45
+            ],
+            "chunk_chars": 3567,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              43,
+              55,
+              45,
+              55,
+              76
+            ],
+            "chunk_chars": 2312,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              43,
+              55,
+              45,
+              55,
+              76,
+              1,
+              52,
+              14
+            ],
+            "chunk_chars": 3757,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              43,
+              56,
+              55,
+              45,
+              52
+            ],
+            "chunk_chars": 2292,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              43,
+              56,
+              55,
+              45,
+              52,
+              14,
+              43,
+              55
+            ],
+            "chunk_chars": 3634,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "P10",
+      "category": "doc_prose",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              11,
+              16,
+              11,
+              44,
+              70
+            ],
+            "chunk_chars": 2099,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          },
+          "8": {
+            "pages": [
+              11,
+              16,
+              11,
+              44,
+              70,
+              41,
+              61,
+              45
+            ],
+            "chunk_chars": 3536,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              44,
+              54,
+              12,
+              1,
+              45
+            ],
+            "chunk_chars": 2319,
+            "quote_ranks": [
+              3
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 3,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              44,
+              54,
+              12,
+              1,
+              45,
+              43,
+              41,
+              11
+            ],
+            "chunk_chars": 3689,
+            "quote_ranks": [
+              3
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 3,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              44,
+              11,
+              45,
+              41,
+              11
+            ],
+            "chunk_chars": 2179,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          },
+          "8": {
+            "pages": [
+              44,
+              11,
+              45,
+              41,
+              11,
+              43,
+              1,
+              2
+            ],
+            "chunk_chars": 3506,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              11,
+              44,
+              16,
+              54,
+              11
+            ],
+            "chunk_chars": 2187,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          },
+          "8": {
+            "pages": [
+              11,
+              44,
+              16,
+              54,
+              11,
+              12,
+              1,
+              70
+            ],
+            "chunk_chars": 3525,
+            "quote_ranks": [
+              6
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 6,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "P11",
+      "category": "doc_prose",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              7,
+              1,
+              8,
+              29,
+              1
+            ],
+            "chunk_chars": 2186,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              7,
+              1,
+              8,
+              29,
+              1,
+              8,
+              33,
+              12
+            ],
+            "chunk_chars": 3175,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              1,
+              7,
+              1,
+              8,
+              29
+            ],
+            "chunk_chars": 2186,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              1,
+              7,
+              1,
+              8,
+              29,
+              8,
+              14,
+              29
+            ],
+            "chunk_chars": 3632,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              7,
+              1,
+              8,
+              1,
+              29
+            ],
+            "chunk_chars": 2186,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              7,
+              1,
+              8,
+              1,
+              29,
+              8,
+              33,
+              14
+            ],
+            "chunk_chars": 3232,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              7,
+              1,
+              8,
+              1,
+              29
+            ],
+            "chunk_chars": 2186,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              7,
+              1,
+              8,
+              1,
+              29,
+              8,
+              33,
+              14
+            ],
+            "chunk_chars": 3232,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "P12",
+      "category": "doc_prose",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              4,
+              2,
+              2,
+              20,
+              14
+            ],
+            "chunk_chars": 2324,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              4,
+              2,
+              2,
+              20,
+              14,
+              1,
+              3,
+              65
+            ],
+            "chunk_chars": 3140,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              4,
+              20,
+              4,
+              20,
+              43
+            ],
+            "chunk_chars": 2047,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              4,
+              20,
+              4,
+              20,
+              43,
+              30,
+              56,
+              2
+            ],
+            "chunk_chars": 3388,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              4,
+              20,
+              2,
+              4,
+              2
+            ],
+            "chunk_chars": 2308,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              4,
+              20,
+              2,
+              4,
+              2,
+              14,
+              14,
+              20
+            ],
+            "chunk_chars": 3310,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              4,
+              2,
+              20,
+              2,
+              4
+            ],
+            "chunk_chars": 2308,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              4,
+              2,
+              20,
+              2,
+              4,
+              20,
+              14,
+              43
+            ],
+            "chunk_chars": 3398,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "P13",
+      "category": "doc_prose",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              10,
+              10,
+              10,
+              65,
+              65
+            ],
+            "chunk_chars": 1911,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              10,
+              10,
+              10,
+              65,
+              65,
+              7,
+              10,
+              46
+            ],
+            "chunk_chars": 3356,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              10,
+              10,
+              10,
+              63,
+              14
+            ],
+            "chunk_chars": 2224,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              10,
+              10,
+              10,
+              63,
+              14,
+              50,
+              46,
+              3
+            ],
+            "chunk_chars": 3547,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              10,
+              10,
+              10,
+              65,
+              46
+            ],
+            "chunk_chars": 2281,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              10,
+              10,
+              10,
+              65,
+              46,
+              11,
+              64,
+              50
+            ],
+            "chunk_chars": 3618,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              10,
+              10,
+              10,
+              65,
+              63
+            ],
+            "chunk_chars": 2169,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              10,
+              10,
+              10,
+              65,
+              63,
+              65,
+              14,
+              7
+            ],
+            "chunk_chars": 3226,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "T01",
+      "category": "doc_table",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              5,
+              6,
+              30,
+              5,
+              6
+            ],
+            "chunk_chars": 2084,
+            "quote_ranks": [
+              4
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 4,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              5,
+              6,
+              30,
+              5,
+              6,
+              6,
+              1,
+              28
+            ],
+            "chunk_chars": 3435,
+            "quote_ranks": [
+              4
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 4,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              5,
+              30,
+              25,
+              6,
+              1
+            ],
+            "chunk_chars": 2077,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              5,
+              30,
+              25,
+              6,
+              1,
+              1,
+              4,
+              35
+            ],
+            "chunk_chars": 3500,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              5,
+              6,
+              30,
+              1,
+              6
+            ],
+            "chunk_chars": 2048,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              5,
+              6,
+              30,
+              1,
+              6,
+              1,
+              6,
+              5
+            ],
+            "chunk_chars": 3422,
+            "quote_ranks": [
+              8
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 8,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              5,
+              6,
+              30,
+              30,
+              25
+            ],
+            "chunk_chars": 2088,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              5,
+              6,
+              30,
+              30,
+              25,
+              5,
+              6,
+              1
+            ],
+            "chunk_chars": 3432,
+            "quote_ranks": [
+              6
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 6,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "T02",
+      "category": "doc_table",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              5,
+              6,
+              5,
+              1,
+              30
+            ],
+            "chunk_chars": 2165,
+            "quote_ranks": [
+              3
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 3,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              5,
+              6,
+              5,
+              1,
+              30,
+              24,
+              65,
+              7
+            ],
+            "chunk_chars": 3252,
+            "quote_ranks": [
+              3
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 3,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              5,
+              32,
+              28,
+              6,
+              28
+            ],
+            "chunk_chars": 2049,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              5,
+              32,
+              28,
+              6,
+              28,
+              13,
+              28,
+              1
+            ],
+            "chunk_chars": 3492,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              5,
+              5,
+              1,
+              28,
+              6
+            ],
+            "chunk_chars": 2154,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              5,
+              5,
+              1,
+              28,
+              6,
+              28,
+              28,
+              65
+            ],
+            "chunk_chars": 3167,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              5,
+              6,
+              32,
+              5,
+              28
+            ],
+            "chunk_chars": 2124,
+            "quote_ranks": [
+              4
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 4,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              5,
+              6,
+              32,
+              5,
+              28,
+              1,
+              6,
+              30
+            ],
+            "chunk_chars": 3456,
+            "quote_ranks": [
+              4
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 4,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "T03",
+      "category": "doc_table",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              5,
+              3,
+              3,
+              65,
+              32
+            ],
+            "chunk_chars": 1557,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              5,
+              3,
+              3,
+              65,
+              32,
+              25,
+              10,
+              2
+            ],
+            "chunk_chars": 2883,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              25,
+              5,
+              25,
+              6,
+              50
+            ],
+            "chunk_chars": 2222,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              25,
+              5,
+              25,
+              6,
+              50,
+              55,
+              56,
+              6
+            ],
+            "chunk_chars": 3466,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              25,
+              25,
+              3,
+              3,
+              10
+            ],
+            "chunk_chars": 1976,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          },
+          "8": {
+            "pages": [
+              25,
+              25,
+              3,
+              3,
+              10,
+              5,
+              1,
+              65
+            ],
+            "chunk_chars": 2822,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              5,
+              25,
+              3,
+              5,
+              3
+            ],
+            "chunk_chars": 1888,
+            "quote_ranks": [
+              4
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 4,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              5,
+              25,
+              3,
+              5,
+              3,
+              25,
+              65,
+              6
+            ],
+            "chunk_chars": 2891,
+            "quote_ranks": [
+              4
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 4,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "T04",
+      "category": "doc_table",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              5,
+              6,
+              6,
+              65,
+              25
+            ],
+            "chunk_chars": 1588,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              5,
+              6,
+              6,
+              65,
+              25,
+              10,
+              1,
+              4
+            ],
+            "chunk_chars": 3008,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              6,
+              28,
+              31,
+              30,
+              31
+            ],
+            "chunk_chars": 2337,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          },
+          "8": {
+            "pages": [
+              6,
+              28,
+              31,
+              30,
+              31,
+              6,
+              65,
+              11
+            ],
+            "chunk_chars": 3645,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              6,
+              5,
+              25,
+              1,
+              6
+            ],
+            "chunk_chars": 2016,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              6,
+              5,
+              25,
+              1,
+              6,
+              10,
+              6,
+              65
+            ],
+            "chunk_chars": 2964,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              5,
+              6,
+              6,
+              28,
+              6
+            ],
+            "chunk_chars": 2107,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              5,
+              6,
+              6,
+              28,
+              6,
+              31,
+              65,
+              30
+            ],
+            "chunk_chars": 3140,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "T05",
+      "category": "doc_table",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              1,
+              7,
+              8,
+              12,
+              1
+            ],
+            "chunk_chars": 2240,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              1,
+              7,
+              8,
+              12,
+              1,
+              65,
+              7,
+              5
+            ],
+            "chunk_chars": 3140,
+            "quote_ranks": [
+              7
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 7,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              1,
+              65,
+              11,
+              10,
+              8
+            ],
+            "chunk_chars": 2251,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          },
+          "8": {
+            "pages": [
+              1,
+              65,
+              11,
+              10,
+              8,
+              7,
+              6,
+              5
+            ],
+            "chunk_chars": 3486,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              1,
+              7,
+              8,
+              5,
+              65
+            ],
+            "chunk_chars": 1837,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              1,
+              7,
+              8,
+              5,
+              65,
+              29,
+              10,
+              10
+            ],
+            "chunk_chars": 3158,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              1,
+              7,
+              65,
+              8,
+              11
+            ],
+            "chunk_chars": 2285,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              1,
+              7,
+              65,
+              8,
+              11,
+              12,
+              10,
+              1
+            ],
+            "chunk_chars": 3542,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "T06",
+      "category": "doc_table",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              3,
+              4,
+              1,
+              32,
+              10
+            ],
+            "chunk_chars": 2035,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              3,
+              4,
+              1,
+              32,
+              10,
+              10,
+              2,
+              5
+            ],
+            "chunk_chars": 3249,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              2,
+              2,
+              4,
+              3,
+              4
+            ],
+            "chunk_chars": 2294,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          },
+          "8": {
+            "pages": [
+              2,
+              2,
+              4,
+              3,
+              4,
+              14,
+              64,
+              63
+            ],
+            "chunk_chars": 3665,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              4,
+              2,
+              3,
+              3,
+              2
+            ],
+            "chunk_chars": 2027,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          },
+          "8": {
+            "pages": [
+              4,
+              2,
+              3,
+              3,
+              2,
+              32,
+              32,
+              10
+            ],
+            "chunk_chars": 3419,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              3,
+              2,
+              4,
+              2,
+              1
+            ],
+            "chunk_chars": 1980,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          },
+          "8": {
+            "pages": [
+              3,
+              2,
+              4,
+              2,
+              1,
+              4,
+              32,
+              3
+            ],
+            "chunk_chars": 3428,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "T07",
+      "category": "doc_table",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              32,
+              32,
+              30,
+              3,
+              6
+            ],
+            "chunk_chars": 2087,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              32,
+              32,
+              30,
+              3,
+              6,
+              31,
+              46,
+              56
+            ],
+            "chunk_chars": 3355,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              32,
+              32,
+              31,
+              30,
+              4
+            ],
+            "chunk_chars": 2243,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              32,
+              32,
+              31,
+              30,
+              4,
+              13,
+              29,
+              10
+            ],
+            "chunk_chars": 3393,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              32,
+              32,
+              30,
+              31,
+              3
+            ],
+            "chunk_chars": 2005,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              32,
+              32,
+              30,
+              31,
+              3,
+              29,
+              4,
+              6
+            ],
+            "chunk_chars": 3413,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              32,
+              32,
+              30,
+              31,
+              3
+            ],
+            "chunk_chars": 2005,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              32,
+              32,
+              30,
+              31,
+              3,
+              6,
+              4,
+              13
+            ],
+            "chunk_chars": 3412,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "T08",
+      "category": "doc_table",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              62,
+              13,
+              64,
+              42,
+              10
+            ],
+            "chunk_chars": 1863,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              62,
+              13,
+              64,
+              42,
+              10,
+              64,
+              65,
+              50
+            ],
+            "chunk_chars": 3166,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              13,
+              62,
+              42,
+              13,
+              14
+            ],
+            "chunk_chars": 1884,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              13,
+              62,
+              42,
+              13,
+              14,
+              62,
+              1,
+              47
+            ],
+            "chunk_chars": 3212,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              62,
+              13,
+              64,
+              62,
+              64
+            ],
+            "chunk_chars": 1882,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              62,
+              13,
+              64,
+              62,
+              64,
+              13,
+              47,
+              65
+            ],
+            "chunk_chars": 3227,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              62,
+              13,
+              64,
+              42,
+              42
+            ],
+            "chunk_chars": 1862,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              62,
+              13,
+              64,
+              42,
+              42,
+              13,
+              10,
+              14
+            ],
+            "chunk_chars": 3286,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "U01",
+      "category": "doc_undisclosed",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              65,
+              40,
+              10,
+              1,
+              14
+            ],
+            "chunk_chars": 1532,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          },
+          "8": {
+            "pages": [
+              65,
+              40,
+              10,
+              1,
+              14,
+              1,
+              17,
+              37
+            ],
+            "chunk_chars": 2947,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              45,
+              50,
+              1,
+              44,
+              44
+            ],
+            "chunk_chars": 2259,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          },
+          "8": {
+            "pages": [
+              45,
+              50,
+              1,
+              44,
+              44,
+              14,
+              7,
+              13
+            ],
+            "chunk_chars": 3698,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              1,
+              44,
+              41,
+              65,
+              3
+            ],
+            "chunk_chars": 1741,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          },
+          "8": {
+            "pages": [
+              1,
+              44,
+              41,
+              65,
+              3,
+              10,
+              10,
+              62
+            ],
+            "chunk_chars": 3128,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              65,
+              45,
+              40,
+              50,
+              10
+            ],
+            "chunk_chars": 1591,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          },
+          "8": {
+            "pages": [
+              65,
+              45,
+              40,
+              50,
+              10,
+              1,
+              1,
+              44
+            ],
+            "chunk_chars": 2951,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "U02",
+      "category": "doc_undisclosed",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              3,
+              32,
+              2,
+              1,
+              4
+            ],
+            "chunk_chars": 2133,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              3,
+              32,
+              2,
+              1,
+              4,
+              1,
+              62,
+              65
+            ],
+            "chunk_chars": 3121,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              2,
+              2,
+              1,
+              4,
+              6
+            ],
+            "chunk_chars": 1902,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              2,
+              2,
+              1,
+              4,
+              6,
+              1,
+              46,
+              42
+            ],
+            "chunk_chars": 3331,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              1,
+              2,
+              6,
+              1,
+              2
+            ],
+            "chunk_chars": 2392,
+            "quote_ranks": [
+              5
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 5,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              1,
+              2,
+              6,
+              1,
+              2,
+              3,
+              46,
+              42
+            ],
+            "chunk_chars": 3548,
+            "quote_ranks": [
+              5
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 5,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              3,
+              2,
+              32,
+              2,
+              2
+            ],
+            "chunk_chars": 2043,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              3,
+              2,
+              32,
+              2,
+              2,
+              1,
+              1,
+              4
+            ],
+            "chunk_chars": 3078,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "U03",
+      "category": "doc_undisclosed",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              3,
+              3,
+              2,
+              2,
+              65
+            ],
+            "chunk_chars": 1661,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              3,
+              3,
+              2,
+              2,
+              65,
+              29,
+              1,
+              1
+            ],
+            "chunk_chars": 3126,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              2,
+              37,
+              63,
+              3,
+              3
+            ],
+            "chunk_chars": 1946,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              2,
+              37,
+              63,
+              3,
+              3,
+              37,
+              14,
+              42
+            ],
+            "chunk_chars": 3323,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              2,
+              3,
+              3,
+              37,
+              2
+            ],
+            "chunk_chars": 2049,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              2,
+              3,
+              3,
+              37,
+              2,
+              1,
+              14,
+              3
+            ],
+            "chunk_chars": 3439,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              3,
+              2,
+              3,
+              37,
+              63
+            ],
+            "chunk_chars": 1946,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              3,
+              2,
+              3,
+              37,
+              63,
+              2,
+              65,
+              29
+            ],
+            "chunk_chars": 2995,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "U04",
+      "category": "doc_undisclosed",
+      "needs": "doc",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              46,
+              32,
+              10,
+              29,
+              62
+            ],
+            "chunk_chars": 2353,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          },
+          "8": {
+            "pages": [
+              46,
+              32,
+              10,
+              29,
+              62,
+              37,
+              66,
+              3
+            ],
+            "chunk_chars": 3544,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              46,
+              2,
+              6,
+              42,
+              49
+            ],
+            "chunk_chars": 2334,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              46,
+              2,
+              6,
+              42,
+              49,
+              32,
+              2,
+              1
+            ],
+            "chunk_chars": 3691,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              46,
+              32,
+              29,
+              6,
+              62
+            ],
+            "chunk_chars": 2325,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          },
+          "8": {
+            "pages": [
+              46,
+              32,
+              29,
+              6,
+              62,
+              37,
+              10,
+              66
+            ],
+            "chunk_chars": 3781,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              46,
+              32,
+              2,
+              10,
+              6
+            ],
+            "chunk_chars": 2365,
+            "quote_ranks": [
+              3
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 3,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              46,
+              32,
+              2,
+              10,
+              6,
+              29,
+              42,
+              62
+            ],
+            "chunk_chars": 3768,
+            "quote_ranks": [
+              3
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 3,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "M01",
+      "category": "mixed",
+      "needs": "both",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              5,
+              6,
+              1,
+              6,
+              28
+            ],
+            "chunk_chars": 2067,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              5,
+              6,
+              1,
+              6,
+              28,
+              1,
+              30,
+              5
+            ],
+            "chunk_chars": 3451,
+            "quote_ranks": [
+              8
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 8,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              30,
+              5,
+              1,
+              5,
+              6
+            ],
+            "chunk_chars": 2143,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              30,
+              5,
+              1,
+              5,
+              6,
+              25,
+              30,
+              25
+            ],
+            "chunk_chars": 3482,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              5,
+              30,
+              1,
+              6,
+              5
+            ],
+            "chunk_chars": 2143,
+            "quote_ranks": [
+              5
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 5,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              5,
+              30,
+              1,
+              6,
+              5,
+              1,
+              6,
+              30
+            ],
+            "chunk_chars": 3462,
+            "quote_ranks": [
+              5
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 5,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              5,
+              30,
+              6,
+              5,
+              1
+            ],
+            "chunk_chars": 2122,
+            "quote_ranks": [
+              4
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 4,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              5,
+              30,
+              6,
+              5,
+              1,
+              1,
+              6,
+              28
+            ],
+            "chunk_chars": 3451,
+            "quote_ranks": [
+              4
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 4,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "M02",
+      "category": "mixed",
+      "needs": "both",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              10,
+              44,
+              10,
+              2,
+              65
+            ],
+            "chunk_chars": 2002,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              10,
+              44,
+              10,
+              2,
+              65,
+              1,
+              1,
+              14
+            ],
+            "chunk_chars": 3284,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              58,
+              98,
+              64,
+              41,
+              43
+            ],
+            "chunk_chars": 2015,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          },
+          "8": {
+            "pages": [
+              58,
+              98,
+              64,
+              41,
+              43,
+              28,
+              14,
+              63
+            ],
+            "chunk_chars": 3379,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": false
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              44,
+              10,
+              64,
+              1,
+              28
+            ],
+            "chunk_chars": 2349,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              44,
+              10,
+              64,
+              1,
+              28,
+              65,
+              62,
+              10
+            ],
+            "chunk_chars": 3368,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              10,
+              58,
+              44,
+              98,
+              10
+            ],
+            "chunk_chars": 2025,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              10,
+              58,
+              44,
+              98,
+              10,
+              64,
+              2,
+              41
+            ],
+            "chunk_chars": 3421,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "M03",
+      "category": "mixed",
+      "needs": "both",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              56,
+              43,
+              55,
+              55,
+              47
+            ],
+            "chunk_chars": 2228,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              56,
+              43,
+              55,
+              55,
+              47,
+              42,
+              44,
+              14
+            ],
+            "chunk_chars": 3669,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              43,
+              55,
+              45,
+              43,
+              1
+            ],
+            "chunk_chars": 2267,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              43,
+              55,
+              45,
+              43,
+              1,
+              61,
+              55,
+              54
+            ],
+            "chunk_chars": 3701,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              43,
+              55,
+              55,
+              1,
+              56
+            ],
+            "chunk_chars": 2246,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              43,
+              55,
+              55,
+              1,
+              56,
+              66,
+              44,
+              3
+            ],
+            "chunk_chars": 3448,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              56,
+              43,
+              55,
+              55,
+              45
+            ],
+            "chunk_chars": 2302,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              56,
+              43,
+              55,
+              55,
+              45,
+              43,
+              47,
+              1
+            ],
+            "chunk_chars": 3542,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "M04",
+      "category": "mixed",
+      "needs": "both",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              3,
+              10,
+              1,
+              32,
+              1
+            ],
+            "chunk_chars": 2010,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              3,
+              10,
+              1,
+              32,
+              1,
+              5,
+              7,
+              10
+            ],
+            "chunk_chars": 3274,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              32,
+              3,
+              25,
+              7,
+              44
+            ],
+            "chunk_chars": 2075,
+            "quote_ranks": [
+              4
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 4,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              32,
+              3,
+              25,
+              7,
+              44,
+              2,
+              46,
+              32
+            ],
+            "chunk_chars": 3415,
+            "quote_ranks": [
+              4
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 4,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              3,
+              32,
+              32,
+              10,
+              2
+            ],
+            "chunk_chars": 2075,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              3,
+              32,
+              32,
+              10,
+              2,
+              16,
+              44,
+              4
+            ],
+            "chunk_chars": 3509,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              3,
+              32,
+              10,
+              1,
+              25
+            ],
+            "chunk_chars": 1979,
+            "quote_ranks": [
+              null
+            ],
+            "evidence": "missing",
+            "first_evidence_rank": null,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              3,
+              32,
+              10,
+              1,
+              25,
+              32,
+              7,
+              1
+            ],
+            "chunk_chars": 3379,
+            "quote_ranks": [
+              7
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 7,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    },
+    {
+      "id": "M05",
+      "category": "mixed",
+      "needs": "both",
+      "by_method": {
+        "vector": {
+          "5": {
+            "pages": [
+              1,
+              1,
+              43,
+              2,
+              1
+            ],
+            "chunk_chars": 2068,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              1,
+              1,
+              43,
+              2,
+              1,
+              62,
+              10,
+              45
+            ],
+            "chunk_chars": 3506,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        },
+        "bm25": {
+          "5": {
+            "pages": [
+              1,
+              54,
+              53,
+              50,
+              45
+            ],
+            "chunk_chars": 2032,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              1,
+              54,
+              53,
+              50,
+              45,
+              48,
+              49,
+              45
+            ],
+            "chunk_chars": 3423,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "rrf": {
+          "5": {
+            "pages": [
+              1,
+              45,
+              1,
+              1,
+              2
+            ],
+            "chunk_chars": 2141,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              1,
+              45,
+              1,
+              1,
+              2,
+              54,
+              42,
+              62
+            ],
+            "chunk_chars": 3537,
+            "quote_ranks": [
+              1
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 1,
+            "gold_page_hit": true
+          }
+        },
+        "interleave": {
+          "5": {
+            "pages": [
+              1,
+              1,
+              54,
+              43,
+              53
+            ],
+            "chunk_chars": 1941,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          },
+          "8": {
+            "pages": [
+              1,
+              1,
+              54,
+              43,
+              53,
+              2,
+              50,
+              1
+            ],
+            "chunk_chars": 3271,
+            "quote_ranks": [
+              2
+            ],
+            "evidence": "sufficient",
+            "first_evidence_rank": 2,
+            "gold_page_hit": true
+          }
+        }
+      },
+      "matches_compare": true
+    }
+  ]
+}

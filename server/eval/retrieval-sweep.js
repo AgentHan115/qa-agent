@@ -171,7 +171,8 @@ for (const m of methods) {
   }
 }
 for (const c of categories) {
-  console.log(`  ${c.padEnd(16)} ${methods.map((m) => `${m} ${ks.map((k) => `${summary[m][k].by_category[c].sufficient}`).join("/")}`).join("  ")}`);
+  const n = summary[methods[0]][ks[0]].by_category[c].n;
+  console.log(`  ${`${c} (${n})`.padEnd(20)} ${methods.map((m) => `${m} ${ks.map((k) => `k${k}=${summary[m][k].by_category[c].sufficient}`).join(" ")}`).join("  ")}`);
 }
 if (compare && methods.includes("vector")) {
   const same = records.filter((r) => r.matches_compare).length;
