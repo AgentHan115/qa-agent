@@ -1,0 +1,281 @@
+{
+  "runAt": "2026-10-22T23:19:16.480Z",
+  "git": {
+    "commit": "3de369200947bc749c8a36f15e1916bcea2f3cbf",
+    "dirty": false
+  },
+  "stub": false,
+  "frozen": {
+    "path": "eval/frozen/contexts-2026-10-21T10-03-05-839Z.json",
+    "sha256": "8b9409d9517cdcf466a8f9042afeb4031a9d064803ed39a9df7b97d1b5bd7107",
+    "created": "2026-10-21T10:03:05.839Z"
+  },
+  "model": {
+    "runtime": "ollama",
+    "baseURL": "http://localhost:11434/v1",
+    "model": "qa-qwen3-8b-32k",
+    "disableThinking": true,
+    "contextTokens": 32768,
+    "maxOutputTokens": 1024,
+    "temperature": 0,
+    "seed": 1,
+    "timeoutMs": 120000,
+    "maxRetries": 2
+  },
+  "runtime": {
+    "llm": {
+      "runtime": "ollama",
+      "baseURL": "http://localhost:11434/v1",
+      "model": "qa-qwen3-8b-32k",
+      "disableThinking": true,
+      "contextTokens": 32768,
+      "maxOutputTokens": 1024,
+      "temperature": 0,
+      "seed": 1,
+      "timeoutMs": 120000,
+      "maxRetries": 2
+    },
+    "embedding": {
+      "baseURL": "http://localhost:11434/v1",
+      "model": "qwen3-embedding:0.6b",
+      "queryInstruction": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+      "batchSize": 32
+    },
+    "retrieval": {
+      "top_k": 5,
+      "chunk_size": 500,
+      "chunk_overlap": 50
+    },
+    "web_search": {
+      "provider": "serpapi",
+      "transport": "mcp",
+      "num": 5,
+      "timeoutMs": 8000,
+      "attemptTimeoutMs": 3000,
+      "retries": 2
+    },
+    "prompt": {
+      "instructions_sha1": "5909347e2caf"
+    },
+    "serving": {
+      "server": "ollama",
+      "version": "0.33.2",
+      "models": [
+        {
+          "name": "qa-qwen3-8b-32k",
+          "digest": "365415f081c0b8f003dad729b765e948a3f6588a99dd508e8aa941043f976b5b",
+          "quantization": "Q4_K_M",
+          "parameter_size": "8.2B",
+          "family": "qwen3",
+          "parent_model": "qwen3:8b",
+          "parameters": "num_ctx                        32768\nrepeat_penalty                 1\nstop                           \"<|im_start|>\"\nstop                           \"<|im_end|>\"\ntemperature                    0.6\ntop_k                          20\ntop_p                          0.95"
+        },
+        {
+          "name": "qwen3-embedding:0.6b",
+          "digest": "ac6da0dfba84a81fdbfbaf330198c33cd77c4cdfc53e8bc50eb581914a15621d",
+          "quantization": "Q8_0",
+          "parameter_size": "595.78M",
+          "family": "qwen3",
+          "parent_model": "/Users/ollama/.ollama/models/blobs/sha256-06507c7b42688469c4e7298b0a1e16deff06caf291cf0a5b278c308249c3e439",
+          "parameters": null
+        }
+      ]
+    }
+  },
+  "conditions": [
+    "retrieved"
+  ],
+  "reused": [],
+  "answers": [
+    {
+      "id": "P05",
+      "condition": "retrieved",
+      "prompt_sha1": "780822da40c25d6b22e15db3e2929f1031c94020",
+      "answer": "GPT-4 reduced its tendency to respond to requests for disallowed content by 82% compared to GPT-3.5 [D2]. This improvement is attributed to the combination of various safety mitigations and training techniques [D1].",
+      "usage": {
+        "input_tokens": 1369,
+        "output_tokens": 52,
+        "cached_input_tokens": null
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4715,
+        "prompt_tokens": 1369,
+        "chars_per_token": 3.44,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "qa-qwen3-8b-32k",
+      "citations": {
+        "total": 2,
+        "cited": [
+          "D2",
+          "D1"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D3",
+          "D4",
+          "D5",
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 15865
+    },
+    {
+      "id": "T01",
+      "condition": "retrieved",
+      "prompt_sha1": "52d352ba536541880019dbceead3674e3fe6260b",
+      "answer": "GPT-4 scored 298 / 400 on the Uniform Bar Exam, which corresponds to the 90th percentile [D3]. This score is consistent across both the GPT-4 (no vision) and the non-contaminated GPT-4 models [D3].",
+      "usage": {
+        "input_tokens": 1280,
+        "output_tokens": 64,
+        "cached_input_tokens": null
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 3826,
+        "prompt_tokens": 1280,
+        "chars_per_token": 2.99,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "qa-qwen3-8b-32k",
+      "citations": {
+        "total": 2,
+        "cited": [
+          "D3"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D2",
+          "D4",
+          "D5",
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 6432
+    },
+    {
+      "id": "U02",
+      "condition": "retrieved",
+      "prompt_sha1": "4f7574230912dfcebdfaaa99f6e5eb499f71eb94",
+      "answer": "The document sources do not provide specific information about the hardware used to train GPT-4. Web sources also do not mention the exact hardware used for GPT-4 training [W1][W2][W3][W4][W5]. Therefore, I do not know the specific hardware used for training GPT-4.",
+      "usage": {
+        "input_tokens": 1281,
+        "output_tokens": 69,
+        "cached_input_tokens": null
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4272,
+        "prompt_tokens": 1281,
+        "chars_per_token": 3.33,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "qa-qwen3-8b-32k",
+      "citations": {
+        "total": 5,
+        "cited": [
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "D5"
+        ]
+      },
+      "ms": 6933
+    },
+    {
+      "id": "W05",
+      "condition": "retrieved",
+      "prompt_sha1": "e627af86e477003af6040abb3919c5ae219e8efc",
+      "answer": "GPT-4 Turbo's knowledge cutoff is April 2023 [W3]. This provides it with more up-to-date information compared to the standard GPT-4, which has a cutoff date of September 2021 [D1].",
+      "usage": {
+        "input_tokens": 1200,
+        "output_tokens": 54,
+        "cached_input_tokens": null
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4171,
+        "prompt_tokens": 1200,
+        "chars_per_token": 3.48,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "qa-qwen3-8b-32k",
+      "citations": {
+        "total": 2,
+        "cited": [
+          "W3",
+          "D1"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D2",
+          "D3",
+          "D4",
+          "D5",
+          "W1",
+          "W2",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 5866
+    },
+    {
+      "id": "M02",
+      "condition": "retrieved",
+      "prompt_sha1": "a406f0fc499d28205368d8f140f08edd3a7a548f",
+      "answer": "The report states that GPT-4's knowledge cutoff is in September 2021 [D1]. GPT-4 Turbo has an updated knowledge cutoff of April 2023 [W5].",
+      "usage": {
+        "input_tokens": 1162,
+        "output_tokens": 45,
+        "cached_input_tokens": null
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4236,
+        "prompt_tokens": 1162,
+        "chars_per_token": 3.65,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "qa-qwen3-8b-32k",
+      "citations": {
+        "total": 2,
+        "cited": [
+          "D1",
+          "W5"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D2",
+          "D3",
+          "D4",
+          "D5",
+          "W1",
+          "W2",
+          "W3",
+          "W4"
+        ]
+      },
+      "ms": 4647
+    }
+  ]
+}
