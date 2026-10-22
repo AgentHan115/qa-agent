@@ -1,0 +1,44 @@
+id   category         before  after   evidence before -> after
+P10  doc_prose         FAIL    pass   missing -> sufficient  GAINED
+P13  doc_prose         pass    pass   sufficient -> sufficient
+T03  doc_table         FAIL    pass   missing -> sufficient  GAINED
+U01  doc_undisclosed   FAIL    FAIL   missing -> missing
+W04  web               FAIL    FAIL   missing -> missing
+P06  doc_prose         FAIL    FAIL   missing -> missing
+M03  mixed             FAIL    FAIL   partial -> partial
+W05  web               pass    pass   sufficient -> sufficient
+M01  mixed             pass    pass   missing -> partial
+M02  mixed             pass    pass   sufficient -> sufficient
+U03  doc_undisclosed   pass    FAIL   missing -> missing  LOST
+T04  doc_table         FAIL    FAIL   missing -> missing
+P01  doc_prose         FAIL    pass   sufficient -> sufficient  GAINED
+P07  doc_prose         pass    FAIL   sufficient -> sufficient  LOST
+P09  doc_prose         pass    FAIL   sufficient -> sufficient  LOST
+P12  doc_prose         pass    pass   sufficient -> sufficient
+U04  doc_undisclosed   pass    pass   missing -> sufficient
+W01  web               FAIL    FAIL   missing -> missing
+P05  doc_prose         pass    pass   sufficient -> sufficient
+P02  doc_prose         pass    pass   missing -> sufficient
+T02  doc_table         pass    pass   sufficient -> sufficient
+W03  web               FAIL    FAIL   missing -> missing
+M04  mixed             FAIL    FAIL   missing -> missing
+M05  mixed             FAIL    FAIL   sufficient -> sufficient
+P03  doc_prose         pass    pass   sufficient -> sufficient
+T05  doc_table         FAIL    FAIL   missing -> missing
+W02  web               FAIL    FAIL   sufficient -> sufficient
+T06  doc_table         FAIL    FAIL   missing -> missing
+U02  doc_undisclosed   pass    pass   missing -> sufficient
+P08  doc_prose         pass    pass   sufficient -> sufficient
+T08  doc_table         pass    pass   sufficient -> sufficient
+P11  doc_prose         pass    pass   sufficient -> sufficient
+T01  doc_table         pass    pass   sufficient -> sufficient
+T07  doc_table         pass    pass   sufficient -> sufficient
+P04  doc_prose         pass    FAIL   sufficient -> sufficient  LOST
+
+grounded-correct: before 20/35, after 19/35
+gained 3 (P10, T03, P01), lost 4 (U03, P07, P09, P04), net -1
+median input tokens 1181 -> 1567; median generation ms 5922 -> 7423
+
+Decision rule (net >= +2, regressions <= 1): DON'T adopt. n = 35, one run: directional, not significant.
+
+Determinism: 5/5 re-run baseline prompts reproduced the baseline answer exactly.
