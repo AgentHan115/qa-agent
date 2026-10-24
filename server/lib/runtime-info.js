@@ -55,6 +55,7 @@ const SGLANG_SERVER_FIELDS = [
   "max_total_num_tokens", // KV-cache pool: the real per-request prompt limit
   "mem_fraction_static",
   "chunked_prefill_size",
+  "cuda_graph_max_bs_decode",
   "disable_radix_cache",
   "enable_cache_report",
   "enable_deterministic_inference",
