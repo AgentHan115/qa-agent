@@ -1,0 +1,1409 @@
+{
+  "runAt": "2026-10-24T08:59:50.394Z",
+  "git": {
+    "commit": "e9cfa7e03809a1844415bb3dcf77e28187945906",
+    "dirty": true
+  },
+  "stub": false,
+  "frozen": {
+    "path": "eval/frozen/contexts-2026-10-21T10-03-05-839Z.json",
+    "sha256": "8b9409d9517cdcf466a8f9042afeb4031a9d064803ed39a9df7b97d1b5bd7107",
+    "created": "2026-10-21T10:03:05.839Z"
+  },
+  "model": {
+    "runtime": "sglang",
+    "baseURL": "http://127.0.0.1:30000/v1",
+    "model": "Qwen/Qwen3-8B-FP8",
+    "disableThinking": true,
+    "contextTokens": 16227,
+    "maxOutputTokens": 1024,
+    "temperature": 0,
+    "seed": 1,
+    "timeoutMs": 120000,
+    "maxRetries": 2
+  },
+  "runtime": {
+    "llm": {
+      "runtime": "sglang",
+      "baseURL": "http://127.0.0.1:30000/v1",
+      "model": "Qwen/Qwen3-8B-FP8",
+      "disableThinking": true,
+      "contextTokens": 16227,
+      "maxOutputTokens": 1024,
+      "temperature": 0,
+      "seed": 1,
+      "timeoutMs": 120000,
+      "maxRetries": 2
+    },
+    "embedding": {
+      "baseURL": "http://localhost:11434/v1",
+      "model": "qwen3-embedding:0.6b",
+      "queryInstruction": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+      "batchSize": 32
+    },
+    "retrieval": {
+      "top_k": 5,
+      "chunk_size": 500,
+      "chunk_overlap": 50
+    },
+    "web_search": {
+      "provider": "serpapi",
+      "transport": "mcp",
+      "num": 5,
+      "timeoutMs": 8000,
+      "attemptTimeoutMs": 3000,
+      "retries": 2
+    },
+    "prompt": {
+      "instructions_sha1": "5909347e2caf"
+    },
+    "serving": {
+      "server": "sglang",
+      "version": "0.5.21",
+      "model": {
+        "name": "Qwen/Qwen3-8B-FP8",
+        "path": "/home/han/.cache/huggingface/hub/models--Qwen--Qwen3-8B-FP8/snapshots/220b46e3b2180893580a4454f21f22d3ebb187d3",
+        "hf_revision": "220b46e3b2180893580a4454f21f22d3ebb187d3"
+      },
+      "args": {
+        "attention_backend": "triton",
+        "sampling_backend": "pytorch",
+        "dtype": "auto",
+        "kv_cache_dtype": "auto",
+        "quantization": null,
+        "context_length": 32768,
+        "max_total_num_tokens": 16233,
+        "mem_fraction_static": 0.752,
+        "chunked_prefill_size": 2048,
+        "disable_radix_cache": false,
+        "enable_cache_report": true,
+        "enable_deterministic_inference": false
+      }
+    }
+  },
+  "conditions": [
+    "retrieved"
+  ],
+  "reused": [],
+  "answers": [
+    {
+      "id": "P01",
+      "condition": "retrieved",
+      "prompt_sha1": "b95663d6dfdf45c2b58a31d907ef0ecb1a63f34e",
+      "answer": "Most of GPT-4's pre-training data cut off in September 2021 [D2][W4]. This cutoff date indicates the last point at which the training data was updated [W4].",
+      "usage": {
+        "input_tokens": 1222,
+        "output_tokens": 45,
+        "cached_input_tokens": 3
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4149,
+        "prompt_tokens": 1222,
+        "chars_per_token": 3.4,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 3,
+        "cited": [
+          "D2",
+          "W4"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D3",
+          "D4",
+          "D5",
+          "W1",
+          "W2",
+          "W3",
+          "W5"
+        ]
+      },
+      "ms": 997
+    },
+    {
+      "id": "P02",
+      "condition": "retrieved",
+      "prompt_sha1": "43aaf7f69ab5b26d5e9c77c1c10bf253f76649eb",
+      "answer": "GPT-4 was fine-tuned using supervised fine-tuning (SFT) with demonstration data to imitate the behavior in the demonstrations [D3]. Additionally, a reward model (RM) was trained using ranking data to predict the average labeler’s preference for a given output, which was then used as a reward signal for reinforcement learning (specifically, the PPO algorithm) to further fine-tune the model [D3]. This process aimed to steer the model towards the desired behavior [D3]. The post-training alignment process also involved improving performance on measures of factuality and adherence to desired behavior [D4].",
+      "usage": {
+        "input_tokens": 1195,
+        "output_tokens": 128,
+        "cached_input_tokens": 175
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4618,
+        "prompt_tokens": 1195,
+        "chars_per_token": 3.86,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 4,
+        "cited": [
+          "D3",
+          "D4"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D2",
+          "D5",
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 2347
+    },
+    {
+      "id": "P03",
+      "condition": "retrieved",
+      "prompt_sha1": "aaa591a174ec0dd50742490a20ffd8446647c64a",
+      "answer": "The smaller models used to predict GPT-4's performance were trained using 1,000×–10,000× less compute [D2]. This scaling law allowed for accurate predictions of GPT-4's final loss and performance on tasks like HumanEval [D5].",
+      "usage": {
+        "input_tokens": 1177,
+        "output_tokens": 63,
+        "cached_input_tokens": 175
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4338,
+        "prompt_tokens": 1177,
+        "chars_per_token": 3.69,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 2,
+        "cited": [
+          "D2",
+          "D5"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D3",
+          "D4",
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 1198
+    },
+    {
+      "id": "P04",
+      "condition": "retrieved",
+      "prompt_sha1": "c75e8c36806b66d5cf4f5996b254bd32d3895de9",
+      "answer": "Rule-based reward models (RBRMs) are zero-shot GPT-4 classifiers used to provide an additional reward signal to the GPT-4 policy model during RLHF fine-tuning [D2]. They were used to steer the model towards appropriate refusals by rewarding GPT-4 for refusing harmful requests and not refusing safe ones [D3]. The RBRMs were part of a two-component safety approach that included safety-relevant RLHF training prompts [D2]. The RBRMs were enriched with data from production traffic and classified prompts into content categories [D5].",
+      "usage": {
+        "input_tokens": 1240,
+        "output_tokens": 120,
+        "cached_input_tokens": 174
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4774,
+        "prompt_tokens": 1240,
+        "chars_per_token": 3.85,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 4,
+        "cited": [
+          "D2",
+          "D3",
+          "D5"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D4",
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 2277
+    },
+    {
+      "id": "P05",
+      "condition": "retrieved",
+      "prompt_sha1": "780822da40c25d6b22e15db3e2929f1031c94020",
+      "answer": "GPT-4 reduced its tendency to respond to requests for disallowed content by 82% compared to GPT-3.5 [D2]. This improvement was achieved through various safety mitigations and training techniques [D1].",
+      "usage": {
+        "input_tokens": 1365,
+        "output_tokens": 49,
+        "cached_input_tokens": 177
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4715,
+        "prompt_tokens": 1365,
+        "chars_per_token": 3.45,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 2,
+        "cited": [
+          "D2",
+          "D1"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D3",
+          "D4",
+          "D5",
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 1052
+    },
+    {
+      "id": "P06",
+      "condition": "retrieved",
+      "prompt_sha1": "fcd925d24121182c2d093353dddefe42e03ffd9a",
+      "answer": "The authors checked for contamination by running variants of exams and benchmarks with the contaminated questions removed and reporting the lower score of the two [D1]. They also conducted contamination checks for test data appearing in the training set for each benchmark [D3]. For specific benchmarks like GSM-8K, they included part of the training set in GPT-4’s pre-training mix and used chain-of-thought prompting [D5]. The results were considered representative of the model's performance without contamination [D1].",
+      "usage": {
+        "input_tokens": 895,
+        "output_tokens": 102,
+        "cached_input_tokens": 174
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 3202,
+        "prompt_tokens": 895,
+        "chars_per_token": 3.58,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 4,
+        "cited": [
+          "D1",
+          "D3",
+          "D5"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D2",
+          "D4"
+        ]
+      },
+      "ms": 1936
+    },
+    {
+      "id": "P07",
+      "condition": "retrieved",
+      "prompt_sha1": "9429eb081366daff43c859e1753ee485b4718a65",
+      "answer": "After post-training, GPT-4's calibration was significantly reduced, as indicated by the calibration plot showing a higher Expected Calibration Error (ECE) compared to the pre-trained model [D3]. The post-training process hurt calibration significantly, as demonstrated by the calibration curve for the post-trained GPT-4 model on the MMLU dataset [D2]. This reduction in calibration suggests that the model's confidence in its answers no longer closely matches the actual probability of being correct after post-training [D4]. The calibration plot for the pre-trained GPT-4 model showed high calibration, but this was not maintained after post-training [D3].",
+      "usage": {
+        "input_tokens": 1114,
+        "output_tokens": 132,
+        "cached_input_tokens": 174
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4160,
+        "prompt_tokens": 1114,
+        "chars_per_token": 3.73,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 4,
+        "cited": [
+          "D3",
+          "D2",
+          "D4"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D5",
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 2397
+    },
+    {
+      "id": "P08",
+      "condition": "retrieved",
+      "prompt_sha1": "8626d12b7c8ca62821e5833402852ae70d1e2075",
+      "answer": "The difference between GPT-4-early and GPT-4-launch is that GPT-4-early is an early version fine-tuned for instruction following, while GPT-4-launch is a version fine-tuned for increased helpfulness and harmlessness, reflecting further mitigations outlined in the system card [D3]. GPT-4-launch is considered safer than GPT-4-early along various dimensions [D2]. The system card notes that GPT-4-launch still has remaining risks, as shown in example E3 [D5]. The system card is not comprehensive and expects to learn more over time [D2].",
+      "usage": {
+        "input_tokens": 1081,
+        "output_tokens": 132,
+        "cached_input_tokens": 175
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 3884,
+        "prompt_tokens": 1081,
+        "chars_per_token": 3.59,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 4,
+        "cited": [
+          "D3",
+          "D2",
+          "D5"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D4",
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 2434
+    },
+    {
+      "id": "P09",
+      "condition": "retrieved",
+      "prompt_sha1": "17997763016719fd0ad9f7fe884131eb70e4831e",
+      "answer": "The Alignment Research Center (ARC) concluded that the versions of GPT-4 it evaluated were ineffective at the autonomous replication task based on preliminary experiments [D2]. These experiments were conducted on a model without any additional task-specific fine-tuning [D2]. Further research is needed to fully characterize these risks [D1]. Some of the tasks ARC tested include setting up an open-source language model on a new server [D5].",
+      "usage": {
+        "input_tokens": 1116,
+        "output_tokens": 88,
+        "cached_input_tokens": 175
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4651,
+        "prompt_tokens": 1116,
+        "chars_per_token": 4.17,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 4,
+        "cited": [
+          "D2",
+          "D1",
+          "D5"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D3",
+          "D4",
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 1717
+    },
+    {
+      "id": "P10",
+      "condition": "retrieved",
+      "prompt_sha1": "cb9d71cbefefbfe93a2638b610024e95b11d92d0",
+      "answer": "OpenAI engaged 11 external experts to adversarially test GPT-4 [D2]. These experts were part of the OpenAI adversarial testers listed in the document [D2]. The testing included stress testing, boundary testing, and providing feedback on the GPT-4 models [D4]. The involvement of these experts was crucial for understanding the risks associated with GPT-4 and improving its safety [D3].",
+      "usage": {
+        "input_tokens": 1273,
+        "output_tokens": 89,
+        "cached_input_tokens": 177
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4630,
+        "prompt_tokens": 1273,
+        "chars_per_token": 3.64,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 4,
+        "cited": [
+          "D2",
+          "D4",
+          "D3"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D5",
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 1680
+    },
+    {
+      "id": "P11",
+      "condition": "retrieved",
+      "prompt_sha1": "ca794dc2c8698a720d07545fa27218b7bc3b7463",
+      "answer": "On translated versions of MMLU, GPT-4 surpassed the English-language state-of-the-art in 24 of 26 languages considered [D2]. The performance of GPT-4 in a variety of languages compared to prior models in English on MMLU shows it outperforms existing language models for the vast majority of languages tested [D3]. The MMLU benchmark includes multiple-choice problems spanning 57 subjects, which were translated into various languages using Azure Translate [D1]. Web sources indicate that GPT-4's performance on MMLU is a measure of accuracy across different languages and subjects [W1].",
+      "usage": {
+        "input_tokens": 1254,
+        "output_tokens": 132,
+        "cached_input_tokens": 174
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4615,
+        "prompt_tokens": 1254,
+        "chars_per_token": 3.68,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 4,
+        "cited": [
+          "D2",
+          "D3",
+          "D1",
+          "W1"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D4",
+          "D5",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 2419
+    },
+    {
+      "id": "P12",
+      "condition": "retrieved",
+      "prompt_sha1": "b5dfe8195111e45d7b2a2cd1a5e52d98db70788f",
+      "answer": "The report shows GPT-4 reversing the inverse-scaling trend on the task called Hindsight Neglect [46]. This is demonstrated in Figure 3 [D1].",
+      "usage": {
+        "input_tokens": 854,
+        "output_tokens": 37,
+        "cached_input_tokens": 176
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 3210,
+        "prompt_tokens": 854,
+        "chars_per_token": 3.76,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 1,
+        "cited": [
+          "D1"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D2",
+          "D3",
+          "D4",
+          "D5"
+        ]
+      },
+      "ms": 714
+    },
+    {
+      "id": "P13",
+      "condition": "retrieved",
+      "prompt_sha1": "ff2127e30f9d93488cfcc06421184724fbbc58b5",
+      "answer": "GPT-4 improved by 19 percentage points on OpenAI's internal adversarially-designed factuality evaluations compared to the latest GPT-3.5 model [D2]. This improvement was observed across all topics [D3]. The performance is illustrated in Figure 6, showing the accuracy of GPT-4 versus previous versions of ChatGPT [D1]. Some web sources suggest that the improvement might be less significant, but they do not provide specific data to contradict the internal evaluations [W5].",
+      "usage": {
+        "input_tokens": 1246,
+        "output_tokens": 106,
+        "cached_input_tokens": 175
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4099,
+        "prompt_tokens": 1246,
+        "chars_per_token": 3.29,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 4,
+        "cited": [
+          "D2",
+          "D3",
+          "D1",
+          "W5"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D4",
+          "D5",
+          "W1",
+          "W2",
+          "W3",
+          "W4"
+        ]
+      },
+      "ms": 1970
+    },
+    {
+      "id": "T01",
+      "condition": "retrieved",
+      "prompt_sha1": "52d352ba536541880019dbceead3674e3fe6260b",
+      "answer": "GPT-4 scored 298 out of 400 on the Uniform Bar Exam, which corresponds to the 90th percentile [D3]. This score is consistent across both the GPT-4 (no vision) and the non-contaminated GPT-4 models [D3].",
+      "usage": {
+        "input_tokens": 1276,
+        "output_tokens": 65,
+        "cached_input_tokens": 174
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 3826,
+        "prompt_tokens": 1276,
+        "chars_per_token": 3,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 2,
+        "cited": [
+          "D3"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D2",
+          "D4",
+          "D5",
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 1262
+    },
+    {
+      "id": "T02",
+      "condition": "retrieved",
+      "prompt_sha1": "98f759bfc02f7475d484e0dda159a2d66cf9f731",
+      "answer": "GPT-3.5 scored 149 on the LSAT, which corresponds to the 40th percentile [D3].",
+      "usage": {
+        "input_tokens": 1513,
+        "output_tokens": 30,
+        "cached_input_tokens": 273
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4324,
+        "prompt_tokens": 1513,
+        "chars_per_token": 2.86,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 1,
+        "cited": [
+          "D3"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D2",
+          "D4",
+          "D5",
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 751
+    },
+    {
+      "id": "T03",
+      "condition": "retrieved",
+      "prompt_sha1": "3f0e4ad7bbcbbffe613904f6132b3844f2b5f37a",
+      "answer": "GPT-4 achieved a CodeForces rating of 3471.0 according to the CodeForces Leaderboard [W1]. This rating is the highest among the tracked models on this benchmark [W1].",
+      "usage": {
+        "input_tokens": 1154,
+        "output_tokens": 47,
+        "cached_input_tokens": 271
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 3617,
+        "prompt_tokens": 1154,
+        "chars_per_token": 3.13,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 2,
+        "cited": [
+          "W1"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "D5",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 958
+    },
+    {
+      "id": "T04",
+      "condition": "retrieved",
+      "prompt_sha1": "ad95c3cd2118d92b4c4a4e1284e0bd856d51589e",
+      "answer": "The sources do not specifically mention the performance of GPT-4 and GPT-3.5 on the AP Calculus BC exam [D1][D2][D3][D4][D5]. However, they indicate that GPT-4 generally outperforms GPT-3.5 on most exams tested [D2][D4]. The provided information does not include specific details about the AP Calculus BC exam [D1][D2][D3][D4][D5].",
+      "usage": {
+        "input_tokens": 1152,
+        "output_tokens": 105,
+        "cached_input_tokens": 419
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 3795,
+        "prompt_tokens": 1152,
+        "chars_per_token": 3.29,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 12,
+        "cited": [
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "D5"
+        ],
+        "invalid": [],
+        "uncited": [
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 2022
+    },
+    {
+      "id": "T05",
+      "condition": "retrieved",
+      "prompt_sha1": "f747b183f551ae74be8325e6cb2535d792f162ba",
+      "answer": "On the MMLU benchmark, GPT-4 achieved a score that outperformed GPT-3.5 significantly, demonstrating strong performance across multiple languages [D1][D5]. In particular, GPT-4 surpassed the English-language state-of-the-art in 24 of 26 languages considered, while GPT-3.5 performed poorly in comparison [D5]. The exact accuracy percentages for GPT-4 and GPT-3.5 on MMLU are not explicitly stated in the provided sources [D3].",
+      "usage": {
+        "input_tokens": 1477,
+        "output_tokens": 113,
+        "cached_input_tokens": 175
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4354,
+        "prompt_tokens": 1477,
+        "chars_per_token": 2.95,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 4,
+        "cited": [
+          "D1",
+          "D5",
+          "D3"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D2",
+          "D4",
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 2197
+    },
+    {
+      "id": "T06",
+      "condition": "retrieved",
+      "prompt_sha1": "01eaf8d0efc547385304d6ed2b3249a589869dab",
+      "answer": "GPT-4 achieved a pass rate on HumanEval that was predicted by a power law fit to smaller models, which accurately predicted its performance [D1]. The exact pass rate is not explicitly stated in the provided sources [D1][D2]. Some web sources suggest that GPT-4's performance on HumanEval was competitive, with one source mentioning a pass@1 result comparable to internal benchmarks [W1]. However, the exact pass rate is not clearly specified in the given sources [D1][D2][W1].",
+      "usage": {
+        "input_tokens": 1176,
+        "output_tokens": 110,
+        "cached_input_tokens": 174
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4151,
+        "prompt_tokens": 1176,
+        "chars_per_token": 3.53,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 7,
+        "cited": [
+          "D1",
+          "D2",
+          "W1"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D3",
+          "D4",
+          "D5",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 2001
+    },
+    {
+      "id": "T07",
+      "condition": "retrieved",
+      "prompt_sha1": "5336858faf4042c028db2b86a4a3cf4066667708",
+      "answer": "HumanEval was contaminated with GPT-4's pre-training data at a rate of 25% [D2]. GPT-4 scored 65.58% on the non-contaminated subset of HumanEval [D2].",
+      "usage": {
+        "input_tokens": 1277,
+        "output_tokens": 52,
+        "cached_input_tokens": 175
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4314,
+        "prompt_tokens": 1277,
+        "chars_per_token": 3.38,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 2,
+        "cited": [
+          "D2"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D3",
+          "D4",
+          "D5",
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 1037
+    },
+    {
+      "id": "T08",
+      "condition": "retrieved",
+      "prompt_sha1": "e17f6f8c28986156b4d52098f0f054752b685c21",
+      "answer": "GPT-4 produces toxic text 0.73% of the time on the RealToxicityPrompts dataset, while GPT-3.5 generates toxic content 6.48% of the time [D2][D3]. This indicates a significant reduction in toxicity from GPT-3.5 to GPT-4 [D2].",
+      "usage": {
+        "input_tokens": 1216,
+        "output_tokens": 76,
+        "cached_input_tokens": 174
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4142,
+        "prompt_tokens": 1216,
+        "chars_per_token": 3.41,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 3,
+        "cited": [
+          "D2",
+          "D3"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D4",
+          "D5",
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 1445
+    },
+    {
+      "id": "U01",
+      "condition": "retrieved",
+      "prompt_sha1": "6f2b3ffdcb93316fb2602c3588042b112532d86a",
+      "answer": "GPT-4 has 1.8 trillion parameters [W5]. Some sources suggest it has over 1 trillion parameters [W1][W2]. However, there is no consensus on the exact number of parameters in GPT-4 [W4]. The exact parameter count is not disclosed by OpenAI [W3].",
+      "usage": {
+        "input_tokens": 1092,
+        "output_tokens": 68,
+        "cached_input_tokens": 175
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 3824,
+        "prompt_tokens": 1092,
+        "chars_per_token": 3.5,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 5,
+        "cited": [
+          "W5",
+          "W1",
+          "W2",
+          "W4",
+          "W3"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "D5"
+        ]
+      },
+      "ms": 1289
+    },
+    {
+      "id": "U02",
+      "condition": "retrieved",
+      "prompt_sha1": "4f7574230912dfcebdfaaa99f6e5eb499f71eb94",
+      "answer": "The document sources do not provide specific information about the hardware used to train GPT-4. Web sources also do not mention the hardware used for GPT-4 training [W1][W2][W3][W4][W5]. Therefore, I do not know the specific hardware used for training GPT-4.",
+      "usage": {
+        "input_tokens": 1277,
+        "output_tokens": 68,
+        "cached_input_tokens": 241
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4272,
+        "prompt_tokens": 1277,
+        "chars_per_token": 3.35,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 5,
+        "cited": [
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "D5"
+        ]
+      },
+      "ms": 1334
+    },
+    {
+      "id": "U03",
+      "condition": "retrieved",
+      "prompt_sha1": "acd19a1806f58ba0fdcc3a5d22e6f8b47e5b8765",
+      "answer": "The document sources do not provide the exact amount of compute used to train GPT-4. They discuss the relationship between training compute and model performance but do not specify the total compute used for GPT-4 [D1][D2][D3][D4]. Web sources also do not provide a specific figure for the compute used to train GPT-4 [W1][W2][W3][W4][W5].",
+      "usage": {
+        "input_tokens": 1141,
+        "output_tokens": 91,
+        "cached_input_tokens": 176
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 3818,
+        "prompt_tokens": 1141,
+        "chars_per_token": 3.35,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 9,
+        "cited": [
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D5"
+        ]
+      },
+      "ms": 1673
+    },
+    {
+      "id": "U04",
+      "condition": "retrieved",
+      "prompt_sha1": "a86e128e9306e852f2143859b94a39fa50abd72a",
+      "answer": "GPT-4 was trained on both publicly available data from the internet and data licensed from third-party providers [W1]. It also included data from prior models such as ChatGPT to reduce hallucinations [D1]. Additionally, it incorporated data from mathematical reasoning benchmarks like GSM-8K and MATH to improve its mathematical reasoning capabilities [D4]. The training data cutoff in September 2021, meaning GPT-4 lacks knowledge of events after that date [D3].",
+      "usage": {
+        "input_tokens": 1319,
+        "output_tokens": 101,
+        "cached_input_tokens": 175
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4445,
+        "prompt_tokens": 1319,
+        "chars_per_token": 3.37,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 4,
+        "cited": [
+          "W1",
+          "D1",
+          "D4",
+          "D3"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D2",
+          "D5",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 1880
+    },
+    {
+      "id": "W01",
+      "condition": "retrieved",
+      "prompt_sha1": "5bed05558f5ac92062b3b6ae27e9996a20e7a1fb",
+      "answer": "OpenAI released GPT-4o in May 2024. The model was announced on May 15, 2024, and rolled out first to ChatGPT Plus and Team users, then to free users [W4].",
+      "usage": {
+        "input_tokens": 1176,
+        "output_tokens": 54,
+        "cached_input_tokens": 175
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4377,
+        "prompt_tokens": 1176,
+        "chars_per_token": 3.72,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 1,
+        "cited": [
+          "W4"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "D5",
+          "W1",
+          "W2",
+          "W3",
+          "W5"
+        ]
+      },
+      "ms": 1039
+    },
+    {
+      "id": "W02",
+      "condition": "retrieved",
+      "prompt_sha1": "b74e8ec24dec25825dbe9a4b06955bc249be061a",
+      "answer": "GPT-4 Turbo offered a context window of 128,000 tokens. It was announced on November 7, 2023 [W4].",
+      "usage": {
+        "input_tokens": 1163,
+        "output_tokens": 38,
+        "cached_input_tokens": 177
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4280,
+        "prompt_tokens": 1163,
+        "chars_per_token": 3.68,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 1,
+        "cited": [
+          "W4"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "D5",
+          "W1",
+          "W2",
+          "W3",
+          "W5"
+        ]
+      },
+      "ms": 769
+    },
+    {
+      "id": "W03",
+      "condition": "retrieved",
+      "prompt_sha1": "a31f13302e7af366db82a3691798447c31690643",
+      "answer": "GPT-4 was retired from ChatGPT on February 13, 2026 [W1][W2][W3]. It was replaced by newer, more capable models, though the exact names of these models are not specified in the sources [W1][W2][W3].",
+      "usage": {
+        "input_tokens": 1174,
+        "output_tokens": 65,
+        "cached_input_tokens": 220
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4215,
+        "prompt_tokens": 1174,
+        "chars_per_token": 3.59,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 6,
+        "cited": [
+          "W1",
+          "W2",
+          "W3"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "D5",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 1231
+    },
+    {
+      "id": "W04",
+      "condition": "retrieved",
+      "prompt_sha1": "a32062b8314144eaf3c8650a32dcebb90b1afa72",
+      "answer": "The latest arXiv version of the GPT-4 Technical Report was posted on March 15, 2023 [W3].",
+      "usage": {
+        "input_tokens": 1010,
+        "output_tokens": 32,
+        "cached_input_tokens": 176
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 3807,
+        "prompt_tokens": 1010,
+        "chars_per_token": 3.77,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 1,
+        "cited": [
+          "W3"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "D5",
+          "W1",
+          "W2",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 684
+    },
+    {
+      "id": "W05",
+      "condition": "retrieved",
+      "prompt_sha1": "e627af86e477003af6040abb3919c5ae219e8efc",
+      "answer": "GPT-4 Turbo's knowledge cutoff is April 2023 [W3]. This brings its knowledge up to date compared to GPT-4, which has a cutoff date of September 2021 [D1].",
+      "usage": {
+        "input_tokens": 1196,
+        "output_tokens": 50,
+        "cached_input_tokens": 175
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4171,
+        "prompt_tokens": 1196,
+        "chars_per_token": 3.49,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 2,
+        "cited": [
+          "W3",
+          "D1"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D2",
+          "D3",
+          "D4",
+          "D5",
+          "W1",
+          "W2",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 1033
+    },
+    {
+      "id": "M01",
+      "condition": "retrieved",
+      "prompt_sha1": "e02e38f7fb95f933b5aabb340b159bc296832d53",
+      "answer": "Later independent research found that GPT-4 did not really score 90th percentile on the bar exam, as reported by some sources [W2]. The study suggests that the initial claim might have been overstated or misinterpreted [W2].",
+      "usage": {
+        "input_tokens": 1216,
+        "output_tokens": 52,
+        "cached_input_tokens": 273
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4281,
+        "prompt_tokens": 1216,
+        "chars_per_token": 3.52,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 2,
+        "cited": [
+          "W2"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "D5",
+          "W1",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 1066
+    },
+    {
+      "id": "M02",
+      "condition": "retrieved",
+      "prompt_sha1": "a406f0fc499d28205368d8f140f08edd3a7a548f",
+      "answer": "The report indicates that GPT-4's knowledge cutoff is up to September 2021 [D1]. With GPT-4 Turbo, the knowledge cutoff was updated to April 2023 [W5].",
+      "usage": {
+        "input_tokens": 1158,
+        "output_tokens": 48,
+        "cached_input_tokens": 308
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4236,
+        "prompt_tokens": 1158,
+        "chars_per_token": 3.66,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 2,
+        "cited": [
+          "D1",
+          "W5"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D2",
+          "D3",
+          "D4",
+          "D5",
+          "W1",
+          "W2",
+          "W3",
+          "W4"
+        ]
+      },
+      "ms": 980
+    },
+    {
+      "id": "M03",
+      "condition": "retrieved",
+      "prompt_sha1": "7ea254f270e3153e4f5b5d85144660ef4de07cfe",
+      "answer": "The Alignment Research Center (ARC) evaluated GPT-4's ability to autonomously replicate. This organization is now known as the Center for AI Safety (CFAI) [D2].",
+      "usage": {
+        "input_tokens": 1087,
+        "output_tokens": 40,
+        "cached_input_tokens": 175
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4387,
+        "prompt_tokens": 1087,
+        "chars_per_token": 4.04,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 1,
+        "cited": [
+          "D2"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D1",
+          "D3",
+          "D4",
+          "D5",
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ]
+      },
+      "ms": 828
+    },
+    {
+      "id": "M04",
+      "condition": "retrieved",
+      "prompt_sha1": "2add8bf14f441bbcca996d401255414cf56adf95",
+      "answer": "The provided sources do not mention GPT-4o's performance on HumanEval or any specific scores for GPT-4o. Therefore, I do not have the information to answer this question based on the given sources [D1][D2][D3][D4][D5][W1][W2][W3][W4][W5].",
+      "usage": {
+        "input_tokens": 1219,
+        "output_tokens": 76,
+        "cached_input_tokens": 241
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4284,
+        "prompt_tokens": 1219,
+        "chars_per_token": 3.51,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 10,
+        "cited": [
+          "D1",
+          "D2",
+          "D3",
+          "D4",
+          "D5",
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5"
+        ],
+        "invalid": [],
+        "uncited": []
+      },
+      "ms": 1490
+    },
+    {
+      "id": "M05",
+      "condition": "retrieved",
+      "prompt_sha1": "cb59f981cb624a0b96a8e739ed4117b744fd4b11",
+      "answer": "GPT-4 launched with a context window of approximately 8,000 words [W5]. The technical report does mention the context window but does not specify the exact number [D1][D4].",
+      "usage": {
+        "input_tokens": 1104,
+        "output_tokens": 45,
+        "cached_input_tokens": 280
+      },
+      "check": {
+        "truncation_check": "pass",
+        "prompt_chars": 4059,
+        "prompt_tokens": 1104,
+        "chars_per_token": 3.68,
+        "truncation_ruled_out_by": "short_prompt"
+      },
+      "response_model": "Qwen/Qwen3-8B-FP8",
+      "citations": {
+        "total": 3,
+        "cited": [
+          "W5",
+          "D1",
+          "D4"
+        ],
+        "invalid": [],
+        "uncited": [
+          "D2",
+          "D3",
+          "D5",
+          "W1",
+          "W2",
+          "W3",
+          "W4"
+        ]
+      },
+      "ms": 888
+    }
+  ]
+}
