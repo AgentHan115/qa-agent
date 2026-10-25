@@ -14,7 +14,7 @@
 
 import { readFileSync, writeFileSync } from "fs";
 import { basename } from "path";
-import { parseCsv } from "./agreement.js";
+import { parseCsv } from "./csv.js";
 import { abstentionCheck, diagnose, groundedCorrect, parseCorrect, parseGrounded } from "./replay.js";
 
 const argValue = (name) => process.argv.find((a) => a.startsWith(`--${name}=`))?.split("=").slice(1).join("=");
