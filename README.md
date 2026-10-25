@@ -117,13 +117,13 @@ docker compose up -d --build postgres redis chroma server
 docker compose up -d postgres redis chroma
 ```
 ```bash
-npm install && npm install --prefix server
+npm install && npm install --prefix server && npm install --prefix frontend
 ```
 ```bash
 npm run dev
 ```
 
-`npm run dev` starts the API on `:5001` and the UI on `:3000`. If you used the Docker option, start just the UI with `npm start`.
+`npm run dev` starts the API on `:5001` and the UI on `:3000`. If you used the Docker option, start just the UI with `npm start --prefix frontend`. The UI calls `http://localhost:5001`; set `REACT_APP_API_URL` to point it elsewhere.
 
 On first start, the server ingests the demo document, the [GPT-4 Technical Report](https://arxiv.org/abs/2303.08774v3) (OpenAI, 100 pages, 682 chunks). It's a useful test case for hybrid retrieval: it is frozen at March 2023, deliberately omits some details (e.g. model size), and contains benchmark tables. Open http://localhost:3000 and ask a question, or use the API directly:
 
@@ -296,15 +296,12 @@ The server doesn't read `.env` itself, so pass its settings in `env`. Inside thi
 ## Testing
 
 ```bash
-npm test --prefix server
-```
-```bash
-CI=true npm test
+npm test
 ```
 
-The first runs the server suite: 79 tests with Node's built-in test runner. It covers retries and backoff, SerpAPI status classification, cancellation, both fallbacks, the time budget, MCP concurrency and cancellation, context building, citations, the truncation guards, reconciliation, and the evaluation scoring helpers. One integration test needs Chroma running and is skipped otherwise.
+This runs both suites. The server suite (`npm test --prefix server`) has 84 tests with Node's built-in test runner. It covers retries and backoff, SerpAPI status classification, cancellation, both fallbacks, the time budget, MCP concurrency and cancellation, context building, citations, the truncation guards, reconciliation, and the evaluation scoring helpers. One integration test needs Chroma running and is skipped otherwise.
 
-The second runs the frontend suite (4 component tests): citation tags, source list and fallback notices.
+The frontend suite (`CI=true npm test --prefix frontend`) has 4 component tests: citation tags, source list and fallback notices.
 
 To exercise failure paths by hand without spending search quota, run a second API from `server/` with the fake provider:
 
@@ -479,13 +476,19 @@ server/
   db/                   Postgres document records
   models/               Ollama Modelfile (context window)
   scripts/              eval.js (live eval through /chat), benchmark.js
-  eval/                 datasets/ (questions, gold evidence, web excerpts),
-                        capture-contexts.js, replay-contexts.js, make-replay-sheet.js,
-                        score-replay.js, validate-dataset.js, labels/ (human labels),
+  eval/                 datasets/ (questions, gold evidence, web excerpts)
+                        capture-contexts.js, replay-contexts.js     freeze and replay prompts
+                        make-replay-sheet.js, score-replay.js       blind grading, three layers
+                        make-regrade-sheet.js, save-regrade.js,     side-by-side re-grades and
+                          compare-replays.js                        before/after decisions
+                        retrieval-sweep.js, bm25.js, retrievers.js  retrieval experiments
+                        bench-runtime.js                            model-server load test
+                        validate-dataset.js, labels/ (human labels),
                         frozen/ (captured prompts, git-ignored)
-  results/              committed eval results
+  results/              committed eval and benchmark results
   test/                 node:test suites
-src/                    React UI (ChatComponent, RenderQA, PdfUploader)
+frontend/               React UI: ChatComponent, RenderQA, PdfUploader; src/api.js (API address)
+monitoring/             Prometheus scrape config
 docker-compose.yml      postgres, redis, chroma, server, prometheus, grafana
 ```
 

@@ -5,10 +5,9 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import Speech from "speak-tts";
+import { API_URL } from "../api";
 
 const { Search } = Input;
-
-const DOMAIN = "http://localhost:5001";
 
 const searchContainer = {
   display: "flex",
@@ -127,7 +126,7 @@ const ChatComponent = (props) => {
 
     const params = new URLSearchParams({ question, mode });
     if (documentId && mode !== "web") params.set("documentId", documentId);
-    const es = new EventSource(`${DOMAIN}/chat/stream?${params}`);
+    const es = new EventSource(`${API_URL}/chat/stream?${params}`);
 
     let accumulated = "";
     const t0 = Date.now();

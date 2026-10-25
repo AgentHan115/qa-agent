@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PdfUploader from "./components/PdfUploader";
 import ChatComponent from "./components/ChatComponent";
 import RenderQA from "./components/RenderQA";
+import { API_URL } from "./api";
 import { Layout, Typography } from "antd";
 
 const chatComponentStyle = {
@@ -32,7 +33,7 @@ const App = () => {
   useEffect(() => {
     const poll = async () => {
       try {
-        const res = await fetch("http://localhost:5001/documents/default");
+        const res = await fetch(`${API_URL}/documents/default`);
         if (!res.ok) return; // not ready yet, keep polling
         const doc = await res.json();
         if (doc.status === "ready") {

@@ -12,7 +12,7 @@ Facts are verified from the repo (code, commit messages, `server/results/`, READ
 2. **Check git state.** Work happens on branch `qa-agent-hardening`; `main` is the untouched original snapshot.
    - Tags: `baseline-dual`, `step1-hybrid`, `step2-reliability`.
    - Last results commit when this was updated: `6717d6c` (SGLang load test).
-3. **Run the checks.** `npm test --prefix server` should give 86 pass. One integration test needs Chroma and the demo PDF, otherwise it's skipped. `CI=true npm test` should give 4 pass.
+3. **Run the checks.** `npm test --prefix server` should give 84 pass. One integration test needs Chroma and the demo PDF, otherwise it's skipped. `CI=true npm test --prefix frontend` should give 4 pass.
 4. **Check the dataset:** `npm run eval:validate --prefix server` should print "All gold pages verified". It needs `sh server/scripts/fetch-demo-doc.sh` first.
 5. **Current state: Step 4, the retrieval round and the first SGLang round are measured.**
    - Human-graded baseline: end-to-end **16/35** grounded-correct under the clarified rubric (20/35 in the first grading), **26/35** with gold evidence. Details in [§8](#8-benchmark-results-and-how-to-read-them).
@@ -39,7 +39,7 @@ Key files: [server/eval/](server/eval/) (capture, replay, grading, scoring) · [
 - **Web search** behind a provider interface ([server/search/](server/search/)), reached through an MCP stdio server ([server/mcp-server.js](server/mcp-server.js)) or directly.
 - **Models** are reached through any OpenAI-compatible server, configured in [server/lib/llm.js](server/lib/llm.js). The local default is Ollama.
 - **Ingestion:** BullMQ worker → PDFLoader → 500/50 character splitter → embeddings → one Chroma collection per document. Document status lives in Postgres.
-- **React UI** ([src/](src/)): mode switch, citation chips, source list, fallback notices.
+- **React UI** ([frontend/src/](frontend/src/)): mode switch, citation chips, source list, fallback notices.
 
 ## 2. Original architecture and audit findings
 

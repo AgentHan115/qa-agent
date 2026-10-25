@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import axios from "axios";
 import { InboxOutlined } from "@ant-design/icons";
 import { message, Upload, Tag } from "antd";
+import { API_URL } from "../api";
 
 const { Dragger } = Upload;
-
-const DOMAIN = "http://localhost:5001";
 
 // Poll GET /documents/:documentId until status is "ready" or "failed"
 const pollStatus = (documentId, onReady, onFailed) => {
   const interval = setInterval(async () => {
     try {
-      const { data } = await axios.get(`${DOMAIN}/documents/${documentId}`);
+      const { data } = await axios.get(`${API_URL}/documents/${documentId}`);
       if (data.status === "ready") {
         clearInterval(interval);
         onReady(data);
@@ -39,7 +38,7 @@ const PdfUploader = ({ onDocumentReady }) => {
       formData.append("file", file);
 
       try {
-        const { data } = await axios.post(`${DOMAIN}/upload`, formData, {
+        const { data } = await axios.post(`${API_URL}/upload`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
 
