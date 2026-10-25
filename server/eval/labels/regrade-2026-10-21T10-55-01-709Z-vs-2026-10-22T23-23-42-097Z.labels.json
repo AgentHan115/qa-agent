@@ -1,0 +1,442 @@
+{
+  "sheet": "regrade-2026-10-21T10-55-01-709Z-vs-2026-10-22T23-23-42-097Z.independent.csv",
+  "before": "results/replay-2026-10-21T10-55-01-709Z.json",
+  "after": "results/replay-2026-10-22T23-23-42-097Z.json",
+  "note": "Independent re-grade of both sides by the same grader under the clarified rubric (e9cfa7e), after the first gradings disagreed on P04, P07, P09. First labels are kept unchanged.",
+  "grounded_correct": {
+    "before": 16,
+    "after": 19,
+    "n": 35,
+    "gained": [
+      "P10",
+      "T03",
+      "U04",
+      "M01"
+    ],
+    "lost": [
+      "U03"
+    ]
+  },
+  "rows": [
+    {
+      "id": "P01",
+      "before": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "after": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "notes": "Both give September 2021; after additionally cites the report. Caveat about small amounts of later data not required by question."
+    },
+    {
+      "id": "P02",
+      "before": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "after": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "notes": "Both describe the human-feedback reward model and RL/PPO workflow; after explicitly names RLHF."
+    },
+    {
+      "id": "P03",
+      "before": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "after": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "notes": "Both cover the 1,000x and 10,000x endpoints; after splits them by experiments."
+    },
+    {
+      "id": "P04",
+      "before": {
+        "correct": "partial",
+        "grounded": true
+      },
+      "after": {
+        "correct": "partial",
+        "grounded": true
+      },
+      "notes": "Both omit the three RBRM inputs (optional prompt, policy output, human-written rubric) and classification step; central purpose is correct."
+    },
+    {
+      "id": "P05",
+      "before": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "after": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "notes": "Both give the required 82% reduction."
+    },
+    {
+      "id": "P06",
+      "before": {
+        "correct": "partial",
+        "grounded": true
+      },
+      "after": {
+        "correct": "partial",
+        "grounded": true
+      },
+      "notes": "Neither explains the exact substring-match procedure (strip symbols/spaces; sample three 50-character substrings); removing contaminated questions is downstream handling."
+    },
+    {
+      "id": "P07",
+      "before": {
+        "correct": "partial",
+        "grounded": true
+      },
+      "after": {
+        "correct": "partial",
+        "grounded": true
+      },
+      "notes": "Both omit the key ECE numbers 0.007 and 0.074; calibration direction is correct."
+    },
+    {
+      "id": "P08",
+      "before": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "after": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "notes": "Both identify instruction-following early version versus safer helpful/harmless launch version."
+    },
+    {
+      "id": "P09",
+      "before": {
+        "correct": "partial",
+        "grounded": true
+      },
+      "after": {
+        "correct": "partial",
+        "grounded": true
+      },
+      "notes": "Before omits lack of fine-tuning access and no final-model test; after omits clear not-capable conclusion and no final-model test."
+    },
+    {
+      "id": "P10",
+      "before": {
+        "correct": "abstained",
+        "grounded": true
+      },
+      "after": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "notes": "Before claims the number is unavailable (abstention); after gives over 50 and fields."
+    },
+    {
+      "id": "P11",
+      "before": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "after": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "notes": "Both give 24 of 26."
+    },
+    {
+      "id": "P12",
+      "before": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "after": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "notes": "Both name Hindsight Neglect."
+    },
+    {
+      "id": "P13",
+      "before": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "after": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "notes": "Both give 19 percentage points."
+    },
+    {
+      "id": "T01",
+      "before": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "after": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "notes": "Both give 298/400 and around 90th percentile; ancillary discussion of non-contaminated comparison is not needed."
+    },
+    {
+      "id": "T02",
+      "before": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "after": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "notes": "Both give 149 and around 40th percentile."
+    },
+    {
+      "id": "T03",
+      "before": {
+        "correct": "abstained",
+        "grounded": true
+      },
+      "after": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "notes": "Before explicitly withholds the requested rating; after gives 392 and below fifth percentile."
+    },
+    {
+      "id": "T04",
+      "before": {
+        "correct": "abstained",
+        "grounded": true
+      },
+      "after": {
+        "correct": "incorrect",
+        "grounded": false
+      },
+      "notes": "Before states scores unavailable; after fabricates 66.7% and 57.8% rather than the report’s AP scale scores 4 and 1."
+    },
+    {
+      "id": "T05",
+      "before": {
+        "correct": "incorrect",
+        "grounded": false
+      },
+      "after": {
+        "correct": "partial",
+        "grounded": true
+      },
+      "notes": "Before confuses MMLU accuracy with bar exam top/bottom 10% (false benchmark claim); after notes comparative advantage but omits both 86.4% and 70.0%."
+    },
+    {
+      "id": "T06",
+      "before": {
+        "correct": "incorrect",
+        "grounded": false
+      },
+      "after": {
+        "correct": "abstained",
+        "grounded": true
+      },
+      "notes": "Before incorrectly claims 100% HumanEval pass rate; after provides no pass rate."
+    },
+    {
+      "id": "T07",
+      "before": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "after": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "notes": "Both give 25% contaminated and 65.58% non-contaminated; degradation not requested."
+    },
+    {
+      "id": "T08",
+      "before": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "after": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "notes": "Both give 0.73% versus 6.48%."
+    },
+    {
+      "id": "U01",
+      "before": {
+        "correct": "incorrect",
+        "grounded": false
+      },
+      "after": {
+        "correct": "incorrect",
+        "grounded": false
+      },
+      "notes": "Both state speculative 1.8-trillion parameter count as fact; report expressly withholds model size."
+    },
+    {
+      "id": "U02",
+      "before": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "after": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "notes": "Both explain the hardware is not disclosed."
+    },
+    {
+      "id": "U03",
+      "before": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "after": {
+        "correct": "correct",
+        "grounded": false
+      },
+      "notes": "Both say absolute training compute not disclosed; after adds a GPT-5 vs GPT-4 comparison not substantiated by frozen sources."
+    },
+    {
+      "id": "U04",
+      "before": {
+        "correct": "partial",
+        "grounded": false
+      },
+      "after": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "notes": "Before adds an unsupported claim that prior ChatGPT model data was used to reduce hallucinations; after correctly limits data mix to high-level sources and allowed math-data examples."
+    },
+    {
+      "id": "W01",
+      "before": {
+        "correct": "partial",
+        "grounded": false
+      },
+      "after": {
+        "correct": "partial",
+        "grounded": false
+      },
+      "notes": "Both give correct month/year but wrong launch announcement day (May 15 rather than May 13); source snippets do not substantiate exact May 15."
+    },
+    {
+      "id": "W02",
+      "before": {
+        "correct": "partial",
+        "grounded": false
+      },
+      "after": {
+        "correct": "partial",
+        "grounded": false
+      },
+      "notes": "Both get 128K context but incorrectly date DevDay announcement November 7 rather than November 6."
+    },
+    {
+      "id": "W03",
+      "before": {
+        "correct": "incorrect",
+        "grounded": false
+      },
+      "after": {
+        "correct": "incorrect",
+        "grounded": false
+      },
+      "notes": "Both confuse GPT-4 retirement with Feb 13, 2026; actual ChatGPT retirement April 30, 2025, replaced by GPT-4o."
+    },
+    {
+      "id": "W04",
+      "before": {
+        "correct": "incorrect",
+        "grounded": false
+      },
+      "after": {
+        "correct": "incorrect",
+        "grounded": false
+      },
+      "notes": "Before gives March 15, 2023 as latest date; after quotes true v3 date but falsely calls it latest (reference v6 March 4, 2024). After statement about v3 is in PDF, but the latest-version assertion is not grounded; see note."
+    },
+    {
+      "id": "W05",
+      "before": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "after": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "notes": "Both correctly state April 2023 cutoff for November 2023 GPT-4 Turbo."
+    },
+    {
+      "id": "M01",
+      "before": {
+        "correct": "partial",
+        "grounded": true
+      },
+      "after": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "notes": "Before challenges 90th percentile but does not affirm the report claimed ~90th; after states both positions. Exact independent numbers optional."
+    },
+    {
+      "id": "M02",
+      "before": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "after": {
+        "correct": "correct",
+        "grounded": true
+      },
+      "notes": "Both give September 2021 and April 2023."
+    },
+    {
+      "id": "M03",
+      "before": {
+        "correct": "incorrect",
+        "grounded": false
+      },
+      "after": {
+        "correct": "incorrect",
+        "grounded": false
+      },
+      "notes": "Neither knows ARC Evals became METR; before invents CARA; after says ARC remains same."
+    },
+    {
+      "id": "M04",
+      "before": {
+        "correct": "abstained",
+        "grounded": true
+      },
+      "after": {
+        "correct": "abstained",
+        "grounded": true
+      },
+      "notes": "Neither gives the 67.0% GPT-4 and ~90% GPT-4o pair; before inserts an irrelevant GPT-4.1 comparison not established for this task."
+    },
+    {
+      "id": "M05",
+      "before": {
+        "correct": "partial",
+        "grounded": true
+      },
+      "after": {
+        "correct": "partial",
+        "grounded": true
+      },
+      "notes": "Both say 8,000 words rather than 8,192 tokens, but correctly say the report does not give a context size. Frozen web snippets mention roughly 8,000 words."
+    }
+  ]
+}
