@@ -8,7 +8,7 @@ Facts are verified from the repo (code, commit messages, `server/results/`, READ
 
 ## START HERE IN A NEW CLAUDE SESSION
 
-1. **Read** this file, then [README.md](README.md) (the integration guide).
+1. **Read** this file, then [README.md](../README.md) (the integration guide) and [evaluation.md](evaluation.md) (method and results).
 2. **Check git state.** Work happens on branch `qa-agent-hardening`; `main` is the untouched original snapshot.
    - Tags: `baseline-dual`, `step1-hybrid`, `step2-reliability`.
    - Last results commit when this was updated: `6717d6c` (SGLang load test).
@@ -23,7 +23,7 @@ Facts are verified from the repo (code, commit messages, `server/results/`, READ
    - [conversation-only] The previous session ran the API through a Claude preview config named `agentai-api` in `~/.claude/launch.json`, with cwd `server/`. Run it from `server/`, because `dotenv` reads `./.env`.
 7. **Read [§14](#14-do-not-accidentally-change) before changing anything.**
 
-Key files: [server/eval/](server/eval/) (capture, replay, grading, scoring) · [server/pipeline/answer.js](server/pipeline/answer.js) · [server/pipeline/context.js](server/pipeline/context.js) · [server/search/](server/search/) · [server/lib/llm.js](server/lib/llm.js) · [server/lib/guards.js](server/lib/guards.js) · [server/ingest.js](server/ingest.js) · [server/server.js](server/server.js) · [server/scripts/eval.js](server/scripts/eval.js)
+Key files: [server/eval/](../server/eval/) (capture, replay, grading, scoring) · [server/pipeline/answer.js](../server/pipeline/answer.js) · [server/pipeline/context.js](../server/pipeline/context.js) · [server/search/](../server/search/) · [server/lib/llm.js](../server/lib/llm.js) · [server/lib/guards.js](../server/lib/guards.js) · [server/ingest.js](../server/ingest.js) · [server/server.js](../server/server.js) · [server/scripts/eval.js](../server/scripts/eval.js)
 
 ---
 
@@ -32,14 +32,14 @@ Key files: [server/eval/](server/eval/) (capture, replay, grading, scoring) · [
 **Goal** [conversation-only for the motivation]: a credible, honestly measured showcase for a Forward Deployed Engineer internship application at Baidu USA. That team helps developers integrate the Querit real-time web search API into agents and RAG systems. The project should demonstrate search-API integration, retrieval strategy, reliability, and measured quality × latency × cost. Every claim must come from code or from a real run.
 
 **Current architecture** (all in repo):
-- **Express API** ([server/server.js](server/server.js)):
+- **Express API** ([server/server.js](../server/server.js)):
   - `/chat` (JSON) and `/chat/stream` (SSE), with `mode=docs|web|hybrid` (default `hybrid`);
   - `/upload`, `/documents/:id`, `/documents/:id/reingest`, `/runtime`, `/metrics`.
-- **One answer pipeline** ([server/pipeline/](server/pipeline/)): retrieve from Chroma and search the web in parallel → build one prompt with `[D#]` document and `[W#]` web sources → **one** LLM call → check citations.
-- **Web search** behind a provider interface ([server/search/](server/search/)), reached through an MCP stdio server ([server/mcp-server.js](server/mcp-server.js)) or directly.
-- **Models** are reached through any OpenAI-compatible server, configured in [server/lib/llm.js](server/lib/llm.js). The local default is Ollama.
+- **One answer pipeline** ([server/pipeline/](../server/pipeline/)): retrieve from Chroma and search the web in parallel → build one prompt with `[D#]` document and `[W#]` web sources → **one** LLM call → check citations.
+- **Web search** behind a provider interface ([server/search/](../server/search/)), reached through an MCP stdio server ([server/mcp-server.js](../server/mcp-server.js)) or directly.
+- **Models** are reached through any OpenAI-compatible server, configured in [server/lib/llm.js](../server/lib/llm.js). The local default is Ollama.
 - **Ingestion:** BullMQ worker → PDFLoader → 500/50 character splitter → embeddings → one Chroma collection per document. Document status lives in Postgres.
-- **React UI** ([frontend/src/](frontend/src/)): mode switch, citation chips, source list, fallback notices.
+- **React UI** ([frontend/src/](../frontend/src/)): mode switch, citation chips, source list, fallback notices.
 
 ## 2. Original architecture and audit findings
 
@@ -73,8 +73,8 @@ The original system is commit `e1a9a25` on `main`, "Add backend, RAG pipeline…
 - **Clean-up:** removed dead `chat.js` and unused `pino`.
 - **Chroma persistence and healthcheck** fixed.
 - **Postgres/Chroma consistency:** startup checks every `ready` document against Chroma and marks drifted ones `failed`. Re-ingestion is explicit (`POST /documents/:id/reingest`); only the demo document is retried automatically, once per boot.
-- **Ingestion retries** made real and idempotent (§5). Permanent provider errors fail immediately ([server/lib/errors.js](server/lib/errors.js)).
-- **Runtime-independent model layer** ([server/lib/llm.js](server/lib/llm.js)) and truncation/thinking guards ([server/lib/guards.js](server/lib/guards.js)).
+- **Ingestion retries** made real and idempotent (§5). Permanent provider errors fail immediately ([server/lib/errors.js](../server/lib/errors.js)).
+- **Runtime-independent model layer** ([server/lib/llm.js](../server/lib/llm.js)) and truncation/thinking guards ([server/lib/guards.js](../server/lib/guards.js)).
 - **Reproducibility:** `GET /runtime` reports model digests and settings, and the eval stores it with every result.
 - **`/chat?web=off`**, added to measure the document pipeline alone. Removed in Step 1 in favour of `mode=docs`.
 
@@ -86,7 +86,7 @@ The original system is commit `e1a9a25` on `main`, "Add backend, RAG pipeline…
 **Commits:** `0fe88b0`; results in `09be944` (tag `step1-hybrid`)
 
 **What changed:**
-- Server-side modules [server/pipeline/](server/pipeline/) and [server/search/](server/search/).
+- Server-side modules [server/pipeline/](../server/pipeline/) and [server/search/](../server/search/).
 - One prompt, one LLM call, `[D#]` (page number) and `[W#]` (title and URL) sources, deduplication, and a citation check.
 - SerpAPI results reduced to `{title, url, snippet, position, date}`.
 - The MCP tool returns structured results and sets `isError` on failure.
@@ -130,7 +130,7 @@ The original system is commit `e1a9a25` on `main`, "Add backend, RAG pipeline…
 
 **Verified:** the full Docker path answered a hybrid question, and the built image contains no `.env`.
 
-**History rewrite:** on 2026-10-19 the user rewrote history to remove the HBS PDF. Every hash changed. [server/results/COMMIT_MAP.md](server/results/COMMIT_MAP.md) maps the hashes recorded in result files to current commits.
+**History rewrite:** on 2026-10-19 the user rewrote history to remove the HBS PDF. Every hash changed. [server/results/COMMIT_MAP.md](../server/results/COMMIT_MAP.md) maps the hashes recorded in result files to current commits.
 
 ## 4. Runtime / model setup
 
@@ -138,13 +138,13 @@ The original system is commit `e1a9a25` on `main`, "Add backend, RAG pipeline…
 
 | | Setting |
 |---|---|
-| Chat model | `qa-qwen3-8b-32k`: built from `qwen3:8b` (Q4_K_M, digest `365415f081c0…`) with `num_ctx 32768` via [server/models/qwen3-8b-32k.Modelfile](server/models/qwen3-8b-32k.Modelfile) |
+| Chat model | `qa-qwen3-8b-32k`: built from `qwen3:8b` (Q4_K_M, digest `365415f081c0…`) with `num_ctx 32768` via [server/models/qwen3-8b-32k.Modelfile](../server/models/qwen3-8b-32k.Modelfile) |
 | Embeddings | `qwen3-embedding:0.6b` (Q8_0, digest `ac6da0dfba84…`), 1024 dimensions, unit length. Queries get `EMBEDDING_QUERY_INSTRUCTION` (`Instruct: …\nQuery:`); documents don't |
 | Request settings | `LLM_TEMPERATURE=0`, `LLM_SEED=1`, `LLM_MAX_OUTPUT_TOKENS=1024`, `LLM_CONTEXT_TOKENS=32768`, `EMBEDDING_BATCH_SIZE=32` |
 | Thinking off | `LLM_RUNTIME=ollama` sends `reasoning_effort: "none"`. Ollama's OpenAI-compatible endpoint ignores `think: false`. `sglang`/`vllm` would send `chat_template_kwargs.enable_thinking=false`, which is **not yet verified** |
 
 **Important constraints** (documented in code comments and the README):
-- **Ollama silently truncates over-long prompts** to `num_ctx/2 + 2` tokens. The guard in [server/lib/guards.js](server/lib/guards.js) rules truncation out only by prompt length (a prompt can't fall below 1 character per token) or, for Ollama, by a reported count above `num_ctx/2`. Otherwise it fails closed. Don't replace it with a characters-per-token heuristic: raw SerpAPI JSON tokenized at 1.72 characters per token.
+- **Ollama silently truncates over-long prompts** to `num_ctx/2 + 2` tokens. The guard in [server/lib/guards.js](../server/lib/guards.js) rules truncation out only by prompt length (a prompt can't fall below 1 character per token) or, for Ollama, by a reported count above `num_ctx/2`. Otherwise it fails closed. Don't replace it with a characters-per-token heuristic: raw SerpAPI JSON tokenized at 1.72 characters per token.
 - **Ollama serves one request at a time here** (`OLLAMA_NUM_PARALLEL=1`), so simultaneous requests queue.
 - **Ollama doesn't report prompt-cache tokens**, so `cached_input_tokens` is `null` (not reported). That is not a measured 0.
 - **Ollama fails a 212-input embedding batch**; batches of 128 work. Hence a batch size of 32.
@@ -166,7 +166,7 @@ The original system is commit `e1a9a25` on `main`, "Add backend, RAG pipeline…
 
 ## 5. Ingestion and Chroma invariants
 
-Code: [server/ingest.js](server/ingest.js), [server/lib/queue.js](server/lib/queue.js), [server/lib/vectors.js](server/lib/vectors.js), [server/lib/reconcile.js](server/lib/reconcile.js).
+Code: [server/ingest.js](../server/ingest.js), [server/lib/queue.js](../server/lib/queue.js), [server/lib/vectors.js](../server/lib/vectors.js), [server/lib/reconcile.js](../server/lib/reconcile.js).
 
 **What's stored:**
 - One collection per document, named by its document ID.
@@ -192,20 +192,20 @@ Code: [server/ingest.js](server/ingest.js), [server/lib/queue.js](server/lib/que
 
 ## 6. Pipeline and search architecture
 
-**Modes** ([server/pipeline/answer.js](server/pipeline/answer.js)):
+**Modes** ([server/pipeline/answer.js](../server/pipeline/answer.js)):
 - The frontend always sends `mode` (UI default `hybrid`). The backend defaults to `hybrid` if `mode` is missing.
 - **There's no automatic routing or intent detection.** A user writing "answer only from this PDF" in hybrid mode still triggers a web search; the instruction is just part of the question text.
 
-**Context** ([server/pipeline/context.js](server/pipeline/context.js)):
+**Context** ([server/pipeline/context.js](../server/pipeline/context.js)):
 - `[D#] (page N)` plus chunk text; `[W#] title (date)`, URL, snippet. Each list keeps its own order.
 - Duplicates removed: documents by SHA-1 of the whitespace-normalized text, web results by normalized URL.
 - Answers are capped at four sentences by the instructions.
 - `INSTRUCTIONS_sha1` appears in `/runtime` (`prompt.instructions_sha1`).
 
-**Citations** ([server/pipeline/citations.js](server/pipeline/citations.js)): `{total, cited, invalid, uncited}`. The answer text is never rewritten.
+**Citations** ([server/pipeline/citations.js](../server/pipeline/citations.js)): `{total, cited, invalid, uncited}`. The answer text is never rewritten.
 
-**Search** ([server/search/](server/search/)):
-- **Provider contract:** `{name, search(query, {num, signal})}` → normalized results ([provider.js](server/search/provider.js)). `SearchProviderError{status, retryable}`.
+**Search** ([server/search/](../server/search/)):
+- **Provider contract:** `{name, search(query, {num, signal})}` → normalized results ([provider.js](../server/search/provider.js)). `SearchProviderError{status, retryable}`.
 - **Adapters:** `serpapi.js` (fetch, status-classified errors, the API key never appears in errors) and `fake.js` (`ok|empty|error|transient|hang`).
 - **Retries:** `retry.js` (bounded, full jitter, abortable).
 - **Selection:** `index.js` reads `SEARCH_PROVIDER`, `SEARCH_TRANSPORT`, `SEARCH_NUM_RESULTS=5`, `SEARCH_TIMEOUT_MS=8000`, `SEARCH_ATTEMPT_TIMEOUT_MS=3000`, `SEARCH_RETRIES=2`.
@@ -242,10 +242,10 @@ Code: [server/ingest.js](server/ingest.js), [server/lib/queue.js](server/lib/que
 
 ### Step 4: GPT-4 report dataset, human-graded (the numbers to quote)
 
-**Method** (code in [server/eval/](server/eval/), also described in the README's Evaluation section):
-- [capture-contexts.js](server/eval/capture-contexts.js) ran the production `prepareContext` once per question on 2026-10-21 (commit `4c9f804`): real retrieval, one real SerpAPI search (production budgets), raw SerpAPI metadata kept. It also built **oracle** contexts (gold evidence chunks replace the lowest-ranked chunks; a reviewed web excerpt replaces the lowest-ranked web result) and a no-sources control. Output: `server/eval/frozen/contexts-2026-10-21T10-03-05-839Z.json`, **git-ignored** (report text and snippets), SHA-256 `8b9409d9517cdcf466a8f9042afeb4031a9d064803ed39a9df7b97d1b5bd7107`. Retrieval reproduces exactly (35/35 identical to the 2026-10-20 runs).
-- [replay-contexts.js](server/eval/replay-contexts.js) sent the frozen hybrid prompts to Qwen3-8B Q4_K_M (commit `29963b5`, results `3b3a4a8`). Every prompt matched its frozen SHA-1. 56 calls: 35 retrieved, 21 oracle; for the other 14 the oracle prompt is identical, so the retrieved answer is reused.
-- The user graded all 56 answers blind: `correct` (correct/partial/incorrect/abstained) and `grounded` (every claim supported by the sources shown). Labels with notes: [server/eval/labels/replay-2026-10-21T10-55-01-709Z.labels.json](server/eval/labels/replay-2026-10-21T10-55-01-709Z.labels.json). Scores: [server/results/replay-score-2026-10-21T10-55-01-709Z.json](server/results/replay-score-2026-10-21T10-55-01-709Z.json) (`f8a0b43`).
+**Method** (code in [server/eval/](../server/eval/), also described in [evaluation.md](evaluation.md)):
+- [capture-contexts.js](../server/eval/capture-contexts.js) ran the production `prepareContext` once per question on 2026-10-21 (commit `4c9f804`): real retrieval, one real SerpAPI search (production budgets), raw SerpAPI metadata kept. It also built **oracle** contexts (gold evidence chunks replace the lowest-ranked chunks; a reviewed web excerpt replaces the lowest-ranked web result) and a no-sources control. Output: `server/eval/frozen/contexts-2026-10-21T10-03-05-839Z.json`, **git-ignored** (report text and snippets), SHA-256 `8b9409d9517cdcf466a8f9042afeb4031a9d064803ed39a9df7b97d1b5bd7107`. Retrieval reproduces exactly (35/35 identical to the 2026-10-20 runs).
+- [replay-contexts.js](../server/eval/replay-contexts.js) sent the frozen hybrid prompts to Qwen3-8B Q4_K_M (commit `29963b5`, results `3b3a4a8`). Every prompt matched its frozen SHA-1. 56 calls: 35 retrieved, 21 oracle; for the other 14 the oracle prompt is identical, so the retrieved answer is reused.
+- The user graded all 56 answers blind: `correct` (correct/partial/incorrect/abstained) and `grounded` (every claim supported by the sources shown). Labels with notes: [server/eval/labels/replay-2026-10-21T10-55-01-709Z.labels.json](../server/eval/labels/replay-2026-10-21T10-55-01-709Z.labels.json). Scores: [server/results/replay-score-2026-10-21T10-55-01-709Z.json](../server/results/replay-score-2026-10-21T10-55-01-709Z.json) (`f8a0b43`).
 
 **Results (hybrid mode):**
 
@@ -276,11 +276,11 @@ Code: [server/ingest.js](server/ingest.js), [server/lib/queue.js](server/lib/que
 - The oracle keeps the other retrieved sources, so layer 3 is "gold evidence among noise", not clean evidence.
 - One grader, n = 35, one run; a few labels are judgement calls (W02's date, M04's wording rule, W03's extra claim).
 - **No other model has been run on these contexts.** Nothing here says how much GPT-4o would help.
-- **Re-graded under the clarified rubric** (`e9cfa7e`; a missing number makes an answer partial), the same answers score **16/35**. The labels are in [server/eval/labels/regrade-2026-10-21T10-55-01-709Z-vs-2026-10-22T23-23-42-097Z.labels.json](server/eval/labels/regrade-2026-10-21T10-55-01-709Z-vs-2026-10-22T23-23-42-097Z.labels.json), saved by [save-regrade.js](server/eval/save-regrade.js). The first labels are unchanged. **Compare later runs with 16.**
+- **Re-graded under the clarified rubric** (`e9cfa7e`; a missing number makes an answer partial), the same answers score **16/35**. The labels are in [server/eval/labels/regrade-2026-10-21T10-55-01-709Z-vs-2026-10-22T23-23-42-097Z.labels.json](../server/eval/labels/regrade-2026-10-21T10-55-01-709Z-vs-2026-10-22T23-23-42-097Z.labels.json), saved by [save-regrade.js](../server/eval/save-regrade.js). The first labels are unchanged. **Compare later runs with 16.**
 
 ### Retrieval round (2026-10-22): candidate met the rule, not shipped
 
-Full table and links in the README's "Retrieval round".
+Full table and links in [evaluation.md](evaluation.md#retrieval-round-2026-10-22).
 - **Layer 2, document evidence in context (of 30):** vector k5 17 / k8 20; BM25 20 / 21; RRF 19 / 20; interleave 21 / 24; **vector top-5 + BM25 top-3: 23** (tooling `806e6dd`, `3de3692`; sweeps `a7e825b`, `41847ec`).
 - **End to end** (capture `contexts-2026-10-22T23-17-04-429Z.json`, replay `87cc35b`, determinism 5/5):
   - First grading 20 → 19 (`93249c6`): not adopted.
@@ -289,25 +289,25 @@ Full table and links in the README's "Retrieval round".
 
 ### SGLang (2026-10-24)
 
-Host and settings in [§4](#4-runtime--model-setup); full results in the README's "SGLang on a consumer GPU".
+Host and settings in [§4](#4-runtime--model-setup); full results in [evaluation.md](evaluation.md#sglang-on-a-consumer-gpu-2026-10-24).
 - **Verified:** thinking off via `chat_template_kwargs`; over-long prompts get HTTP 400, never truncated; cached tokens reported with `--enable-cache-report`.
 - **Quality parity:** the 35 retrieved prompts of the 2026-10-21 capture were replayed (`c3c9b45`) and graded blind (`ec9e798`). **15/35** grounded-correct vs the Mac's 16/35 under the same rubric, with the same outcome on 34/35 questions (P13 differs). Only 4/35 answers are word-for-word identical.
-- **Load test** ([bench-runtime.js](server/eval/bench-runtime.js), `8885884`; results `6717d6c`):
+- **Load test** ([bench-runtime.js](../server/eval/bench-runtime.js), `8885884`; results `6717d6c`):
   - c = 1: TTFT p50 139 ms, TPOT 17 ms.
   - c = 8: 3.24 requests/s, TTFT p50 221 ms.
   - c = 16: 3.43 requests/s, but TTFT p50 2.1 s. The server runs at most ~9 requests at once because it reserves decode room for `max_tokens` = 1,024 in the 16k-token KV pool.
   - `max_tokens` 256 (benchmark only, same tooling `8885884`, result file `bench-sglang-radix-on-max256-…`): 12–14 requests run at once. At c = 16, TTFT p50 925 ms (from 2.1 s), 4.02 requests/s (+17%), TPOT 35 ms (from 29). No answer reached the cap (max 134 tokens).
   - Radix cache on vs off: TTFT 8–24% lower and 3–8% more requests/s. Only the system message is shared (16.6% of prompt tokens).
-  - The commit message of `6717d6c` rounds these as 15–25% and 5–11%; the README's numbers are exact.
+  - The commit message of `6717d6c` rounds these as 15–25% and 5–11%; the numbers in evaluation.md are exact.
 - **Not batch-invariant:** answers repeat exactly at c = 1 (35/35 across passes), but only 19–27/35 at c = 8–16.
 
 ### Step 4: the 2026-10-20 live runs (judge-graded, superseded)
 
-[server/scripts/eval.js](server/scripts/eval.js) on commit `c239d93`, results `56069a8`: judged pass docs 30/35, web 23/35, hybrid 29/35. **The judge (the same Qwen3-8B) is too lenient**: it passed 12 of 15 abstentions in docs mode and some wrong facts, so these pass rates are not quality numbers. Page-level retrieval from those runs (MRR 0.639, R@1 0.5, R@3 0.767, R@5 0.833) overstates evidence recall; see the chunk-level 17/30 above. In web mode, 7 of 31 completed searches returned pages matching only one word of the question (e.g. "does" → does.dc.gov) and 4 timed out; the one-word results didn't recur on 2026-10-21 except T01's, which SerpAPI's metadata shows Google ranked for the full question. The judge-calibration sheet from `b796421` was never labelled; the replay labels replace it as the calibration set.
+[server/scripts/eval.js](../server/scripts/eval.js) on commit `c239d93`, results `56069a8`: judged pass docs 30/35, web 23/35, hybrid 29/35. **The judge (the same Qwen3-8B) is too lenient**: it passed 12 of 15 abstentions in docs mode and some wrong facts, so these pass rates are not quality numbers. Page-level retrieval from those runs (MRR 0.639, R@1 0.5, R@3 0.767, R@5 0.833) overstates evidence recall; see the chunk-level 17/30 above. In web mode, 7 of 31 completed searches returned pages matching only one word of the question (e.g. "does" → does.dc.gov) and 4 timed out; the one-word results didn't recur on 2026-10-21 except T01's, which SerpAPI's metadata shows Google ranked for the full question. The judge-calibration sheet from `b796421` was never labelled; the replay labels replace it as the calibration set.
 
 ### Earlier results (HBS document, before Step 4)
 
-All runs: the Mac setup above, the **earlier HBS demo document** (Lean Startup note, 26 pages, 212 chunks), the 10 questions in [server/scripts/eval.js](server/scripts/eval.js), one run each. Grading used the same Qwen3-8B as an LLM judge, **not calibrated against human labels**. Files are in [server/results/](server/results/); commits are mapped in COMMIT_MAP.md.
+All runs: the Mac setup above, the **earlier HBS demo document** (Lean Startup note, 26 pages, 212 chunks), the 10 questions in [server/scripts/eval.js](../server/scripts/eval.js), one run each. Grading used the same Qwen3-8B as an LLM judge, **not calibrated against human labels**. Files are in [server/results/](../server/results/); commits are mapped in COMMIT_MAP.md.
 
 | Run (file) | Completed | Judged correct | LLM calls per question | Input tokens | Warm median latency |
 |---|---|---|---|---|---|
@@ -328,11 +328,11 @@ All runs: the Mac setup above, the **earlier HBS demo document** (Lean Startup n
 
 **Document:** "GPT-4 Technical Report", arXiv:2303.08774**v3**; 100 pages, 682 chunks, about 71k tokens.
 - **Not committed:** arXiv's non-exclusive license doesn't extend to redistribution.
-- Download and verify with [server/scripts/fetch-demo-doc.sh](server/scripts/fetch-demo-doc.sh), which pins SHA-256 `a4990dde…a0f5`.
+- Download and verify with [server/scripts/fetch-demo-doc.sh](../server/scripts/fetch-demo-doc.sh), which pins SHA-256 `a4990dde…a0f5`.
 - A copy saved from the arXiv submission preview differs only in the page-1 margin stamp, so page numbers are the same.
 - It's the server's `DEFAULT_DOCUMENT`. The previous HBS note is no longer in the repo or its history.
 
-**Dataset:** [server/eval/datasets/gpt4-report.v1.json](server/eval/datasets/gpt4-report.v1.json). Status `APPROVED` (2026-10-19). 35 questions:
+**Dataset:** [server/eval/datasets/gpt4-report.v1.json](../server/eval/datasets/gpt4-report.v1.json). Status `APPROVED` (2026-10-19). 35 questions:
 
 | Category | Count | Notes |
 |---|---|---|
@@ -346,7 +346,7 @@ All runs: the Mac setup above, the **earlier HBS demo document** (Lean Startup n
 - **Check:** `npm run eval:validate --prefix server` verifies the PDF checksum and that every evidence quote appears on a gold page. It has been shown to fail on a wrong page.
 - **[conversation-only] The user was asked to look closely at M01** (bar-exam percentiles, which differ across paper versions) **and M04** (GPT-4o's HumanEval score depends on the snapshot).
 - **Contamination risk:** Qwen3-8B has probably seen this report in training. Grading must reward page-grounded citations, exact table values, and "not disclosed" answers, not just correct-sounding text. The replay grading does this with the separate `grounded` label.
-- **Web evidence for the oracle:** [server/eval/datasets/gpt4-report.v1.web-evidence.json](server/eval/datasets/gpt4-report.v1.web-evidence.json), one short excerpt per web/mixed question, approved by the user on 2026-10-21. Verbatim except M04, which is transcribed from OpenAI's GPT-4o chart. `review_note` fields record known weaknesses (e.g. W02's date comes only from the result date).
+- **Web evidence for the oracle:** [server/eval/datasets/gpt4-report.v1.web-evidence.json](../server/eval/datasets/gpt4-report.v1.web-evidence.json), one short excerpt per web/mixed question, approved by the user on 2026-10-21. Verbatim except M04, which is transcribed from OpenAI's GPT-4o chart. `review_note` fields record known weaknesses (e.g. W02's date comes only from the result date).
 - **Dataset revision history:** `f25e5b9` revised M01, M04, M05, W03 and T01 after a source review, before any answers were seen; `81f829c` approved it.
 
 ## 10. Known issues found but intentionally not fixed
