@@ -9,8 +9,8 @@ Facts are verified from the repo (code, commit messages, `server/results/`, READ
 ## START HERE IN A NEW CLAUDE SESSION
 
 1. **Read** this file, then [README.md](../README.md) (the integration guide) and [evaluation.md](evaluation.md) (method and results).
-2. **Check git state.** Work happens on branch `qa-agent-hardening`; `main` is the untouched original snapshot.
-   - Tags: `baseline-dual`, `step1-hybrid`, `step2-reliability`.
+2. **Check git state.** `main` holds the current work (fast-forwarded from `qa-agent-hardening` on 2026-10-25). The project as it was before this work is tag `original` (`e1a9a25`).
+   - Tags: `original`, `baseline-dual`, `step1-hybrid`, `step2-reliability`.
    - Last results commit when this was updated: `6717d6c` (SGLang load test).
 3. **Run the checks.** `npm test --prefix server` should give 84 pass. One integration test needs Chroma and the demo PDF, otherwise it's skipped. `CI=true npm test --prefix frontend` should give 4 pass.
 4. **Check the dataset:** `npm run eval:validate --prefix server` should print "All gold pages verified". It needs `sh server/scripts/fetch-demo-doc.sh` first.
