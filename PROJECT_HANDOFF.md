@@ -296,6 +296,7 @@ Host and settings in [§4](#4-runtime--model-setup); full results in the README'
   - c = 1: TTFT p50 139 ms, TPOT 17 ms.
   - c = 8: 3.24 requests/s, TTFT p50 221 ms.
   - c = 16: 3.43 requests/s, but TTFT p50 2.1 s. The server runs at most ~9 requests at once because it reserves decode room for `max_tokens` = 1,024 in the 16k-token KV pool.
+  - `max_tokens` 256 (benchmark only, same tooling `8885884`, result file `bench-sglang-radix-on-max256-…`): 12–14 requests run at once. At c = 16, TTFT p50 925 ms (from 2.1 s), 4.02 requests/s (+17%), TPOT 35 ms (from 29). No answer reached the cap (max 134 tokens).
   - Radix cache on vs off: TTFT 8–24% lower and 3–8% more requests/s. Only the system message is shared (16.6% of prompt tokens).
   - The commit message of `6717d6c` rounds these as 15–25% and 5–11%; the README's numbers are exact.
 - **Not batch-invariant:** answers repeat exactly at c = 1 (35/35 across passes), but only 19–27/35 at c = 8–16.
@@ -376,7 +377,7 @@ Each of these changes retrieval or answer behaviour, so it should be measured in
 **Evaluation story** agreed with the user [conversation-only]: (1) how good is the QA agent end to end; (2) if it fails, is retrieval or generation responsible; (3) only then, would a stronger model help. Layer 4 (Qwen vs GPT-4o on the same frozen evidence) is deliberately deferred.
 
 **Update 2026-10-24:** steps 1, 2 (document part only) and 4 below are done; see §8 and §13. Open, in suggested order:
-1. **SGLang follow-ups:** lower `max_tokens` (e.g. 256) in the load test to see if more requests run at once; measure what `--enable-deterministic-inference` costs; prompt-layout experiments for the radix cache.
+1. **SGLang follow-ups:** (`max_tokens` 256 done 2026-10-25: see §8) measure what `--enable-deterministic-inference` costs; prompt-layout experiments for the radix cache.
 2. **Retrieval precision fix** (table-aware chunks or a reranker), then re-test the vector + BM25 candidate, T04 especially.
 3. **Search API comparison** (Querit vs SerpAPI on the same questions), once Querit's docs or a key are available.
 4. **Generator fix / GPT-4o** (old step 3 below), unchanged.

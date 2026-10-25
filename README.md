@@ -427,7 +427,11 @@ Same frozen prompts, served by SGLang 0.5.21 with `Qwen/Qwen3-8B-FP8` (revision 
 What this shows:
 - **Throughput saturates at about 8 concurrent requests.** From c = 8 to 16, throughput grows 6% while TTFT grows almost 10×.
   - The server never ran more than 9 requests at once, and KV use peaked at 69%. SGLang reserves decode room for each request's `max_tokens` (1,024) before admitting it, so the rest queue.
-  - Lowering the cap is the obvious next test; it hasn't been run.
+  - **Lowering the cap to 256 tokens** (no answer here is longer than 140) let the server run 12–14 requests at once, with KV use peaking at 90% ([results](server/results/bench-sglang-radix-on-max256-2026-10-25T05-22-55-828Z.json)).
+    - At c = 16: TTFT p50 2,069 → 925 ms, p95 3,837 → 2,754 ms, requests/s 3.43 → 4.02.
+    - The cost is TPOT 29 → 35 ms, because batches are bigger.
+    - At c ≤ 8 nothing changed, because nothing queued.
+    - The production cap stays at 1,024. A lower one would need a measured answer-length distribution and a policy for cut-off answers.
 - **The radix cache helps a little, because little is shared.** Only the system message is common to all prompts: 16.6% of prompt tokens came from the cache.
   - TTFT p50 drops 8–24% (c = 1: 164 → 139 ms; c = 8: 292 → 221 ms; c = 16: 2,587 → 2,069 ms).
   - Requests/s rise 3–8% (c = 16: 3.17 → 3.43).
