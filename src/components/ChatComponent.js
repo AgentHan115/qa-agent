@@ -39,8 +39,6 @@ const ChatComponent = (props) => {
     transcript,
     listening,
     resetTranscript,
-    browserSupportsSpeechRecognition,
-    isMicrophoneAvailable,
   } = useSpeechRecognition();
 
   useEffect(() => {
@@ -69,36 +67,18 @@ const ChatComponent = (props) => {
       (async () => await onSearch(transcript))();
       setIsRecording(false);
     }
+    // Runs only when a recording finishes; onSearch is recreated every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listening, transcript]);
 
   const talk = (what2say) => {
     speech
       .speak({
         text: what2say,
-        queue: false, // current speech will be interrupted,
-        listeners: {
-          onstart: () => {
-            console.log("Start utterance");
-          },
-          onend: () => {
-            console.log("End utterance");
-          },
-          onresume: () => {
-            console.log("Resume utterance");
-          },
-          onboundary: (event) => {
-            console.log(
-              event.name +
-                " boundary reached after " +
-                event.elapsedTime +
-                " milliseconds."
-            );
-          },
-        },
+        queue: false, // current speech will be interrupted
       })
       .then(() => {
-        // if everyting went well, start listening again
-        console.log("Success !");
+        // When the answer has been read out, listen for the next question.
         userStartConvo();
       })
       .catch((e) => {

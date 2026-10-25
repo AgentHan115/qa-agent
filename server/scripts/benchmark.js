@@ -6,7 +6,7 @@
 // Optional:
 //   SERVER_URL=http://localhost:5001  (default)
 //   RUNS=20                           (default)
-//   QUESTION="..."                    (default: "What is the Build-Measure-Learn feedback loop?")
+//   QUESTION="..."                    (default: P01 of the GPT-4 report dataset)
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -14,7 +14,7 @@ dotenv.config();
 const SERVER_URL = process.env.SERVER_URL || "http://localhost:5001";
 const RUNS = parseInt(process.env.RUNS || "20", 10);
 const QUESTION =
-  process.env.QUESTION || "What is the Build-Measure-Learn feedback loop?";
+  process.env.QUESTION || "According to the report, when does most of GPT-4's pre-training data cut off?";
 
 const arg = process.argv.find((a) => a.startsWith("--documentId="));
 if (!arg) {

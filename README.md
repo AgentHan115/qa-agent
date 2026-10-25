@@ -157,25 +157,25 @@ Prometheus (`:9090`) and Grafana (`:3001`) are also defined in [docker-compose.y
 | `mode` | no | `docs`, `web` or `hybrid` (default `hybrid`) |
 | `documentId` | unless `mode=web` | The document to retrieve from |
 
-Response (abridged from a real run):
+Response for dataset question T02, "What did GPT-3.5 score on the LSAT in Table 1?" (from the [2026-10-20 hybrid run](server/results/eval-2026-10-20T01-20-53-949Z.json); source texts, titles and the uncited sources abridged):
 
 ```json
 {
-  "answer": "Vanity metrics are superficial data points that look impressive but lack practical value, while actionable metrics provide insights that drive decisions [W3]. ... focus on conversion funnel performance and cohort analysis [D2][D4].",
+  "answer": "GPT-3.5 scored 149 on the LSAT, which corresponds to the 40th percentile [W2]. This score is consistent with the data reported in Table 1 [D1].",
   "mode": "hybrid",
   "sources": [
-    { "id": "D2", "type": "document", "page": 5, "text": "Entrepreneurs often use cohort analysis to track trends in LTV/CAC, ..." },
-    { "id": "W3", "type": "web", "title": "What is the difference between vanity and actionable metrics?", "url": "https://www.secoda.co/blog/...", "snippet": "...", "date": null }
+    { "id": "D1", "type": "document", "page": 5, "text": "..." },
+    { "id": "W2", "type": "web", "title": "...", "url": "https://www.centeraipolicy.org/work/openai-unhobbles-o1-epitomizing-the-relentless-pace-of-ai-progress", "snippet": "...", "date": null }
   ],
-  "citations": { "total": 6, "cited": ["W3", "W5", "D2", "D4", "W1", "W2"], "invalid": [], "uncited": ["D1", "D3", "D5", "W4"] },
+  "citations": { "total": 2, "cited": ["W2", "D1"], "invalid": [], "uncited": ["D2", "D3", "D4", "D5", "W1", "W3", "W4", "W5"] },
   "web": { "status": "ok" },
   "retrieval": { "status": "ok" },
   "meta": {
-    "retrieval": { "embed_ms": 518, "chroma_ms": 19, "chunks": 5, "status": "ok" },
-    "web": { "search_ms": 1083, "attempts": 1, "results": 5, "status": "ok" },
-    "llm": { "ms": 7341, "usage": { "input_tokens": 1093, "output_tokens": 110, "cached_input_tokens": null },
-             "check": { "truncation_check": "pass", "prompt_tokens": 1093, "truncation_ruled_out_by": "short_prompt" } },
-    "total_ms": 8429
+    "retrieval": { "embed_ms": 4550, "chroma_ms": 97, "chunks": 5, "status": "ok" },
+    "web": { "search_ms": 228, "attempts": 1, "results": 5, "status": "ok" },
+    "llm": { "ms": 8962, "usage": { "input_tokens": 1623, "output_tokens": 46, "cached_input_tokens": null },
+             "check": { "truncation_check": "pass", "prompt_tokens": 1623, "truncation_ruled_out_by": "short_prompt" } },
+    "total_ms": 13612
   }
 }
 ```
