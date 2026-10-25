@@ -1,4 +1,4 @@
-# Agent AI — Hybrid Document + Web Q&A
+# QA Agent — Hybrid Document + Web Q&A
 
 Ask questions about an uploaded PDF and get **one grounded answer** that cites both
 **document chunks** (`[D1]`, with page numbers) and **live web results** (`[W1]`, with URLs).

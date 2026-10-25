@@ -1,4 +1,4 @@
-# Project Handoff — Agent AI (Hybrid Document + Web Q&A)
+# Project Handoff — QA Agent (Hybrid Document + Web Q&A)
 
 Written 2026-10-19 and updated 2026-10-22 (Step 4 results) and 2026-10-24 (retrieval round, SGLang) so a fresh Claude session can continue the work from the repository alone.
 
