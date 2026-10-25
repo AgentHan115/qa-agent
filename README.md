@@ -227,9 +227,18 @@ Every chat and embedding model is created in [server/lib/llm.js](server/lib/llm.
 |---|---|---|
 | `ollama` | `reasoning_effort: "none"`. Ollama ignores `think: false` on this endpoint (Ollama 0.33) | Verified |
 | `openai` | n/a | Supported, not re-measured on this branch |
-| `sglang`, `vllm` | `chat_template_kwargs: {enable_thinking: false}` | Implemented, **not yet verified** |
+| `sglang` | `chat_template_kwargs: {enable_thinking: false}` | Verified (SGLang 0.5.21) |
+| `vllm` | `chat_template_kwargs: {enable_thinking: false}` | Implemented, not verified |
 
 If thinking output appears anyway, the request fails rather than silently inflating latency and token counts.
+
+**SGLang, checked on Qwen3-8B-FP8 (RTX 4070 Ti SUPER, 16 GB):**
+- **Over-long prompts are rejected, not truncated:** HTTP 400 with the token count, and the server keeps serving. Unlike Ollama, nothing is silently cut.
+- **The KV-cache pool, not the context length, sets the largest prompt on a small GPU.** With `--context-length 32768` the pool held 16,126 tokens, and a 20k-token prompt was refused. Set `LLM_CONTEXT_TOKENS` to `max_total_num_tokens` from `/get_server_info`.
+- **Cached prompt tokens are reported** (`cached_input_tokens`) only with `--enable-cache-report`.
+- **The runtime record** ([server/lib/runtime-info.js](server/lib/runtime-info.js)) stores SGLang's version, the model's Hugging Face revision and the relevant server args with every result.
+
+Settings and server workarounds are in [server/.env.example](server/.env.example) and [Evaluation](#sglang-on-a-consumer-gpu-2026-10-24).
 
 Inside Docker, the server reaches a model server on the host through `host.docker.internal`. Set `DOCKER_LLM_BASE_URL` to use another server. When `LLM_BASE_URL` is set, the key sent is `LLM_API_KEY`, not `OPENAI_API_KEY`.
 
@@ -371,6 +380,68 @@ Caveats:
 - **The oracle adds the gold evidence but leaves the other sources in place**, so layer 3 measures the model with gold evidence among noise.
 - **One grader, n = 35, one run.** A few labels are judgement calls (noted per answer in the labels file).
 - **No other model has been measured on these contexts**, so these results don't say how much a stronger model would help.
+- **The rubric was clarified afterwards** ([labels README](server/eval/labels/README.md), `e9cfa7e`): a missing number makes an answer partial. Re-graded under it, the same 35 answers score **16/35** grounded-correct ([labels](server/eval/labels/regrade-2026-10-21T10-55-01-709Z-vs-2026-10-22T23-23-42-097Z.labels.json)); the first labels are kept unchanged. Compare later runs with 16, not 20.
+
+### Retrieval round (2026-10-22)
+
+Layer 2 first, with no grading needed: share of the 30 document questions whose evidence chunk is in the context ([sweep](server/results/retrieval-sweep-2026-10-22T10-05-24-622Z.json), [eval/retrieval-sweep.js](server/eval/retrieval-sweep.js)):
+
+| Retriever | k = 5 | k = 8 |
+|---|---|---|
+| Vector (production) | 17 | 20 (flat up to k = 20) |
+| BM25 | 20 | 21 |
+| Reciprocal rank fusion | 19 | 20 |
+| Interleave vector + BM25 | 21 | 24 |
+| **Vector top-5 + BM25 top-3** (the candidate) | | **23** |
+
+The candidate keeps the production chunks and adds BM25's best three. It was captured and replayed end to end ([replay](server/results/replay-2026-10-22T23-23-42-097Z.json), [comparison](server/results/compare-2026-10-21-vs-2026-10-22-vector5-bm25-3.txt)). A determinism check re-ran 5 baseline prompts and reproduced all 5 answers exactly.
+
+The decision rule, set before the run: adopt only with net ≥ +2 grounded-correct and ≤ 1 regression.
+- **First grading:** 20 → 19, net −1, not adopted.
+- **Independent re-grade of both sides under the clarified rubric:** 16 → **19**, gaining P10, T03, U04 and M01 and losing U03. Net +3, so the rule is met.
+- **Still not shipped:** on T04 the baseline abstained, but the candidate's extra chunk (p. 28, Table 8: base vs post-RLHF model on multiple-choice questions) led it to report 66.7% and 57.8% as AP Calculus results. A fabrication is worse than an abstention, so the change waits for a precision fix (table-aware chunks or a reranker).
+- **Five questions miss with every retriever** (P06, T04, T06, U01, U03).
+
+### SGLang on a consumer GPU (2026-10-24)
+
+Same frozen prompts, served by SGLang 0.5.21 with `Qwen/Qwen3-8B-FP8` (revision `220b46e`) on an RTX 4070 Ti SUPER 16 GB under WSL2. The app stays on the Mac and reaches the GPU through an SSH tunnel; the round trip is about 7–9 ms.
+
+**Quality parity:** the 35 retrieved prompts of the 2026-10-21 capture were replayed and graded blind under the clarified rubric ([replay](server/results/replay-2026-10-24T08-59-50-394Z.json), [scores](server/results/replay-score-2026-10-24T08-59-50-394Z.json)). The result is **15/35 grounded-correct**, against 16/35 for the Mac's Q4_K_M answers re-graded under the same rubric.
+- **34 of 35 questions get the same outcome.** P13 is the exception: the FP8 model added a web claim its cited snippet doesn't support.
+- **Only 4 of 35 answers are word-for-word identical**, so the two quantizations write differently but are right or wrong on the same questions.
+
+**Load test** ([eval/bench-runtime.js](server/eval/bench-runtime.js), results with the radix cache [on](server/results/bench-sglang-radix-on-2026-10-24T09-40-43-086Z.json) and [off](server/results/bench-sglang-radix-off-2026-10-24T09-45-33-936Z.json)):
+- **Workload:** the 35 retrieved prompts, about 1.2k tokens each, `max_tokens` 1,024, answers about 70 tokens at the median.
+- **Method:** a closed loop of c clients, 2 passes per level, with the prefix cache flushed before each pass. 700 requests, 0 errors.
+
+| Concurrency | TTFT p50 / p95 | TPOT p50 | Requests/s | Output tokens/s |
+|---|---|---|---|---|
+| 1 | 139 / 198 ms | 17 ms | 0.69 | 52 |
+| 2 | 166 / 236 ms | 18 ms | 1.33 | 99 |
+| 4 | 176 / 543 ms | 21 ms | 2.27 | 166 |
+| 8 | 221 / 856 ms | 28 ms | 3.24 | 241 |
+| 16 | 2,069 / 3,837 ms | 29 ms | 3.43 | 262 |
+
+(Radix cache on. TTFT is time to first token; TPOT is time per output token after the first.)
+
+What this shows:
+- **Throughput saturates at about 8 concurrent requests.** From c = 8 to 16, throughput grows 6% while TTFT grows almost 10×.
+  - The server never ran more than 9 requests at once, and KV use peaked at 69%. SGLang reserves decode room for each request's `max_tokens` (1,024) before admitting it, so the rest queue.
+  - Lowering the cap is the obvious next test; it hasn't been run.
+- **The radix cache helps a little, because little is shared.** Only the system message is common to all prompts: 16.6% of prompt tokens came from the cache.
+  - TTFT p50 drops 8–24% (c = 1: 164 → 139 ms; c = 8: 292 → 221 ms; c = 16: 2,587 → 2,069 ms).
+  - Requests/s rise 3–8% (c = 16: 3.17 → 3.43).
+- **Greedy output is not batch-invariant.** At c = 1 every answer repeated exactly across passes (35/35); at c = 8–16, only 19–27 of 35 did.
+  - Prefix-cache state and the server's own configuration also change outputs, so the graded SGLang answers are one sample.
+  - SGLang has an `--enable-deterministic-inference` mode; its cost hasn't been measured.
+
+Server workarounds needed on this setup:
+- **FlashInfer's kernels fail to compile** (the CUDA headers bundled with PyTorch's CUDA 13 wheels don't match), so the runs use `--attention-backend triton --sampling-backend pytorch`.
+- **`CUDA_HOME` must point at the pip-installed CUDA** (`site-packages/nvidia/cu13`), with the venv's `bin` on `PATH`, plus `lib64` and `libcudart.so` symlinks there.
+- **Tunnel to `127.0.0.1`, not `localhost`.** On Windows, `localhost` resolves to `::1` and misses WSL's port forwarding.
+- **Don't use `/health` to measure latency:** it runs a test generation and takes about 1 s.
+
+These numbers come from one GPU, one model and one run per setting: treat them as directional. Don't compare them with the Mac/Ollama latencies above, because hardware, quantization, runtime and batching all differ.
 
 ### Earlier results
 
@@ -417,11 +488,11 @@ docker-compose.yml      postgres, redis, chroma, server, prometheus, grafana
 ## Known limitations
 
 - **Search query quality.** The raw question is sent as the search query, with no rewriting. "What score and percentile did GPT-4 get on the Uniform Bar Exam?" returned ExamSoft, ExamFX and an IMDb page in two captures; SerpAPI's metadata confirms Google received the full question. Web evidence for the dataset's web and mixed questions was present for only 4 of 10. Query rewriting would cost an extra LLM call and hasn't been measured yet.
-- **Document retrieval ranks the right chunk too low.** The gold evidence chunk was in the top 5 for 17 of 30 questions that need the report, although every one is stored. Top-k, chunk size and table handling haven't been tuned yet.
+- **Document retrieval ranks the right chunk too low.** The gold evidence chunk was in the top 5 for 17 of 30 questions that need the report, although every one is stored. Adding BM25 results raises that to 23/30, but brought in a table chunk that led to a fabricated answer, so it isn't shipped (see [Retrieval round](#retrieval-round-2026-10-22)). Chunk size and table handling haven't been tuned yet.
 - **Conflicting sources.** The model sometimes prefers an unofficial or wrong-entity web figure over the document, or picks the wrong one of two dates (see [Evaluation](#evaluation)).
 - **Citation validity is not faithfulness.** The checker confirms that labels exist, not that the cited source supports the sentence.
 - **The eval is small:** 35 questions, one run, graded by one person. The LLM judge in `scripts/eval.js` hasn't been calibrated and is too lenient to use for quality numbers.
-- **SGLang and vLLM thinking control and overflow behaviour aren't verified yet.** Until they are, the truncation check fails closed on long prompts for those runtimes.
-- **`benchmark.js`** only measures end-to-end `/chat` latency (default `hybrid`, sequential). It doesn't break down stages or compare modes, and doesn't test concurrency yet.
+- **vLLM's thinking control and overflow behaviour aren't verified.** SGLang's are (see [Switching model servers](#switching-model-servers)).
+- **`benchmark.js`** only measures end-to-end `/chat` latency (default `hybrid`, sequential). Concurrency has been measured only on the model server ([eval/bench-runtime.js](server/eval/bench-runtime.js), SGLang), not through the full `/chat` pipeline.
 - **`multer` 1.x** (the upload handler) has published vulnerabilities fixed in 2.x and should be upgraded.
 - **Query routing** (deciding when web search is worth its latency) isn't implemented. Every `hybrid` question searches.

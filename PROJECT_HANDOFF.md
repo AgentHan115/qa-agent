@@ -1,6 +1,6 @@
 # Project Handoff — Agent AI (Hybrid Document + Web Q&A)
 
-Written 2026-10-19 and updated 2026-10-22 (Step 4 results) so a fresh Claude session can continue the work from the repository alone.
+Written 2026-10-19 and updated 2026-10-22 (Step 4 results) and 2026-10-24 (retrieval round, SGLang) so a fresh Claude session can continue the work from the repository alone.
 
 Facts are verified from the repo (code, commit messages, `server/results/`, README) unless marked **[conversation-only]**. Those come from earlier chat sessions, aren't recorded in the repo, and should be re-verified before you rely on them.
 
@@ -11,12 +11,14 @@ Facts are verified from the repo (code, commit messages, `server/results/`, READ
 1. **Read** this file, then [README.md](README.md) (the integration guide).
 2. **Check git state.** Work happens on branch `qa-agent-hardening`; `main` is the untouched original snapshot.
    - Tags: `baseline-dual`, `step1-hybrid`, `step2-reliability`.
-   - Last results commit when this was updated: `f8a0b43` (human-graded Step 4 scores).
-3. **Run the checks.** `npm test --prefix server` should give 79 pass. One integration test needs Chroma and the demo PDF, otherwise it's skipped. `CI=true npm test` should give 4 pass.
+   - Last results commit when this was updated: `6717d6c` (SGLang load test).
+3. **Run the checks.** `npm test --prefix server` should give 86 pass. One integration test needs Chroma and the demo PDF, otherwise it's skipped. `CI=true npm test` should give 4 pass.
 4. **Check the dataset:** `npm run eval:validate --prefix server` should print "All gold pages verified". It needs `sh server/scripts/fetch-demo-doc.sh` first.
-5. **Current state: Step 4 (evaluation) is measured; next is a retrieval round.**
-   - Human-graded results: end-to-end **20/35** grounded-correct, **26/35** with gold evidence; 7 failures trace to retrieval and 8 to generation. Details in [§8](#8-benchmark-results-and-how-to-read-them).
-   - Next steps, in order: [§11](#11-step-4-status-and-next-steps). SGLang: [§13](#13-future-sglang-experiment).
+5. **Current state: Step 4, the retrieval round and the first SGLang round are measured.**
+   - Human-graded baseline: end-to-end **16/35** grounded-correct under the clarified rubric (20/35 in the first grading), **26/35** with gold evidence. Details in [§8](#8-benchmark-results-and-how-to-read-them).
+   - Retrieval round: vector top-5 + BM25 top-3 met the decision rule (16 → 19) but **isn't shipped** because of a fabrication on T04.
+   - SGLang on the RTX 4070 Ti SUPER: quality matches the Mac on 34/35 questions; throughput saturates at about 8 concurrent requests.
+   - Next steps: [§11](#11-step-4-status-and-next-steps). SGLang: [§13](#13-sglang-experiment).
 6. **Local services:** `docker compose up -d postgres redis chroma`. Ollama runs on the host. Model setup: [§4](#4-runtime--model-setup).
    - [conversation-only] The previous session ran the API through a Claude preview config named `agentai-api` in `~/.claude/launch.json`, with cwd `server/`. Run it from `server/`, because `dotenv` reads `./.env`.
 7. **Read [§14](#14-do-not-accidentally-change) before changing anything.**
@@ -147,9 +149,20 @@ The original system is commit `e1a9a25` on `main`, "Add backend, RAG pipeline…
 - **Ollama doesn't report prompt-cache tokens**, so `cached_input_tokens` is `null` (not reported). That is not a measured 0.
 - **Ollama fails a 212-input embedding batch**; batches of 128 work. Hence a batch size of 32.
 - **Node's server `requestTimeout`** (300 s by default) is raised via `SERVER_REQUEST_TIMEOUT_MS` (default 900 s), because local prefill can be slow.
-- **[conversation-only] GPU host for the future SGLang work:** RTX 4070 Ti SUPER 16 GB, Ryzen 7 7800X3D, 32 GB RAM, OS unknown (SGLang needs Linux).
-  - The planned model is `Qwen/Qwen3-8B-FP8` (weights 9.44 GB). BF16 weights are 16.38 GB and don't fit in 16 GB.
-  - KV cache per token is about 144 KiB in BF16, so roughly 30k tokens of cache after the weights. Estimated; SGLang reports the real `max_total_num_tokens` at startup.
+**SGLang host** (recorded in each SGLang result's `runtime.serving`):
+
+| | Setting |
+|---|---|
+| Machine | RTX 4070 Ti SUPER 16 GB, Windows 11, WSL2 Ubuntu 26.04 |
+| Server | SGLang 0.5.21 in a uv venv (Python 3.12), PyTorch 2.13 + CUDA 13.0 |
+| Model | `Qwen/Qwen3-8B-FP8`, revision `220b46e`; 8.81 GB of weights on the GPU |
+| Flags | `--context-length 32768 --attention-backend triton --sampling-backend pytorch --enable-cache-report --cuda-graph-max-bs-decode 16` |
+| KV pool | 16,126 tokens (`max_total_num_tokens`), so `LLM_CONTEXT_TOKENS=16126` |
+| App settings | `LLM_RUNTIME=sglang`, `LLM_BASE_URL=http://127.0.0.1:30000/v1`, `LLM_MODEL=Qwen/Qwen3-8B-FP8`, `EMBEDDING_BASE_URL=http://localhost:11434/v1` (embeddings stay on Ollama) |
+
+- **Workarounds:** FlashInfer's kernels don't compile against the CUDA headers bundled with the pip CUDA 13 wheels, hence Triton attention. `CUDA_HOME` must point at `site-packages/nvidia/cu13`, with the venv's `bin` on `PATH` and `lib64`/`libcudart.so` symlinks there.
+- **Reaching it:** the app stays on the Mac; `ssh -N -L 127.0.0.1:30000:127.0.0.1:30000 <gpu-host>`. Use `127.0.0.1`, because on Windows `localhost` resolves to `::1` and misses WSL's forwarding.
+- **[conversation-only]** The host's address, account and the launch script (`~/serve-sglang.sh` in WSL) are known to the user and to the Claude session's memory, deliberately not committed. SSH is key-only and firewalled to the Mac.
 
 ## 5. Ingestion and Chroma invariants
 
@@ -263,6 +276,29 @@ Code: [server/ingest.js](server/ingest.js), [server/lib/queue.js](server/lib/que
 - The oracle keeps the other retrieved sources, so layer 3 is "gold evidence among noise", not clean evidence.
 - One grader, n = 35, one run; a few labels are judgement calls (W02's date, M04's wording rule, W03's extra claim).
 - **No other model has been run on these contexts.** Nothing here says how much GPT-4o would help.
+- **Re-graded under the clarified rubric** (`e9cfa7e`; a missing number makes an answer partial), the same answers score **16/35**. The labels are in [server/eval/labels/regrade-2026-10-21T10-55-01-709Z-vs-2026-10-22T23-23-42-097Z.labels.json](server/eval/labels/regrade-2026-10-21T10-55-01-709Z-vs-2026-10-22T23-23-42-097Z.labels.json), saved by [save-regrade.js](server/eval/save-regrade.js). The first labels are unchanged. **Compare later runs with 16.**
+
+### Retrieval round (2026-10-22): candidate met the rule, not shipped
+
+Full table and links in the README's "Retrieval round".
+- **Layer 2, document evidence in context (of 30):** vector k5 17 / k8 20; BM25 20 / 21; RRF 19 / 20; interleave 21 / 24; **vector top-5 + BM25 top-3: 23** (tooling `806e6dd`, `3de3692`; sweeps `a7e825b`, `41847ec`).
+- **End to end** (capture `contexts-2026-10-22T23-17-04-429Z.json`, replay `87cc35b`, determinism 5/5):
+  - First grading 20 → 19 (`93249c6`): not adopted.
+  - Independent re-grade of both sides under the clarified rubric: 16 → 19, gaining P10, T03, U04 and M01 and losing U03. The pre-set rule (net ≥ +2, ≤ 1 regression) is met.
+- **Not shipped:** on T04 the extra BM25 chunk (p. 28, Table 8) turned a correct abstention into fabricated AP Calculus scores (66.7% / 57.8%). The decision is to wait for a precision fix (table-aware chunks or a reranker). Production retrieval is still vector top-5.
+
+### SGLang (2026-10-24)
+
+Host and settings in [§4](#4-runtime--model-setup); full results in the README's "SGLang on a consumer GPU".
+- **Verified:** thinking off via `chat_template_kwargs`; over-long prompts get HTTP 400, never truncated; cached tokens reported with `--enable-cache-report`.
+- **Quality parity:** the 35 retrieved prompts of the 2026-10-21 capture were replayed (`c3c9b45`) and graded blind (`ec9e798`). **15/35** grounded-correct vs the Mac's 16/35 under the same rubric, with the same outcome on 34/35 questions (P13 differs). Only 4/35 answers are word-for-word identical.
+- **Load test** ([bench-runtime.js](server/eval/bench-runtime.js), `8885884`; results `6717d6c`):
+  - c = 1: TTFT p50 139 ms, TPOT 17 ms.
+  - c = 8: 3.24 requests/s, TTFT p50 221 ms.
+  - c = 16: 3.43 requests/s, but TTFT p50 2.1 s. The server runs at most ~9 requests at once because it reserves decode room for `max_tokens` = 1,024 in the 16k-token KV pool.
+  - Radix cache on vs off: TTFT 8–24% lower and 3–8% more requests/s. Only the system message is shared (16.6% of prompt tokens).
+  - The commit message of `6717d6c` rounds these as 15–25% and 5–11%; the README's numbers are exact.
+- **Not batch-invariant:** answers repeat exactly at c = 1 (35/35 across passes), but only 19–27/35 at c = 8–16.
 
 ### Step 4: the 2026-10-20 live runs (judge-graded, superseded)
 
@@ -339,7 +375,13 @@ Each of these changes retrieval or answer behaviour, so it should be measured in
 
 **Evaluation story** agreed with the user [conversation-only]: (1) how good is the QA agent end to end; (2) if it fails, is retrieval or generation responsible; (3) only then, would a stronger model help. Layer 4 (Qwen vs GPT-4o on the same frozen evidence) is deliberately deferred.
 
-**Next, in order** (suggested to the user on 2026-10-22; the user approved step 1):
+**Update 2026-10-24:** steps 1, 2 (document part only) and 4 below are done; see §8 and §13. Open, in suggested order:
+1. **SGLang follow-ups:** lower `max_tokens` (e.g. 256) in the load test to see if more requests run at once; measure what `--enable-deterministic-inference` costs; prompt-layout experiments for the radix cache.
+2. **Retrieval precision fix** (table-aware chunks or a reranker), then re-test the vector + BM25 candidate, T04 especially.
+3. **Search API comparison** (Querit vs SerpAPI on the same questions), once Querit's docs or a key are available.
+4. **Generator fix / GPT-4o** (old step 3 below), unchanged.
+
+**Original plan** (suggested to the user on 2026-10-22; the user approved step 1):
 1. **Write up Step 4** in the README and this file. Done 2026-10-22.
 2. **One retrieval round**, iterating on layer 2 first (no grading needed), then grading only the winning configuration end to end:
    - document: top-k 5 → 8/10 (no re-ingestion), then chunk size / table-aware chunks / junk filtering (re-ingest and re-baseline);
@@ -361,7 +403,7 @@ Remaining baseline experiments from the original plan, not yet done: `SEARCH_TRA
 - Prompt-cache layout experiments (the stable prefix exists already).
 - SGLang (§13).
 
-## 13. Future SGLang experiment
+## 13. SGLang experiment
 
 [conversation-only plan, agreed with the user] Only after the QA Agent is measured (Step 4):
 1. Save workload traces that keep **the actual prompt parts** (system message, sources, question, settings), not just token counts, so SGLang can re-tokenize and replay them. **Largely done:** the frozen capture (§8) stores the system message once and every question's user prompt per mode, with prompt hashes. Still missing: request arrival times, needed to replay them as a realistic workload. `replay-contexts.js` reaches the model through the app's model settings, so pointing it at SGLang should be configuration only (`LLM_BASE_URL`, `LLM_RUNTIME=sglang`).
@@ -369,7 +411,13 @@ Remaining baseline experiments from the original plan, not yet done: `SEARCH_TRA
 3. **First verify** thinking-off and how SGLang behaves on an over-long prompt (the guard currently fails closed for `sglang`).
 4. Replay the same frozen prompts for a quality-parity check against Q4_K_M (grade only answers that differ, or use a judge calibrated on the human labels).
 5. Study prefix-cache hit rate, time to first token and throughput against request rate, with SGLang's prefix (radix) cache on and off and different prompt layouts, plus API vs self-hosted cost. **Expectation:** the shared prefix is only the ~650-character system message against ~1.2k-token prompts, so the cache has little to reuse in today's layout; layout experiments are where it can matter.
-6. **Open question for the user:** whether the GPU machine runs Linux (SGLang needs it; otherwise WSL2 or a dual boot first).
+6. ~~Open question: does the GPU machine run Linux?~~ It runs Windows 11; SGLang runs under WSL2 (§4).
+
+**Status 2026-10-24:**
+- **Steps 2–4 are done**, and so is the first part of step 5 (concurrency 1–16, radix cache on/off); results are in §8.
+- **Step 4 was graded in full** rather than only the answers that differ, because only 4 of 35 were identical.
+- **The expectation held:** the cache reused 16.6% of prompt tokens and cut TTFT by 8–24%.
+- **Still open:** request arrival times (step 1), prompt-layout experiments, and the cost comparison.
 
 **Never compare Mac/Ollama/Q4_K_M numbers with GPU/SGLang/FP8 numbers as an "SGLang speedup".** Hardware, quantization, runtime and batching all differ at once. Re-run the baseline on SGLang; compare only within one environment.
 
@@ -443,4 +491,22 @@ Fault testing from `server/`, with no search quota spent:
 
 ```bash
 SEARCH_PROVIDER=fake FAKE_SEARCH_MODE=transient PORT=5002 node server.js
+```
+
+SGLang, from `server/`, with the server running on the GPU host and the tunnel open (§4):
+
+```bash
+export LLM_RUNTIME=sglang LLM_BASE_URL=http://127.0.0.1:30000/v1 LLM_MODEL=Qwen/Qwen3-8B-FP8 EMBEDDING_BASE_URL=http://localhost:11434/v1 LLM_CONTEXT_TOKENS=16126
+```
+```bash
+node eval/replay-contexts.js --frozen=eval/frozen/contexts-<ts>.json --conditions=retrieved
+```
+```bash
+node eval/bench-runtime.js --frozen=eval/frozen/contexts-<ts>.json --label=<name> --reference=results/replay-<ts>.json
+```
+
+Saving a filled side-by-side re-grade sheet as labels (refuses to overwrite):
+
+```bash
+node eval/save-regrade.js --sheet=<regrade.csv> --before=results/replay-<a>.json --after=results/replay-<b>.json
 ```
