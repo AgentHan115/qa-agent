@@ -1,0 +1,635 @@
+{
+  "sheet": "eval/frozen/labels/arms-search-2026-10-26.graded.csv",
+  "labels": [
+    {
+      "answer_id": "S001",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "W4 supports scores 4 vs 1; omits both reference percentile ranges (43rd-59th and 0th-7th)."
+    },
+    {
+      "answer_id": "S002",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D1/D2 support the preliminary finding of ineffective autonomous replication/resource gathering without task-specific fine-tuning. Unasked evaluation caveats do not reduce completeness."
+    },
+    {
+      "answer_id": "S003",
+      "correct": "partial",
+      "grounded": false,
+      "notes": "Correctly identifies ARC, but the claimed current name Center for AI Alignment is wrong against the reference and unsupported by this row's sources."
+    },
+    {
+      "answer_id": "S004",
+      "correct": "partial",
+      "grounded": false,
+      "notes": "v6 is correct, but the posted date 2023-03-03 is wrong (reference: March 4, 2024) and unsupported. W1's metadata says 2024-03-03, not 2023."
+    },
+    {
+      "answer_id": "S005",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "Public and licensed data match the requested core reference; W2 supports the corpus description and W4/W5 support the added details. Specific corpus/token claims are web-source claims, not disclosures from the report."
+    },
+    {
+      "answer_id": "S006",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "D4 supports the 10,000x figure, but the answer omits the 1,000x end of the reference's 1,000x-10,000x range."
+    },
+    {
+      "answer_id": "S007",
+      "correct": "incorrect",
+      "grounded": true,
+      "notes": "December 2023 is supported by W2/W4, but fails the grading note: April 2023 is required unless a specific later snapshot is identified. The cutoff explanation is supported by W1."
+    },
+    {
+      "answer_id": "S008",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "Presents attributed estimates rather than a confirmed count; W1/W2/W4/W5 support them. Omits the required fact that the report withholds model size."
+    },
+    {
+      "answer_id": "S009",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D2 supports both requested quantities: 25% contamination and 65.58% on the non-contaminated subset. The unasked degradation comparison is omitted."
+    },
+    {
+      "answer_id": "S010",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "Correct direction of calibration change, supported by D2/D3 and W1/W2, but omits the required ECE values 0.007 -> 0.074."
+    },
+    {
+      "answer_id": "S011",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D1 supports September 2021; W4/W5 support the change to April 2023. Includes both requested cutoff dates."
+    },
+    {
+      "answer_id": "S012",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "D1-D4 support contamination checks and removing contaminated items, but the answer omits the requested detection method: stripping spaces/symbols, three random 50-character substrings (whole example if shorter), and any-match rule."
+    },
+    {
+      "answer_id": "S013",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D3 explicitly gives GPT-3.5's LSAT score 149 (~40th percentile); the answer reads the correct column."
+    },
+    {
+      "answer_id": "S014",
+      "correct": "abstained",
+      "grounded": true,
+      "notes": "Declines to invent a rating; none of this row's displayed excerpts gives GPT-4's 392 rating."
+    },
+    {
+      "answer_id": "S015",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D2/D3 establish the instruction-following versus helpfulness/harmlessness distinction and improved safety; D5 supports the remaining-risk caveat."
+    },
+    {
+      "answer_id": "S016",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D1/D2 support the preliminary conclusion and need for further experiments; unasked evaluation caveats do not reduce completeness."
+    },
+    {
+      "answer_id": "S017",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "W1 supports the 8K launch context and D2 gives only a limited window. Omits the limited-access 32,768-token version required by the reference."
+    },
+    {
+      "answer_id": "S018",
+      "correct": "incorrect",
+      "grounded": true,
+      "notes": "Uses W2's later GPT-4-1106-preview result (85.7%) and later GPT-3.5 result (72.2%), rather than the reference's 67.0%/48.1%. W2 supports the numbers and pass@1 context; D2 alone does not define single-attempt scoring."
+    },
+    {
+      "answer_id": "S019",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D3/D4 support 298/400 and ~90th percentile; W2 supports the additional population-dependent lower-percentile caveat."
+    },
+    {
+      "answer_id": "S020",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D2 explicitly supports 24 of 26 languages."
+    },
+    {
+      "answer_id": "S021",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "D1-D3 support zero-shot classifiers, extra RLHF reward, and refusal steering. Omits the reference's classifier inputs (optional prompt, policy output, human-written rubric) and rubric-based classification procedure."
+    },
+    {
+      "answer_id": "S022",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D2 supports both reference rates: GPT-4 0.73% and GPT-3.5 6.48%."
+    },
+    {
+      "answer_id": "S023",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "W1 gives over 50 experts and the domains; D4 supports their recruitment. Saying the exact count is unspecified is compatible with an over-50 lower bound."
+    },
+    {
+      "answer_id": "S024",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D1/D2 explicitly support the requested 82% reduction."
+    },
+    {
+      "answer_id": "S025",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "v6 and March 4, 2024 match the reference. The explicit revision date is in W1, although the answer cites W2; W1 establishes that this was a revision."
+    },
+    {
+      "answer_id": "S026",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "Meets the question-specific pass rule: acknowledges reported 90th percentile and research questioning it with lower estimates. The 68th-90th range is in W4 (cited W1/W3); W1/W4 support the retaker-skew explanation."
+    },
+    {
+      "answer_id": "S027",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D2/D3 support both reference rates: GPT-4 0.73% and GPT-3.5 6.48%."
+    },
+    {
+      "answer_id": "S028",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D2/D3 support both versions' fine-tuning objectives, additional launch mitigations, and safer launch behavior."
+    },
+    {
+      "answer_id": "S029",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "Correct direction of calibration change; D2/D3 and W1/W3 support the claims. Omits the required ECE values 0.007 -> 0.074."
+    },
+    {
+      "answer_id": "S030",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "W1 gives both 5-shot results: GPT-4 86.4% and GPT-3.5 70.0%."
+    },
+    {
+      "answer_id": "S031",
+      "correct": "incorrect",
+      "grounded": false,
+      "notes": "Gives 80.1% instead of 67.0%; W1 supports that web figure, but D4's 82.5 is for DROP, not HumanEval. That benchmark transfer is unsupported."
+    },
+    {
+      "answer_id": "S032",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D2 supports both requested quantities: 25% contamination and 65.58% on the non-contaminated subset. The unasked degradation comparison is omitted."
+    },
+    {
+      "answer_id": "S033",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "D2/D3 and W3 support classifiers, rewards, refusal categories and rubrics; W1 supports reduced recurrent human input. Omits the prompt/policy-output/human-written-rubric input specification."
+    },
+    {
+      "answer_id": "S034",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "Discusses uncertainty in the reported ~90th percentile, supported by W3/W4, but omits the required finding that independent research estimated substantially lower percentiles."
+    },
+    {
+      "answer_id": "S035",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "States that exact hardware specifications are not detailed. W1/W2 support the general Azure-supercomputer description and stable/predictable training; no specific GPU model or hardware configuration is asserted."
+    },
+    {
+      "answer_id": "S036",
+      "correct": "incorrect",
+      "grounded": false,
+      "notes": "Adds specific VRAM requirements as a training-hardware answer despite nondisclosure. W3 describes estimated inference/quantization memory, not the hardware used to train GPT-4; this transfer is unsupported."
+    },
+    {
+      "answer_id": "S037",
+      "correct": "abstained",
+      "grounded": true,
+      "notes": "Abstains on the requested HumanEval result; this row's excerpts do not contain GPT-4o's ~90% score. W1 supports the ancillary risk-evaluation statement."
+    },
+    {
+      "answer_id": "S038",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "Correctly says absolute compute is not supplied. D3/D4 support the relative scaling discussion; W5's exaflop-day example is conditional, not a measured GPT-4 disclosure."
+    },
+    {
+      "answer_id": "S039",
+      "correct": "incorrect",
+      "grounded": true,
+      "notes": "Fails the explicit rule by stating more than 1 trillion parameters as fact. W3 supports that assertion, so it is grounded despite failing correctness; the report's nondisclosure is not stated."
+    },
+    {
+      "answer_id": "S040",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "128K and November 6, 2023 match the reference; W5 explicitly supplies the date and first-DevDay context, while W1 also supplies 128K."
+    },
+    {
+      "answer_id": "S041",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "D2 supports September 2021 for most data, but the added absolute claim that no training information exists after that date overstates the reference, which allows a small amount of newer data. W1 supports the web-source wording."
+    },
+    {
+      "answer_id": "S042",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D3 describes human demonstration/ranking data and PPO reinforcement learning, correctly explaining RLHF; D4 supports the alignment effects."
+    },
+    {
+      "answer_id": "S043",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D1 explicitly identifies Hindsight Neglect and Figure 3; [46] is a carried-over report bibliography marker, with D1 supplying actual evidence."
+    },
+    {
+      "answer_id": "S044",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "September 2021 is correct (D2/W1), but the categorical claim that later-event information cannot be accessed without tools overstates the reference's allowance for some newer training data. W1 supports that web-source claim."
+    },
+    {
+      "answer_id": "S045",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D2 supports both requested quantities: 25% contamination and 65.58% on the non-contaminated subset. The unasked degradation comparison is omitted."
+    },
+    {
+      "answer_id": "S046",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D1/D2 support 82%; D1-D4 support the safety-training explanation. No disagreement is asserted beyond the cited matching accounts."
+    },
+    {
+      "answer_id": "S047",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D1 supports September 2021; W4/W5 support the change to April 2023. Includes both requested cutoff dates."
+    },
+    {
+      "answer_id": "S048",
+      "correct": "partial",
+      "grounded": false,
+      "notes": "W4 supports April 30, 2025 and replacement by GPT-4o. The added claim that this retirement also included other legacy models is not supported by W5, which discusses newer model-picker options rather than simultaneous retirements."
+    },
+    {
+      "answer_id": "S049",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "D1/D3-D5 support the described checks and exam variants, but the answer omits substring matching, normalization, three 50-character samples, the short-example fallback, and any-match rule."
+    },
+    {
+      "answer_id": "S050",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D2 supports 24/26; D1/D3/D4 support the multilingual comparison and translated evaluation. These document sources support the claims regardless of W3's citation."
+    },
+    {
+      "answer_id": "S051",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "Meets the explicit pass rule: reported 90th versus substantially lower independent findings. W1 supports below 69th overall/~48th on essays; W3/W4 support the critique."
+    },
+    {
+      "answer_id": "S052",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D2 and W5 support September 2021 for most pre-training data. The unasked small-amount-of-newer-data caveat is omitted without making an absolute exclusion claim."
+    },
+    {
+      "answer_id": "S053",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "W3 supports the 8K context and D2 does not give a token count. Omits the reference's limited-access 32,768-token version."
+    },
+    {
+      "answer_id": "S054",
+      "correct": "incorrect",
+      "grounded": false,
+      "notes": "808 and the 11th percentile are GPT-4o results in W2/W3, incorrectly transferred to GPT-4. Reference requires 392, below the 5th percentile."
+    },
+    {
+      "answer_id": "S055",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D1/D2/D5 support the preliminary conclusion and absence of task-specific fine-tuning; unasked evaluation caveats do not reduce completeness."
+    },
+    {
+      "answer_id": "S056",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "GPT-4's September 2021 cutoff is right, but gives December 2023 instead of the reference's April 2023 for Turbo's initial change. W1 supports the later-cutoff claim, so grounded remains yes."
+    },
+    {
+      "answer_id": "S057",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "Explicitly says the technical report does not specify training hardware (W2/W4). W1 supports the general Azure platform; the 25,000 A100 figure is separately attributed to some sources (W3), not presented as a report disclosure or confirmed specification."
+    },
+    {
+      "answer_id": "S058",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "W5 supports rating 392 and beginner-level performance; W3 supports the contest counts. Omits the reference's below-5th-percentile result."
+    },
+    {
+      "answer_id": "S059",
+      "correct": "partial",
+      "grounded": false,
+      "notes": "Omits the reference's substring-detection procedure and sampling numbers. D1 expresses belief that results are representative, not a guarantee that training-data knowledge had no influence; that final assurance is unsupported."
+    },
+    {
+      "answer_id": "S060",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D1/D2 explicitly support the requested 82% reduction."
+    },
+    {
+      "answer_id": "S061",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "May 13, 2024 matches the reference and is explicitly supported by W1/W3 (also W4)."
+    },
+    {
+      "answer_id": "S062",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D2/D3 support 0.73% versus 6.48% and the context-specific reduction in toxic output."
+    },
+    {
+      "answer_id": "S063",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D2 explicitly supports 24 of 26 languages."
+    },
+    {
+      "answer_id": "S064",
+      "correct": "correct",
+      "grounded": false,
+      "notes": "Correctly describes RLHF via SFT, human-preference reward modeling, and PPO (D3). The extra claim that GPT-4 specifically used a smaller learning rate is not established: W1 describes fine-tuning generically, not GPT-4's training run."
+    },
+    {
+      "answer_id": "S065",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D3 supports 298/400 and ~90th percentile; W2 explicitly supports the extra overinflation caveat."
+    },
+    {
+      "answer_id": "S066",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "D4 supports the 10,000x figure, but the answer omits the 1,000x end of the reference's 1,000x-10,000x range."
+    },
+    {
+      "answer_id": "S067",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "D1-D4 support reduced calibration after post-training, but the answer omits the required ECE values 0.007 -> 0.074."
+    },
+    {
+      "answer_id": "S068",
+      "correct": "partial",
+      "grounded": false,
+      "notes": "Correct classifier/reward/refusal core, but omits the classifier's input specification and incorrectly says RBRMs are trained using production traffic and human reviewers. D5 describes preparing/filtering prompts, not training the zero-shot classifiers."
+    },
+    {
+      "answer_id": "S069",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "Includes the full 1,000x-10,000x range from D2; D5 supports the added 1/1,000th-compute statement."
+    },
+    {
+      "answer_id": "S070",
+      "correct": "partial",
+      "grounded": false,
+      "notes": "Gives the GPT-4 baseline 67.0% from W5 but omits GPT-4o's ~90% HumanEval result. D4's 95.6% is GPT-4 on HellaSwag, not a GPT-4o result; the model/benchmark transfer is unsupported."
+    },
+    {
+      "answer_id": "S071",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "D2 and W3/W5 support ARC's evaluation and the METR connection, but the answer conflates ARC with its spun-off ARC Evals team and omits METR's expanded name."
+    },
+    {
+      "answer_id": "S072",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "Correctly states that report compute figures are not disclosed and gives relative scaling from D3/D4. W1 supports the separately attributed GPU/day estimate, explicitly an unverified leak in the source; no absolute FLOP count is asserted."
+    },
+    {
+      "answer_id": "S073",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D1 explicitly identifies Hindsight Neglect and Figure 3; [46] is a carried-over report bibliography marker, with D1 supplying actual evidence."
+    },
+    {
+      "answer_id": "S074",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D2 supplies the required 19 percentage points; W1/W3/W5 support the separately attributed 40% figure. Caution: relative percent and percentage points can coexist; different numerical presentations do not establish a contradiction."
+    },
+    {
+      "answer_id": "S075",
+      "correct": "incorrect",
+      "grounded": false,
+      "notes": "8,192 tokens is supported by W2, but the answer explicitly and falsely attributes the count to the technical report, failing the grading note; W2 is an IBM article, not report evidence."
+    },
+    {
+      "answer_id": "S076",
+      "correct": "partial",
+      "grounded": false,
+      "notes": "Mentions public data and the permitted MATH/GSM-8K examples, but omits licensed data. W4 does not identify its 45TB/570GB figures as GPT-4's; that attribution is unsupported. Books are supported by W1, not cited W3."
+    },
+    {
+      "answer_id": "S077",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "W4 supports April 30, 2025 and replacement by GPT-4o. W5 supports the explicitly attributed alternative description of newer model-picker choices. Continued API availability is an unasked caveat."
+    },
+    {
+      "answer_id": "S078",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "W2/W4/W5 support 128,000 tokens and November 2023, but the answer omits the required day (November 6) and DevDay announcement context."
+    },
+    {
+      "answer_id": "S079",
+      "correct": "incorrect",
+      "grounded": true,
+      "notes": "December 2023 is supported by W1/W2/W4, but no specific later snapshot is identified as required by the grading note. W5 also lists that date."
+    },
+    {
+      "answer_id": "S080",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "May 13, 2024 matches the reference and is explicitly supported by W1/W3/W4."
+    },
+    {
+      "answer_id": "S081",
+      "correct": "incorrect",
+      "grounded": true,
+      "notes": "W2 supports 85.7% for the later GPT-4-1106-preview snapshot and 72.2% for GPT-3.5-turbo-0301, but these do not answer the reference's original GPT-4 result of 67.0%."
+    },
+    {
+      "answer_id": "S082",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "D2/D4 and W3/W5 support ARC's evaluation and the METR connection, but the answer conflates ARC with its spun-off ARC Evals team and omits METR's expanded name."
+    },
+    {
+      "answer_id": "S083",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "States no exact compute figure is provided, satisfying the question-specific rule. D3/D4 support relative scaling and W3 supports the explicitly estimated $50M/>$100M cost discussion."
+    },
+    {
+      "answer_id": "S084",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "W4/W5 support the attributed conflicting estimates, but the answer does not say that the report withholds the parameter count."
+    },
+    {
+      "answer_id": "S085",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "Public and licensed data match the core reference (W2); D1 and D4 support the additional ChatGPT and MATH/GSM-8K details. The unasked dataset-construction caveat is omitted."
+    },
+    {
+      "answer_id": "S086",
+      "correct": "partial",
+      "grounded": false,
+      "notes": "Substitutes D3's 3-shot English 85.5% for the reference's 5-shot 86.4% and omits GPT-3.5's 70.0%. Its claim that GPT-3.5's score is absent is contradicted by this row's W1. The 85.5% comes from D3, not cited D1."
+    },
+    {
+      "answer_id": "S087",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "W5 explicitly supports 128K, November 6, 2023, and OpenAI's first DevDay; W1-W4 corroborate context/window details."
+    },
+    {
+      "answer_id": "S088",
+      "correct": "partial",
+      "grounded": false,
+      "notes": "Identifies GPT-4o as replacement but gives GPT-4o's February 13, 2026 retirement date as GPT-4's. W1/W2 concern GPT-4o; W4 instead places GPT-4's replacement in April 2025. W5 supports only the separate GPT-4o API-retirement claim."
+    },
+    {
+      "answer_id": "S089",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "W4/W5 support the lower-bound percentiles 43 and 0; omits scores 4 vs 1 and the full percentile ranges."
+    },
+    {
+      "answer_id": "S090",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "W2 explicitly supports over 50 experts and the domains; W5 is a rounded secondary description, not the best citation for over 50."
+    },
+    {
+      "answer_id": "S091",
+      "correct": "abstained",
+      "grounded": true,
+      "notes": "Declines to supply Turbo's cutoff. This row's snippets do not supply it; D1 supports the ancillary GPT-4 cutoff and W5 supports the post-training caveat."
+    },
+    {
+      "answer_id": "S092",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D3 supports the human-feedback/PPO process and D4 its alignment effects; W2 supports the added AI-driven reinforcement-learning and ethics/policy description."
+    },
+    {
+      "answer_id": "S093",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D2/D3 support the full distinction, including minimal mitigations for the early model and safer launch behavior."
+    },
+    {
+      "answer_id": "S094",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "W3 supports scores 4 vs 1; omits both reference percentile ranges (43rd-59th and 0th-7th)."
+    },
+    {
+      "answer_id": "S095",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D1 explicitly supports Hindsight Neglect and reversal of the inverse-scaling trend in Figure 3."
+    },
+    {
+      "answer_id": "S096",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "W1-W4 support over 50 experts, the domains, and how expert feedback informed safety mitigations."
+    },
+    {
+      "answer_id": "S097",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D3 supports 298/400, ~90th percentile, and consistency across the displayed no-vision/non-contaminated variants."
+    },
+    {
+      "answer_id": "S098",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "Includes the reference's GPT-4 baseline 67.0% (supported by W5, not cited D5) but abstains on GPT-4o's ~90% result, which is absent from this row's excerpts."
+    },
+    {
+      "answer_id": "S099",
+      "correct": "incorrect",
+      "grounded": false,
+      "notes": "2410.14028 is a different arXiv paper, not the report's latest version. W3 explains that identifier but does not identify it as the GPT-4 Technical Report."
+    },
+    {
+      "answer_id": "S100",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D2 supplies the required 19 percentage points, and W1/W3/W5 support the separately attributed 40%. The sources use different numerical measures (relative percent vs percentage points); a different evaluation setup is only speculation."
+    },
+    {
+      "answer_id": "S101",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D3 explicitly gives GPT-3.5's LSAT score 149 (~40th percentile); the answer reads the correct column."
+    },
+    {
+      "answer_id": "S102",
+      "correct": "partial",
+      "grounded": true,
+      "notes": "Contains the correct May 13, 2024 API date from W2/W3, but also presents September 3, 2024 as the release date. W1 supports that attributed later-release statement; the answer fails to distinguish a later update from the initial launch."
+    },
+    {
+      "answer_id": "S103",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "W1 supports GPT-4 86.4% (5-shot) versus GPT-3.5 70.0%."
+    },
+    {
+      "answer_id": "S104",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D2 supports 19 percentage points and W1/W4 support the separately reported 40% relative improvement. Both support the stated direction; 40% is not 40 percentage points."
+    },
+    {
+      "answer_id": "S105",
+      "correct": "correct",
+      "grounded": true,
+      "notes": "D3 explicitly gives GPT-3.5's LSAT score 149 (~40th percentile); the answer reads the correct column."
+    }
+  ]
+}

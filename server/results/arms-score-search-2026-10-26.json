@@ -1,0 +1,748 @@
+{
+  "sheet": "eval/frozen/labels/arms-search-2026-10-26.graded.csv",
+  "key": "eval/labels/arms-search-2026-10-26.key.json",
+  "rule": "net >= +2 grounded-correct and <= 1 regression",
+  "arms": [
+    {
+      "arm": "serpapi@500",
+      "replay": "results/replay-2026-10-26-serpapi.json",
+      "all": {
+        "n": 35,
+        "grounded_correct": 17,
+        "correct": 18,
+        "partial": 13,
+        "incorrect": 2,
+        "abstained": 2,
+        "ungrounded": 7
+      },
+      "web_and_mixed": {
+        "n": 10,
+        "grounded_correct": 2,
+        "correct": 2,
+        "partial": 6,
+        "incorrect": 0,
+        "abstained": 2,
+        "ungrounded": 2
+      },
+      "median_input_tokens": 1183,
+      "median_generation_ms": 1572
+    },
+    {
+      "arm": "querit@500",
+      "replay": "results/replay-2026-10-26-querit.json",
+      "all": {
+        "n": 35,
+        "grounded_correct": 18,
+        "correct": 18,
+        "partial": 12,
+        "incorrect": 4,
+        "abstained": 1,
+        "ungrounded": 3
+      },
+      "web_and_mixed": {
+        "n": 10,
+        "grounded_correct": 3,
+        "correct": 3,
+        "partial": 5,
+        "incorrect": 2,
+        "abstained": 0,
+        "ungrounded": 2
+      },
+      "median_input_tokens": 1772,
+      "median_generation_ms": 1431
+    },
+    {
+      "arm": "querit@1500",
+      "replay": "results/replay-2026-10-26-querit-1500.json",
+      "all": {
+        "n": 35,
+        "grounded_correct": 21,
+        "correct": 21,
+        "partial": 10,
+        "incorrect": 4,
+        "abstained": 0,
+        "ungrounded": 5
+      },
+      "web_and_mixed": {
+        "n": 10,
+        "grounded_correct": 5,
+        "correct": 5,
+        "partial": 3,
+        "incorrect": 2,
+        "abstained": 0,
+        "ungrounded": 3
+      },
+      "median_input_tokens": 2845,
+      "median_generation_ms": 1467
+    }
+  ],
+  "comparisons": [
+    {
+      "after": "querit@500",
+      "before": "serpapi@500",
+      "n": 35,
+      "gained": [
+        "M02",
+        "P02",
+        "T05",
+        "U04",
+        "W01",
+        "W02"
+      ],
+      "lost": [
+        "M01",
+        "P01",
+        "P03",
+        "U02",
+        "W04"
+      ],
+      "net": 1,
+      "meetsRule": false
+    },
+    {
+      "after": "querit@1500",
+      "before": "querit@500",
+      "n": 35,
+      "gained": [
+        "M01",
+        "U02",
+        "W03"
+      ],
+      "lost": [],
+      "net": 3,
+      "meetsRule": true
+    }
+  ],
+  "questions": [
+    {
+      "id": "M01",
+      "querit@1500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "missing"
+      },
+      "querit@500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "missing"
+      },
+      "serpapi@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "partial"
+      }
+    },
+    {
+      "id": "M02",
+      "querit@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@1500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "serpapi@500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "partial"
+      }
+    },
+    {
+      "id": "M03",
+      "serpapi@500": {
+        "correct": "partial",
+        "grounded": false,
+        "evidence": "partial"
+      },
+      "querit@1500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "sufficient"
+      }
+    },
+    {
+      "id": "M04",
+      "serpapi@500": {
+        "correct": "abstained",
+        "grounded": true,
+        "evidence": "missing"
+      },
+      "querit@1500": {
+        "correct": "partial",
+        "grounded": false,
+        "evidence": "missing"
+      },
+      "querit@500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "missing"
+      }
+    },
+    {
+      "id": "M05",
+      "querit@500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "serpapi@500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@1500": {
+        "correct": "incorrect",
+        "grounded": false,
+        "evidence": "sufficient"
+      }
+    },
+    {
+      "id": "P01",
+      "querit@500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@1500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "serpapi@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      }
+    },
+    {
+      "id": "P02",
+      "querit@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "missing"
+      },
+      "serpapi@500": {
+        "correct": "correct",
+        "grounded": false,
+        "evidence": "missing"
+      },
+      "querit@1500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "missing"
+      }
+    },
+    {
+      "id": "P03",
+      "querit@500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@1500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "serpapi@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      }
+    },
+    {
+      "id": "P04",
+      "querit@500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@1500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "serpapi@500": {
+        "correct": "partial",
+        "grounded": false,
+        "evidence": "sufficient"
+      }
+    },
+    {
+      "id": "P05",
+      "querit@1500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "serpapi@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      }
+    },
+    {
+      "id": "P06",
+      "querit@500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "missing"
+      },
+      "serpapi@500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "missing"
+      },
+      "querit@1500": {
+        "correct": "partial",
+        "grounded": false,
+        "evidence": "missing"
+      }
+    },
+    {
+      "id": "P07",
+      "querit@1500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "serpapi@500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "sufficient"
+      }
+    },
+    {
+      "id": "P08",
+      "querit@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "serpapi@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@1500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      }
+    },
+    {
+      "id": "P09",
+      "serpapi@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@1500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      }
+    },
+    {
+      "id": "P10",
+      "serpapi@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "missing"
+      },
+      "querit@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "missing"
+      },
+      "querit@1500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "missing"
+      }
+    },
+    {
+      "id": "P11",
+      "querit@1500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "serpapi@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      }
+    },
+    {
+      "id": "P12",
+      "serpapi@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@1500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      }
+    },
+    {
+      "id": "P13",
+      "querit@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@1500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "serpapi@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      }
+    },
+    {
+      "id": "T01",
+      "querit@1500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "serpapi@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      }
+    },
+    {
+      "id": "T02",
+      "serpapi@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@1500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      }
+    },
+    {
+      "id": "T03",
+      "querit@500": {
+        "correct": "abstained",
+        "grounded": true,
+        "evidence": "missing"
+      },
+      "querit@1500": {
+        "correct": "incorrect",
+        "grounded": false,
+        "evidence": "missing"
+      },
+      "serpapi@500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "missing"
+      }
+    },
+    {
+      "id": "T04",
+      "serpapi@500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "missing"
+      },
+      "querit@500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "missing"
+      },
+      "querit@1500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "missing"
+      }
+    },
+    {
+      "id": "T05",
+      "querit@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "missing"
+      },
+      "serpapi@500": {
+        "correct": "partial",
+        "grounded": false,
+        "evidence": "missing"
+      },
+      "querit@1500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "missing"
+      }
+    },
+    {
+      "id": "T06",
+      "querit@500": {
+        "correct": "incorrect",
+        "grounded": true,
+        "evidence": "missing"
+      },
+      "serpapi@500": {
+        "correct": "incorrect",
+        "grounded": false,
+        "evidence": "missing"
+      },
+      "querit@1500": {
+        "correct": "incorrect",
+        "grounded": true,
+        "evidence": "missing"
+      }
+    },
+    {
+      "id": "T07",
+      "querit@1500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "serpapi@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      }
+    },
+    {
+      "id": "T08",
+      "querit@1500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "serpapi@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      }
+    },
+    {
+      "id": "U01",
+      "querit@1500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "missing"
+      },
+      "serpapi@500": {
+        "correct": "incorrect",
+        "grounded": true,
+        "evidence": "missing"
+      },
+      "querit@500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "missing"
+      }
+    },
+    {
+      "id": "U02",
+      "querit@1500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "missing"
+      },
+      "querit@500": {
+        "correct": "incorrect",
+        "grounded": false,
+        "evidence": "missing"
+      },
+      "serpapi@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "missing"
+      }
+    },
+    {
+      "id": "U03",
+      "querit@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "missing"
+      },
+      "serpapi@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "missing"
+      },
+      "querit@1500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "missing"
+      }
+    },
+    {
+      "id": "U04",
+      "querit@1500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "missing"
+      },
+      "serpapi@500": {
+        "correct": "partial",
+        "grounded": false,
+        "evidence": "missing"
+      },
+      "querit@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "missing"
+      }
+    },
+    {
+      "id": "W01",
+      "querit@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@1500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "serpapi@500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "sufficient"
+      }
+    },
+    {
+      "id": "W02",
+      "querit@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "serpapi@500": {
+        "correct": "partial",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@1500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      }
+    },
+    {
+      "id": "W03",
+      "querit@500": {
+        "correct": "partial",
+        "grounded": false,
+        "evidence": "sufficient"
+      },
+      "querit@1500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "serpapi@500": {
+        "correct": "partial",
+        "grounded": false,
+        "evidence": "missing"
+      }
+    },
+    {
+      "id": "W04",
+      "querit@1500": {
+        "correct": "partial",
+        "grounded": false,
+        "evidence": "missing"
+      },
+      "serpapi@500": {
+        "correct": "correct",
+        "grounded": true,
+        "evidence": "sufficient"
+      },
+      "querit@500": {
+        "correct": "incorrect",
+        "grounded": false,
+        "evidence": "missing"
+      }
+    },
+    {
+      "id": "W05",
+      "querit@500": {
+        "correct": "incorrect",
+        "grounded": true,
+        "evidence": "missing"
+      },
+      "querit@1500": {
+        "correct": "incorrect",
+        "grounded": true,
+        "evidence": "missing"
+      },
+      "serpapi@500": {
+        "correct": "abstained",
+        "grounded": true,
+        "evidence": "missing"
+      }
+    }
+  ]
+}
