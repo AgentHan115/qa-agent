@@ -35,5 +35,6 @@ Also reported, without changing the decisions:
 ## Known limits
 
 - n = 35 (10 that need the web), one capture day, one grader, one run per arm.
+- Blinding hides the arm labels, not the sources: grading groundedness needs the sources shown, and their style can hint at the arm (passage-length snippets, social/forum links). Grade each row against its own sources only.
 - Search results change from day to day (e.g. SerpAPI's web evidence was 4/10 on 2026-10-21 and 5/10 on 2026-10-26).
 - Querit's `page_age` is passed through as the result date; it can be a last-modified time, and many values are 16:00Z (midnight UTC+8), so a UTC date can be a day early.

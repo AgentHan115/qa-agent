@@ -5,6 +5,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   abstentionCheck,
+  compareArms,
   diagnose,
   evidenceStatus,
   groundedCorrect,
@@ -99,4 +100,18 @@ test("seededShuffle is reproducible and a permutation", () => {
   assert.deepEqual(seededShuffle(xs, 42), seededShuffle(xs, 42));
   assert.deepEqual([...seededShuffle(xs, 42)].sort(), xs);
   assert.notDeepEqual(seededShuffle(xs, 42), xs);
+});
+
+test("compareArms applies the pre-set rule: net >= +2 and at most one regression", () => {
+  const before = { A: false, B: false, C: true, D: true, E: false };
+  assert.deepEqual(compareArms(before, { A: true, B: true, C: true, D: true, E: false }), {
+    n: 5, gained: ["A", "B"], lost: [], net: 2, meetsRule: true,
+  });
+  // +3 -1 = +2 still passes; +3 -2 = +1 fails on net; +4 -2 = +2 fails on regressions.
+  assert.equal(compareArms(before, { A: true, B: true, C: false, D: true, E: true }).meetsRule, true);
+  assert.equal(compareArms(before, { A: true, B: true, C: false, D: false, E: true }).meetsRule, false);
+  const wide = { A: false, B: false, C: true, D: true, E: false, F: false };
+  assert.equal(compareArms(wide, { A: true, B: true, C: false, D: false, E: true, F: true }).meetsRule, false);
+  // Questions missing from one side are left out, not counted as losses.
+  assert.equal(compareArms({ A: true, B: false }, { B: true }).n, 1);
 });

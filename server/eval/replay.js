@@ -132,3 +132,14 @@ export const formatSources = (sources) =>
         : `[${s.id}] ${s.title}${s.date ? ` (${s.date})` : ""} — ${s.url}\n    ${s.snippet}`
     )
     .join("\n\n") || "(no sources)";
+
+// Head-to-head on grounded-correct for the same questions. `before` and `after`
+// map question id -> boolean. A change wins only with net >= minNet and at most
+// maxRegressions questions that were grounded-correct before and not after.
+export const compareArms = (before, after, { minNet = 2, maxRegressions = 1 } = {}) => {
+  const ids = Object.keys(before).filter((id) => id in after).sort();
+  const gained = ids.filter((id) => !before[id] && after[id]);
+  const lost = ids.filter((id) => before[id] && !after[id]);
+  const net = gained.length - lost.length;
+  return { n: ids.length, gained, lost, net, meetsRule: net >= minNet && lost.length <= maxRegressions };
+};
