@@ -1,0 +1,1118 @@
+{
+  "created": "2026-10-26T03:07:12.978Z",
+  "captures": {
+    "serpapi": {
+      "path": "eval/frozen/contexts-2026-10-26-serpapi.json",
+      "sha256": "b36323603b0e8ccc8fb290b319a68c1c4616d866b171cd04162fc04ffb496656",
+      "created": "2026-10-26T02:52:32.278Z"
+    },
+    "querit": {
+      "path": "eval/frozen/contexts-2026-10-26-querit.json",
+      "sha256": "45060e933d073257c071e76c49048faf03fcb697cc5b7dd06502f06c19befbb2",
+      "created": "2026-10-26T02:53:18.041Z"
+    }
+  },
+  "settings": {
+    "results_per_search": 5,
+    "attempt_timeout_ms": 3000,
+    "budget_ms": 8000,
+    "retries": 2,
+    "snippet_cap_chars": 500,
+    "retriever": "vector top-5"
+  },
+  "note": "Web evidence uses eval/replay.js WEB_ANSWER_PATTERNS (set before this comparison). Querit latency excludes U01/W01/W02, served from its cache after the smoke test.",
+  "prices_usd_per_1000_checked_2026_10_26": {
+    "querit_payg": 4,
+    "serpapi": {
+      "starter_1k": 25,
+      "developer_5k": 15,
+      "production_15k": 10,
+      "cloud_1m": 3.75
+    }
+  },
+  "questions": [
+    {
+      "id": "P01",
+      "category": "doc_prose",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 768,
+        "took_ms": null,
+        "domains": [
+          "community.openai.com",
+          "blog.sshh.io",
+          "reddit.com",
+          "mofo.com",
+          "en.wikipedia.org"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 1092,
+        "took_ms": 953,
+        "domains": [
+          "en.wikipedia.org",
+          "en.wikipedia.org",
+          "rankscope.ai",
+          "induwara.lk",
+          "grokipedia.com"
+        ]
+      }
+    },
+    {
+      "id": "P02",
+      "category": "doc_prose",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 921,
+        "took_ms": null,
+        "domains": [
+          "community.openai.com",
+          "reddit.com",
+          "arxiv.org",
+          "encord.com",
+          "dev.to"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 957,
+        "took_ms": 910,
+        "domains": [
+          "openai.com",
+          "datacamp.com",
+          "datacamp.com",
+          "learn.microsoft.com",
+          "mdpi.com"
+        ]
+      }
+    },
+    {
+      "id": "P03",
+      "category": "doc_prose",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 663,
+        "took_ms": null,
+        "domains": [
+          "lesswrong.com",
+          "reddit.com",
+          "epochai.substack.com",
+          "epoch.ai",
+          "researchgate.net"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 873,
+        "took_ms": 828,
+        "domains": [
+          "s10251.pcdn.co",
+          "cdn.openai.com",
+          "arxiv.org",
+          "microsoft.com",
+          "dev.to"
+        ]
+      }
+    },
+    {
+      "id": "P04",
+      "category": "doc_prose",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 752,
+        "took_ms": null,
+        "domains": [
+          "openai.com",
+          "arxiv.org",
+          "openreview.net",
+          "cameronrwolfe.substack.com",
+          "proceedings.neurips.cc"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 1029,
+        "took_ms": 975,
+        "domains": [
+          "openai.com",
+          "ui.adsabs.harvard.edu",
+          "advania.co.uk",
+          "openreview.net",
+          "lesswrong.com"
+        ]
+      }
+    },
+    {
+      "id": "P05",
+      "category": "doc_prose",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 792,
+        "took_ms": null,
+        "domains": [
+          "mofo.com",
+          "1cademy.com",
+          "openai.com",
+          "facebook.com",
+          "hdsr.mitpress.mit.edu"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 864,
+        "took_ms": 817,
+        "domains": [
+          "openai.com",
+          "arxiv.org",
+          "openai.com",
+          "digitaltrends.com",
+          "futurium.ec.europa.eu"
+        ]
+      }
+    },
+    {
+      "id": "P06",
+      "category": "doc_prose",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 723,
+        "took_ms": null,
+        "domains": [
+          "my.clevelandclinic.org",
+          "en.wikipedia.org",
+          "didchain.com",
+          "w3.org",
+          "reddit.com"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 1034,
+        "took_ms": 991,
+        "domains": [
+          "splab.sdu.edu.cn",
+          "cdn.openai.com",
+          "frontiersin.org",
+          "pubmed.ncbi.nlm.nih.gov",
+          "frontiersin.org"
+        ]
+      }
+    },
+    {
+      "id": "P07",
+      "category": "doc_prose",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 512,
+        "took_ms": null,
+        "domains": [
+          "openai.com",
+          "lesswrong.com",
+          "arxiv.org",
+          "normaltech.ai",
+          "facebook.com"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 891,
+        "took_ms": 848,
+        "domains": [
+          "variance.co",
+          "kingy.ai",
+          "maximerobeyns.com",
+          "tianpan.co",
+          "openai.com"
+        ]
+      }
+    },
+    {
+      "id": "P08",
+      "category": "doc_prose",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 756,
+        "took_ms": null,
+        "domains": [
+          "cdn.openai.com",
+          "en.wikipedia.org",
+          "lesswrong.com",
+          "reddit.com",
+          "folio3.com"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 827,
+        "took_ms": 783,
+        "domains": [
+          "cdn.openai.com",
+          "zdnet.com",
+          "ai.miraheze.org",
+          "chatai.guide",
+          "businessinsider.com"
+        ]
+      }
+    },
+    {
+      "id": "P09",
+      "category": "doc_prose",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 1139,
+        "took_ms": null,
+        "domains": [
+          "reddit.com",
+          "arstechnica.com",
+          "lesswrong.com",
+          "cdn.openai.com",
+          "alignmentforum.org"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 1227,
+        "took_ms": 1181,
+        "domains": [
+          "spectrum.ieee.org",
+          "gregoreite.com",
+          "lesswrong.com",
+          "blog.biocomm.ai",
+          "pcmag.com"
+        ]
+      }
+    },
+    {
+      "id": "P10",
+      "category": "doc_prose",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 642,
+        "took_ms": null,
+        "domains": [
+          "openai.com",
+          "control-plane.io",
+          "galileo.ai",
+          "facebook.com",
+          "reddit.com"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 1198,
+        "took_ms": 1150,
+        "domains": [
+          "openai.com",
+          "cdn.openai.com",
+          "openai.com",
+          "arxiv.org",
+          "annjose.com"
+        ]
+      }
+    },
+    {
+      "id": "P11",
+      "category": "doc_prose",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 1195,
+        "took_ms": null,
+        "domains": [
+          "medium.com",
+          "arxiv.org",
+          "1cademy.com",
+          "intuitionlabs.ai",
+          "galileo.ai"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 1186,
+        "took_ms": 1145,
+        "domains": [
+          "openai.com",
+          "aclanthology.org",
+          "appen.com",
+          "link.springer.com",
+          "cdn.openai.com"
+        ]
+      }
+    },
+    {
+      "id": "P12",
+      "category": "doc_prose",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 663,
+        "took_ms": null,
+        "domains": [
+          "arxiv.org",
+          "github.com",
+          "lesswrong.com",
+          "alphaxiv.org",
+          "archive.nyu.edu"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 1064,
+        "took_ms": 1021,
+        "domains": [
+          "cotool.ai",
+          "openreview.net",
+          "openreview.net",
+          "alphaxiv.org",
+          "species.gg"
+        ]
+      }
+    },
+    {
+      "id": "P13",
+      "category": "doc_prose",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 1076,
+        "took_ms": null,
+        "domains": [
+          "openai.com",
+          "preprints.org",
+          "reddit.com",
+          "synthedia.substack.com",
+          "coursera.org"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 820,
+        "took_ms": 776,
+        "domains": [
+          "openai.com",
+          "mondaq.com",
+          "datacamp.com",
+          "searchenginejournal.com",
+          "masaischool.com"
+        ]
+      }
+    },
+    {
+      "id": "T01",
+      "category": "doc_table",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 1084,
+        "took_ms": null,
+        "domains": [
+          "open.spotify.com",
+          "en.wikipedia.org",
+          "sdgs.un.org",
+          "irs.gov",
+          "mail.google.com"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 912,
+        "took_ms": 866,
+        "domains": [
+          "dspace.mit.edu",
+          "link.springer.com",
+          "royalsocietypublishing.org",
+          "calbar.ca.gov",
+          "oadoi.org"
+        ]
+      }
+    },
+    {
+      "id": "T02",
+      "category": "doc_table",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 561,
+        "took_ms": null,
+        "domains": [
+          "arxiv.org",
+          "facebook.com",
+          "nysba.org",
+          "law-ai.org",
+          "facebook.com"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 949,
+        "took_ms": 904,
+        "domains": [
+          "lsac.org",
+          "arxiv.org",
+          "huggingface.co",
+          "huggingface.co",
+          "arxiv.org"
+        ]
+      }
+    },
+    {
+      "id": "T03",
+      "category": "doc_table",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 880,
+        "took_ms": null,
+        "domains": [
+          "codeforces.com",
+          "reddit.com",
+          "codeforces.com",
+          "x.com",
+          "codeforces.com"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 1210,
+        "took_ms": 1166,
+        "domains": [
+          "phaseo.app",
+          "codeforces.com",
+          "codeforces.com",
+          "openai.com",
+          "webpronews.com"
+        ]
+      }
+    },
+    {
+      "id": "T04",
+      "category": "doc_table",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 951,
+        "took_ms": null,
+        "domains": [
+          "jpost.com",
+          "reddit.com",
+          "preprints.org",
+          "semafor.com",
+          "medium.com"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 1166,
+        "took_ms": 1123,
+        "domains": [
+          "pmc.ncbi.nlm.nih.gov",
+          "openai.com",
+          "neoteric.eu",
+          "visualcapitalist.com",
+          "visualcapitalist.com"
+        ]
+      }
+    },
+    {
+      "id": "T05",
+      "category": "doc_table",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 784,
+        "took_ms": null,
+        "domains": [
+          "reddit.com",
+          "llm-stats.com",
+          "huggingface.co",
+          "narev.ai",
+          "arxiv.org"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 900,
+        "took_ms": 856,
+        "domains": [
+          "openai.com",
+          "huggingface.co",
+          "huggingface.co",
+          "tokencalculator.com",
+          "openrouter.ai"
+        ]
+      }
+    },
+    {
+      "id": "T06",
+      "category": "doc_table",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 529,
+        "took_ms": null,
+        "domains": [
+          "reddit.com",
+          "openai.com",
+          "mbrenndoerfer.com",
+          "blaxel.ai",
+          "dl.acm.org"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 1112,
+        "took_ms": 1069,
+        "domains": [
+          "cdn.openai.com",
+          "emergentmind.com",
+          "huggingface.co",
+          "huggingface.co",
+          "wifitalents.com"
+        ]
+      }
+    },
+    {
+      "id": "T07",
+      "category": "doc_table",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 1026,
+        "took_ms": null,
+        "domains": [
+          "wearsubset.com",
+          "leetcode.com",
+          "en.wikipedia.org",
+          "cstheory.stackexchange.com",
+          "pubmed.ncbi.nlm.nih.gov"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 1125,
+        "took_ms": 1084,
+        "domains": [
+          "aclanthology.org",
+          "arxiv.org",
+          "emergentmind.com",
+          "arxiv.org",
+          "tianpan.co"
+        ]
+      }
+    },
+    {
+      "id": "T08",
+      "category": "doc_table",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 966,
+        "took_ms": null,
+        "domains": [
+          "en.wikipedia.org",
+          "merriam-webster.com",
+          "reddit.com",
+          "developingchild.harvard.edu",
+          "pubmed.ncbi.nlm.nih.gov"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 1178,
+        "took_ms": 1135,
+        "domains": [
+          "cdn.openai.com",
+          "arxiv.org",
+          "elhacker.info",
+          "elhacker.info",
+          "arxiv.org"
+        ]
+      }
+    },
+    {
+      "id": "U01",
+      "category": "doc_undisclosed",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 510,
+        "took_ms": null,
+        "domains": [
+          "reddit.com",
+          "en.wikipedia.org",
+          "arxiv.org",
+          "news.ycombinator.com",
+          "aiexpjourney.substack.com"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 49,
+        "took_ms": 4,
+        "domains": [
+          "en.wikipedia.org",
+          "s10251.pcdn.co",
+          "openai.com",
+          "neuralwired.com",
+          "businessnamegenerator.com"
+        ],
+        "cached": true
+      }
+    },
+    {
+      "id": "U02",
+      "category": "doc_undisclosed",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 556,
+        "took_ms": null,
+        "domains": [
+          "openai.com",
+          "en.wikipedia.org",
+          "obot.ai",
+          "verblio.com",
+          "speechmatics.com"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 936,
+        "took_ms": 891,
+        "domains": [
+          "openai.com",
+          "blog.finxter.com",
+          "hardwarehq.io",
+          "gizmodo.com",
+          "openai.com"
+        ]
+      }
+    },
+    {
+      "id": "U03",
+      "category": "doc_undisclosed",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 879,
+        "took_ms": null,
+        "domains": [
+          "medium.com",
+          "reddit.com",
+          "epoch.ai",
+          "en.wikipedia.org",
+          "linkedin.com"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 882,
+        "took_ms": 839,
+        "domains": [
+          "s10251.pcdn.co",
+          "openai.com",
+          "ainowinstitute.org",
+          "cdn.openai.com",
+          "chatgptaihub.com"
+        ]
+      }
+    },
+    {
+      "id": "U04",
+      "category": "doc_undisclosed",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 569,
+        "took_ms": null,
+        "domains": [
+          "en.wikipedia.org",
+          "cs.stackexchange.com",
+          "openai.com",
+          "reddit.com",
+          "speechmatics.com"
+        ]
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 904,
+        "took_ms": 862,
+        "domains": [
+          "en.wikipedia.org",
+          "openai.com",
+          "openai.com",
+          "fastbots.ai",
+          "searchable.com"
+        ]
+      }
+    },
+    {
+      "id": "W01",
+      "category": "web",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 643,
+        "took_ms": null,
+        "domains": [
+          "reddit.com",
+          "community.openai.com",
+          "techcrunch.com",
+          "developers.openai.com",
+          "linkedin.com"
+        ],
+        "answer_rank": 2
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 47,
+        "took_ms": 4,
+        "domains": [
+          "en.wikipedia.org",
+          "en.wikipedia.org",
+          "openai.com",
+          "kids.kiddle.co",
+          "digitaltrends.com"
+        ],
+        "answer_rank": 1,
+        "answer_rank_full_snippets": 1,
+        "cached": true
+      }
+    },
+    {
+      "id": "W02",
+      "category": "web",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 539,
+        "took_ms": null,
+        "domains": [
+          "openai.com",
+          "en.wikipedia.org",
+          "reddit.com",
+          "sunnychopper.medium.com",
+          "superannotate.com"
+        ],
+        "answer_rank": 1
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 49,
+        "took_ms": 4,
+        "domains": [
+          "openai.com",
+          "chatai.guide",
+          "news.cgtn.com",
+          "learn.engineering.vips.edu",
+          "vercel.com"
+        ],
+        "answer_rank": 1,
+        "answer_rank_full_snippets": 1,
+        "cached": true
+      }
+    },
+    {
+      "id": "W03",
+      "category": "web",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 605,
+        "took_ms": null,
+        "domains": [
+          "openai.com",
+          "en.wikipedia.org",
+          "reddit.com",
+          "facebook.com",
+          "nxcode.io"
+        ],
+        "answer_rank": null
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 1107,
+        "took_ms": 1065,
+        "domains": [
+          "en.wikipedia.org",
+          "help.openai.com",
+          "help.openai.com",
+          "arstechnica.com",
+          "techradar.com"
+        ],
+        "answer_rank": 4,
+        "answer_rank_full_snippets": 4
+      }
+    },
+    {
+      "id": "W04",
+      "category": "web",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 948,
+        "took_ms": null,
+        "domains": [
+          "arxiv.org",
+          "arxiv.org",
+          "alphaxiv.org",
+          "ui.adsabs.harvard.edu",
+          "github.com"
+        ],
+        "answer_rank": 1
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 1001,
+        "took_ms": 959,
+        "domains": [
+          "arxiv.org",
+          "arxiv.org",
+          "grokipedia.com",
+          "scispace.com",
+          "scholar.google.com"
+        ],
+        "answer_rank": null,
+        "answer_rank_full_snippets": 1
+      }
+    },
+    {
+      "id": "W05",
+      "category": "web",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 531,
+        "took_ms": null,
+        "domains": [
+          "merriam-webster.com",
+          "lifewiththecrustcutoff.com",
+          "reddit.com",
+          "pubmed.ncbi.nlm.nih.gov",
+          "community.openai.com"
+        ],
+        "answer_rank": null
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 965,
+        "took_ms": 923,
+        "domains": [
+          "en.wikipedia.org",
+          "techtarget.com",
+          "smart.columbus.gov",
+          "openrouter.ai",
+          "fixaeo.com"
+        ],
+        "answer_rank": null,
+        "answer_rank_full_snippets": null
+      }
+    },
+    {
+      "id": "M01",
+      "category": "mixed",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 869,
+        "took_ms": null,
+        "domains": [
+          "law-ai.org",
+          "nysba.org",
+          "reddit.com",
+          "link.springer.com",
+          "law.stanford.edu"
+        ],
+        "answer_rank": 1
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 814,
+        "took_ms": 772,
+        "domains": [
+          "dspace.mit.edu",
+          "law.stanford.edu",
+          "link.springer.com",
+          "pmc.ncbi.nlm.nih.gov",
+          "stetson.edu"
+        ],
+        "answer_rank": null,
+        "answer_rank_full_snippets": 1
+      }
+    },
+    {
+      "id": "M02",
+      "category": "mixed",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 628,
+        "took_ms": null,
+        "domains": [
+          "community.openai.com",
+          "reddit.com",
+          "youtube.com",
+          "ucanly.io",
+          "otterly.ai"
+        ],
+        "answer_rank": null
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 952,
+        "took_ms": 909,
+        "domains": [
+          "en.wikipedia.org",
+          "otterly.ai",
+          "chatai.guide",
+          "vercel.com",
+          "windowsforum.com"
+        ],
+        "answer_rank": 4,
+        "answer_rank_full_snippets": 4
+      }
+    },
+    {
+      "id": "M03",
+      "category": "mixed",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 867,
+        "took_ms": null,
+        "domains": [
+          "anthropic.com",
+          "sciencedirect.com",
+          "openai.com",
+          "pmc.ncbi.nlm.nih.gov",
+          "firstpost.com"
+        ],
+        "answer_rank": null
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 995,
+        "took_ms": 953,
+        "domains": [
+          "openai.com",
+          "metr.org",
+          "metr.org",
+          "link.springer.com",
+          "givingwhatwecan.org"
+        ],
+        "answer_rank": 2,
+        "answer_rank_full_snippets": 1
+      }
+    },
+    {
+      "id": "M04",
+      "category": "mixed",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 721,
+        "took_ms": null,
+        "domains": [
+          "openai.com",
+          "alphaxiv.org",
+          "arxiv.org",
+          "reddit.com",
+          "metr.org"
+        ],
+        "answer_rank": null
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 1202,
+        "took_ms": 1154,
+        "domains": [
+          "dev.to",
+          "openai.com",
+          "huggingface.co",
+          "aiflashreport.com",
+          "gitnux.org"
+        ],
+        "answer_rank": null,
+        "answer_rank_full_snippets": null
+      }
+    },
+    {
+      "id": "M05",
+      "category": "mixed",
+      "serpapi": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 879,
+        "took_ms": null,
+        "domains": [
+          "openai.com",
+          "en.wikipedia.org",
+          "facebook.com",
+          "galileo.ai",
+          "verblio.com"
+        ],
+        "answer_rank": 3
+      },
+      "querit": {
+        "status": "ok",
+        "attempts": 1,
+        "ms": 994,
+        "took_ms": 952,
+        "domains": [
+          "en.wikipedia.org",
+          "ibm.com",
+          "speechmatics.com",
+          "openai.com",
+          "taskade.com"
+        ],
+        "answer_rank": 1,
+        "answer_rank_full_snippets": 1
+      }
+    }
+  ]
+}
