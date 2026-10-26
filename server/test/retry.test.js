@@ -209,3 +209,11 @@ test("querit: HTML in snippets becomes plain text with cells joined by ' | '; da
   assert.equal(result.date, "2026-04-21T02:12:29Z", "page_age is passed through unchanged");
   assert.equal(stripHtml("plain text, already | separated"), "plain text, already | separated");
 });
+
+test("querit: the snippet cap is configurable (passages are kept up to SEARCH_SNIPPET_CHARS)", async () => {
+  const body = { error_code: 200, results: { result: [{ url: "https://a.com", title: "T", snippet: "x".repeat(2000) }] } };
+  const [capped] = await querit(respond(200, body)).search("q");
+  assert.equal(capped.snippet.length, 500, "default cap");
+  const [wide] = await createQueritProvider({ apiKey: "k", fetchImpl: respond(200, body), snippetChars: 1500 }).search("q");
+  assert.equal(wide.snippet.length, 1500);
+});

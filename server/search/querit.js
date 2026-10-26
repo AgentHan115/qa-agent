@@ -10,7 +10,7 @@
 // The API key travels in the Authorization header, never in the URL, and is
 // never included in errors or logs.
 
-import { SearchProviderError, normalizeResult } from "./provider.js";
+import { SearchProviderError, normalizeResult, snippetCharsFromEnv } from "./provider.js";
 
 const ENDPOINT = "https://api.querit.ai/v1/search";
 
@@ -33,7 +33,7 @@ export const stripHtml = (text) =>
 // Any other code in an HTTP 200 body is treated as a failure.
 const QUERIT_OK_CODES = new Set([undefined, null, 0, 200]);
 
-export const mapQueritResponse = (response) => {
+export const mapQueritResponse = (response, { maxSnippetChars } = {}) => {
   if (!response || typeof response !== "object") {
     throw new SearchProviderError("Querit returned a non-object response", { provider: "querit" });
   }
@@ -51,7 +51,8 @@ export const mapQueritResponse = (response) => {
     .map((r, i) =>
       normalizeResult(
         { title: stripHtml(r?.title), url: r?.url, snippet: stripHtml(r?.snippet), position: i + 1, date: r?.page_age },
-        "querit"
+        "querit",
+        { maxSnippetChars }
       )
     )
     .filter(Boolean);
@@ -64,6 +65,7 @@ export const classifyQueritHttpError = (status) => status === 429 || status >= 5
 export const createQueritProvider = ({
   apiKey = process.env.QUERIT_API_KEY,
   attemptTimeoutMs = parseInt(process.env.SEARCH_ATTEMPT_TIMEOUT_MS || "3000", 10),
+  snippetChars = snippetCharsFromEnv(),
   fetchImpl = fetch,
 } = {}) => ({
   name: "querit",
@@ -107,6 +109,6 @@ export const createQueritProvider = ({
         retryable: classifyQueritHttpError(res.status),
       });
     }
-    return mapQueritResponse(body).slice(0, num);
+    return mapQueritResponse(body, { maxSnippetChars: snippetChars }).slice(0, num);
   },
 });

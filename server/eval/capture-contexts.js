@@ -4,10 +4,10 @@
 //
 // Per question it runs prepareContext (the production code, unchanged) with
 // substituted dependencies:
-//   1. hybrid, live: real retrieval and one real search. SerpAPI is called
-//      through its normal adapter with a recording fetch, so the raw response
-//      metadata (search_information, ai_overview, related_questions, ...) is
-//      kept, along with every attempt's timing and status.
+//   1. hybrid, live: real retrieval and one real search. SerpAPI and Querit are
+//      called through their normal adapters with a recording fetch, so the raw
+//      response (SerpAPI's search_information, ai_overview, ...; Querit's whole
+//      body) is kept, along with every attempt's timing and status.
 //   2. docs and web: replays of what step 1 retrieved and found, so all three
 //      modes share one search per question (as the 2026-10-20 runs did via
 //      SerpAPI's cache).
@@ -37,6 +37,10 @@
 //   --web-from=<path>       reuse the web results (and their status) captured in an
 //                           earlier frozen file instead of searching, so only the
 //                           document retrieval differs between the two captures
+//   --rebuild-web           with --web-from: re-map the raw responses that capture
+//                           recorded (SerpAPI or Querit) at the current
+//                           SEARCH_SNIPPET_CHARS, instead of reusing its capped
+//                           results; no search is sent
 //
 // SEARCH_PROVIDER=fake runs everything without spending search quota.
 // The output contains document text and third-party snippets, so eval/frozen/
@@ -57,6 +61,9 @@ import { createVectorPlusKeywordRetriever } from "./retrievers.js";
 import { INSTRUCTIONS } from "../pipeline/context.js";
 import { normalizeResult } from "../search/provider.js";
 import { createSerpApiProvider } from "../search/serpapi.js";
+import { createQueritProvider, mapQueritResponse } from "../search/querit.js";
+import { mapSerpApiResponse } from "../search/serpapi.js";
+import { snippetCharsFromEnv } from "../search/provider.js";
 import { createSearchProvider, searchConfig, searchWithRetries } from "../search/index.js";
 import { embeddingConfig, llmConfig } from "../lib/llm.js";
 
@@ -117,7 +124,11 @@ const recordingFetch = async (url, options) => {
     entry.ms = Date.now() - t;
     entry.http_status = res.status;
     const body = await res.clone().json().catch(() => null);
-    if (body) {
+    if (body && providerName === "querit") {
+      // Querit's whole body is small and keyless (the key is in a header): keep it
+      // raw, before the adapter strips HTML from snippets.
+      entry.response = body;
+    } else if (body) {
       const { search_metadata, search_parameters, search_information, organic_results, error, ...rest } = body;
       entry.response = scrub({
         search_metadata,
@@ -137,10 +148,10 @@ const recordingFetch = async (url, options) => {
   }
 };
 
-const provider =
-  providerName === "serpapi"
-    ? createSerpApiProvider({ fetchImpl: recordingFetch, attemptTimeoutMs })
-    : createSearchProvider(providerName);
+const RECORDED_PROVIDERS = { serpapi: createSerpApiProvider, querit: createQueritProvider };
+const provider = RECORDED_PROVIDERS[providerName]
+  ? RECORDED_PROVIDERS[providerName]({ fetchImpl: recordingFetch, attemptTimeoutMs })
+  : createSearchProvider(providerName);
 const liveSearch = (query, { signal }) => searchWithRetries(provider, query, { num, signal });
 
 // ---------------------------------------------------------------------------
@@ -303,9 +314,22 @@ const webFrom = (() => {
   return {
     path: webFromPath,
     sha256: createHash("sha256").update(text).digest("hex"),
+    provider: earlier.config?.search?.provider ?? null,
     byId: new Map(earlier.questions.map((q) => [q.id, q])),
   };
 })();
+const rebuildWeb = process.argv.includes("--rebuild-web");
+const RAW_MAPPERS = { serpapi: mapSerpApiResponse, querit: mapQueritResponse };
+if (rebuildWeb && !RAW_MAPPERS[webFrom?.provider]) {
+  console.error("--rebuild-web needs --web-from pointing at a live SerpAPI or Querit capture.");
+  process.exit(1);
+}
+const snippetChars = snippetCharsFromEnv();
+// The earlier capture's last attempt holds the response its results came from.
+const rebuiltResults = (earlier) => {
+  const raw = earlier.search.attempts?.at(-1)?.response;
+  return raw ? RAW_MAPPERS[webFrom.provider](raw, { maxSnippetChars: snippetChars }).slice(0, num) : [];
+};
 
 console.log(
   `Capturing ${questions.length} questions (retriever: ${retrieverName}${retrieverName === "vector" ? "" : `, keyword k ${keywordK}`}, top-k ${TOP_K}; ` +
@@ -325,7 +349,7 @@ for (const q of questions) {
   const recordSearch = async (query, opts) => {
     if (earlier) {
       // Same results and status as the earlier capture, through the same replay.
-      web = { status: earlier.search.status, results: earlier.retrieved.web };
+      web = { status: earlier.search.status, results: rebuildWeb ? rebuiltResults(earlier) : earlier.retrieved.web };
       return replaySearch(web)(query, opts);
     }
     try {
@@ -396,17 +420,19 @@ const output = {
     top_k: TOP_K,
     retrieval: { method: retrieverName, vector_k: TOP_K, keyword_k: retrieverName === "vector" ? 0 : keywordK },
     search: webFrom
-      ? { replayed_from: webFrom.path, replayed_from_sha256: webFrom.sha256, timeoutMs }
-      : { provider: providerName, transport: "direct (capture)", num, timeoutMs, attemptTimeoutMs, retries },
+      ? { replayed_from: webFrom.path, replayed_from_sha256: webFrom.sha256, provider: webFrom.provider, rebuilt_from_raw: rebuildWeb, snippet_chars: snippetChars, timeoutMs }
+      : { provider: providerName, transport: "direct (capture)", num, timeoutMs, attemptTimeoutMs, retries, snippet_chars: snippetChars },
   },
   system: INSTRUCTIONS,
   system_sha1: sha1(INSTRUCTIONS),
   questions: records,
 };
 const text = JSON.stringify(output, null, 2);
-if (process.env.SERPAPI_KEY && text.includes(process.env.SERPAPI_KEY)) {
-  console.error("Refusing to write: the output contains the SerpAPI key.");
-  process.exit(1);
+for (const name of ["SERPAPI_KEY", "QUERIT_API_KEY"]) {
+  if (process.env[name] && text.includes(process.env[name])) {
+    console.error(`Refusing to write: the output contains ${name}.`);
+    process.exit(1);
+  }
 }
 const outPath = argValue("out") || `eval/frozen/contexts-${output.created.replace(/[:.]/g, "-")}.json`;
 mkdirSync(dirname(outPath), { recursive: true });

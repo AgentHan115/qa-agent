@@ -10,11 +10,11 @@
 // The API key travels in the query string (SerpAPI's API), so the request URL
 // is never included in errors or logs.
 
-import { SearchProviderError, normalizeResult } from "./provider.js";
+import { SearchProviderError, normalizeResult, snippetCharsFromEnv } from "./provider.js";
 
 const ENDPOINT = "https://serpapi.com/search.json";
 
-export const mapSerpApiResponse = (response) => {
+export const mapSerpApiResponse = (response, { maxSnippetChars } = {}) => {
   if (!response || typeof response !== "object") {
     throw new SearchProviderError("SerpAPI returned a non-object response", { provider: "serpapi" });
   }
@@ -28,7 +28,9 @@ export const mapSerpApiResponse = (response) => {
     throw new SearchProviderError("SerpAPI organic_results is not an array", { provider: "serpapi" });
   }
   return organic
-    .map((r) => normalizeResult({ title: r.title, url: r.link, snippet: r.snippet, position: r.position, date: r.date }, "serpapi"))
+    .map((r) =>
+      normalizeResult({ title: r.title, url: r.link, snippet: r.snippet, position: r.position, date: r.date }, "serpapi", { maxSnippetChars })
+    )
     .filter(Boolean);
 };
 
@@ -42,6 +44,7 @@ export const classifyHttpError = (status, message = "") => {
 export const createSerpApiProvider = ({
   apiKey = process.env.SERPAPI_KEY,
   attemptTimeoutMs = parseInt(process.env.SEARCH_ATTEMPT_TIMEOUT_MS || "3000", 10),
+  snippetChars = snippetCharsFromEnv(),
   fetchImpl = fetch,
 } = {}) => ({
   name: "serpapi",
@@ -82,6 +85,6 @@ export const createSerpApiProvider = ({
         retryable: classifyHttpError(res.status, message),
       });
     }
-    return mapSerpApiResponse(body).slice(0, num);
+    return mapSerpApiResponse(body, { maxSnippetChars: snippetChars }).slice(0, num);
   },
 });

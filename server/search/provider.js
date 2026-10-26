@@ -25,12 +25,16 @@ export class SearchProviderError extends Error {
 }
 
 const MAX_TITLE_CHARS = 200;
-const MAX_SNIPPET_CHARS = 500;
+const DEFAULT_SNIPPET_CHARS = 500;
+
+// SEARCH_SNIPPET_CHARS caps each result's snippet. 500 suits SerpAPI's ~150-char
+// snippets; Querit returns passages (median ~1,600 chars), most of which 500 cuts.
+export const snippetCharsFromEnv = () => parseInt(process.env.SEARCH_SNIPPET_CHARS || String(DEFAULT_SNIPPET_CHARS), 10);
 
 const clip = (s, n) => (s.length > n ? `${s.slice(0, n - 1)}…` : s);
 
 // Shared field validation/cleanup for adapters. Returns null for unusable items.
-export const normalizeResult = ({ title, url, snippet, position, date }, provider) => {
+export const normalizeResult = ({ title, url, snippet, position, date }, provider, { maxSnippetChars = DEFAULT_SNIPPET_CHARS } = {}) => {
   if (typeof url !== "string" || !/^https?:\/\//.test(url)) return null;
   const cleanTitle = typeof title === "string" ? title.trim() : "";
   const cleanSnippet = typeof snippet === "string" ? snippet.replace(/\s+/g, " ").trim() : "";
@@ -38,7 +42,7 @@ export const normalizeResult = ({ title, url, snippet, position, date }, provide
   return {
     title: clip(cleanTitle || url, MAX_TITLE_CHARS),
     url,
-    snippet: clip(cleanSnippet, MAX_SNIPPET_CHARS),
+    snippet: clip(cleanSnippet, maxSnippetChars),
     position: Number.isFinite(position) ? position : null,
     date: typeof date === "string" && date ? date : null,
     provider,

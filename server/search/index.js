@@ -9,6 +9,7 @@
 //   SEARCH_TIMEOUT_MS = 8000          overall budget, enforced by the pipeline
 //   SEARCH_ATTEMPT_TIMEOUT_MS = 3000  per attempt (provider-specific)
 //   SEARCH_RETRIES = 2                retries of retryable failures, within the budget
+//   SEARCH_SNIPPET_CHARS = 500        per-result snippet cap (see search/provider.js)
 
 import { createSerpApiProvider } from "./serpapi.js";
 import { createQueritProvider } from "./querit.js";
@@ -29,6 +30,7 @@ export const searchConfig = () => ({
   timeoutMs: parseInt(process.env.SEARCH_TIMEOUT_MS || "8000", 10),
   attemptTimeoutMs: parseInt(process.env.SEARCH_ATTEMPT_TIMEOUT_MS || "3000", 10),
   retries: parseInt(process.env.SEARCH_RETRIES || "2", 10),
+  snippetChars: parseInt(process.env.SEARCH_SNIPPET_CHARS || "500", 10),
 });
 
 export const createSearchProvider = (name = searchConfig().provider) => {
