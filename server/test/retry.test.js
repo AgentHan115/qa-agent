@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { withRetries, backoffDelay, sleep } from "../search/retry.js";
 import { createSerpApiProvider, classifyHttpError } from "../search/serpapi.js";
+import { createQueritProvider, stripHtml } from "../search/querit.js";
 import { SearchProviderError } from "../search/provider.js";
 
 const transient = () => Object.assign(new Error("503"), { retryable: true });
@@ -129,4 +130,82 @@ test("serpapi: errors never include the API key", async () => {
     }).search("q"),
     (err) => !err.message.includes("test-key")
   );
+});
+
+// --- Querit adapter, with fetch substituted ---------------------------------
+
+const querit = (fetchImpl, attemptTimeoutMs = 3000) =>
+  createQueritProvider({ apiKey: "test-key", fetchImpl, attemptTimeoutMs });
+
+test("querit: posts the query with bearer auth, and maps results", async () => {
+  let call;
+  const results = await querit(async (url, init) => {
+    call = { url, init };
+    return respond(200, {
+      error_code: 200,
+      results: { result: [{ url: "https://a.com", title: "T", snippet: "S", page_age: "2026-10-01" }] },
+    })();
+  }).search("q", { num: 3 });
+  assert.equal(call.url, "https://api.querit.ai/v1/search");
+  assert.equal(call.init.method, "POST");
+  assert.equal(call.init.headers.Authorization, "Bearer test-key");
+  assert.deepEqual(JSON.parse(call.init.body), { query: "q", count: 3 });
+  assert.ok(!call.url.includes("test-key"), "the key is never in the URL");
+  assert.deepEqual(results, [
+    { title: "T", url: "https://a.com", snippet: "S", position: 1, date: "2026-10-01", provider: "querit" },
+  ]);
+});
+
+test("querit: no results is an empty list; error_code 200 is success, any other code a failure", async () => {
+  assert.deepEqual(await querit(respond(200, { error_code: 200, results: { result: [] } })).search("q"), []);
+  assert.deepEqual(await querit(respond(200, { error_code: 0 })).search("q"), []);
+  await assert.rejects(
+    querit(respond(200, { error_code: 1002, error_msg: "quota exceeded" })).search("q"),
+    (err) => err instanceof SearchProviderError && /1002: quota exceeded/.test(err.message) && !err.retryable
+  );
+});
+
+test("querit: HTTP errors are classified for retry", async () => {
+  for (const [status, retryable] of [[400, false], [401, false], [403, false], [429, true], [500, true], [503, true]]) {
+    await assert.rejects(querit(respond(status, { error_msg: "x" })).search("q"), (err) => {
+      assert.equal(err.status, status);
+      assert.equal(err.retryable, retryable, String(status));
+      return true;
+    });
+  }
+});
+
+test("querit: timeouts are retryable, a caller abort propagates, and errors never include the key", async () => {
+  const hang = (url, { signal }) =>
+    new Promise((_, reject) => signal.addEventListener("abort", () => reject(signal.reason)));
+  await assert.rejects(querit(hang, 30).search("q"), (err) => err.retryable && /timed out after 30ms/.test(err.message));
+
+  const controller = new AbortController();
+  const p = querit(hang).search("q", { signal: controller.signal });
+  controller.abort(Object.assign(new Error("client left"), { name: "AbortError" }));
+  await assert.rejects(p, (err) => err.name === "AbortError" && !(err instanceof SearchProviderError));
+
+  await assert.rejects(
+    querit(async (url, init) => {
+      throw new TypeError(`fetch failed (${init.headers.Authorization.length} char header)`);
+    }).search("q"),
+    (err) => err.retryable && !err.message.includes("test-key")
+  );
+});
+
+test("querit: HTML in snippets becomes plain text with cells joined by ' | '; dates pass through", async () => {
+  // Shaped like the Wikipedia infobox snippet Querit returned on 2026-10-25.
+  const snippet =
+    'GPT-4o<table><tr><th colspan="2"></th></tr><tr><th>Developer</th><td>OpenAI</td></tr>' +
+    "<tr><th>Initial release</th><td>May 13, 2024</td></tr></table>Q&amp;A <b>text</b>";
+  const [result] = await querit(
+    respond(200, {
+      error_code: 200,
+      results: { result: [{ url: "https://en.wikipedia.org/wiki/GPT-4o", title: "GPT-4o - <i>Wikipedia</i>", snippet, page_age: "2026-04-21T02:12:29Z" }] },
+    })
+  ).search("q");
+  assert.equal(result.snippet, "GPT-4o | Developer | OpenAI | Initial release | May 13, 2024 | Q&A text");
+  assert.equal(result.title, "GPT-4o - Wikipedia");
+  assert.equal(result.date, "2026-04-21T02:12:29Z", "page_age is passed through unchanged");
+  assert.equal(stripHtml("plain text, already | separated"), "plain text, already | separated");
 });

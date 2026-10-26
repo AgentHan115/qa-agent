@@ -1,6 +1,6 @@
 // Search entry point used by the answer pipeline.
 //
-//   SEARCH_PROVIDER = serpapi | fake          which API answers the query
+//   SEARCH_PROVIDER = serpapi | querit | fake which API answers the query
 //   SEARCH_TRANSPORT = mcp | direct           how the server reaches it:
 //     mcp    — through the MCP stdio server (mcp-server.js), the same tool an
 //              external agent would call (default)
@@ -11,12 +11,14 @@
 //   SEARCH_RETRIES = 2                retries of retryable failures, within the budget
 
 import { createSerpApiProvider } from "./serpapi.js";
+import { createQueritProvider } from "./querit.js";
 import { createFakeProvider } from "./fake.js";
 import { searchViaMcp } from "./mcp-client.js";
 import { withRetries } from "./retry.js";
 
 const PROVIDERS = {
   serpapi: createSerpApiProvider,
+  querit: createQueritProvider,
   fake: createFakeProvider,
 };
 
