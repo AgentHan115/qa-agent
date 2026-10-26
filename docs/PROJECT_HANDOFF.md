@@ -1,6 +1,6 @@
 # Project Handoff — QA Agent (Hybrid Document + Web Q&A)
 
-Written 2026-10-19 and updated 2026-10-22 (Step 4 results) and 2026-10-24 (retrieval round, SGLang) so a fresh Claude session can continue the work from the repository alone.
+Written 2026-10-19 and updated 2026-10-22 (Step 4 results), 2026-10-24 (retrieval round, SGLang) and 2026-10-26 (search API comparison) so a fresh Claude session can continue the work from the repository alone.
 
 Facts are verified from the repo (code, commit messages, `server/results/`, README) unless marked **[conversation-only]**. Those come from earlier chat sessions, aren't recorded in the repo, and should be re-verified before you rely on them.
 
@@ -11,13 +11,14 @@ Facts are verified from the repo (code, commit messages, `server/results/`, READ
 1. **Read** this file, then [README.md](../README.md) (the integration guide) and [evaluation.md](evaluation.md) (method and results).
 2. **Check git state.** `main` holds the current work (fast-forwarded from `qa-agent-hardening` on 2026-10-25). The project as it was before this work is tag `original` (`e1a9a25`).
    - Tags: `original`, `baseline-dual`, `step1-hybrid`, `step2-reliability`.
-   - Last results commit when this was updated: `6717d6c` (SGLang load test).
-3. **Run the checks.** `npm test --prefix server` should give 84 pass. One integration test needs Chroma and the demo PDF, otherwise it's skipped. `CI=true npm test --prefix frontend` should give 4 pass.
+   - Last results commit when this was updated: `56843b7` (graded search API comparison).
+3. **Run the checks.** `npm test --prefix server` should give 91 pass. One integration test needs Chroma and the demo PDF, otherwise it's skipped. `CI=true npm test --prefix frontend` should give 4 pass.
 4. **Check the dataset:** `npm run eval:validate --prefix server` should print "All gold pages verified". It needs `sh server/scripts/fetch-demo-doc.sh` first.
-5. **Current state: Step 4, the retrieval round and the first SGLang round are measured.**
+5. **Current state: Step 4, the retrieval round, the first SGLang round and the search API comparison are measured.**
    - Human-graded baseline: end-to-end **16/35** grounded-correct under the clarified rubric (20/35 in the first grading), **26/35** with gold evidence. Details in [§8](#8-benchmark-results-and-how-to-read-them).
    - Retrieval round: vector top-5 + BM25 top-3 met the decision rule (16 → 19) but **isn't shipped** because of a fabrication on T04.
    - SGLang on the RTX 4070 Ti SUPER: quality matches the Mac on 34/35 questions; throughput saturates at about 8 concurrent requests.
+   - Search APIs: SerpAPI 17/35 vs Querit 18/35 at equal settings (no measurable difference); Querit with a 1,500-char snippet cap 21/35 (+3, no losses), so the documented default is now Querit @1500.
    - Next steps: [§11](#11-step-4-status-and-next-steps). SGLang: [§13](#13-sglang-experiment).
 6. **Local services:** `docker compose up -d postgres redis chroma`. Ollama runs on the host. Model setup: [§4](#4-runtime--model-setup).
    - [conversation-only] The previous session ran the API through a Claude preview config named `agentai-api` in `~/.claude/launch.json`, with cwd `server/`. Run it from `server/`, because `dotenv` reads `./.env`.
@@ -210,7 +211,11 @@ Code: [server/ingest.js](../server/ingest.js), [server/lib/queue.js](../server/l
 - **Retries:** `retry.js` (bounded, full jitter, abortable).
 - **Selection:** `index.js` reads `SEARCH_PROVIDER`, `SEARCH_TRANSPORT`, `SEARCH_NUM_RESULTS=5`, `SEARCH_TIMEOUT_MS=8000`, `SEARCH_ATTEMPT_TIMEOUT_MS=3000`, `SEARCH_RETRIES=2`.
 - **MCP:** `mcp-client.js` shares one connection, published only after `connect()` and dropped only when the transport closes. `mcp-server.js` runs retries server-side, reports the attempt count in `structuredContent` or, on errors, `_meta`, and honours MCP cancellation.
-- **Querit:** a new provider is one adapter file; see the README section "Integrating a different search API". No Querit adapter exists yet, because no API docs have been provided.
+- **Querit:** [server/search/querit.js](../server/search/querit.js) (2026-10-25). `POST https://api.querit.ai/v1/search`, bearer auth, body `{query, count}`, results at `results.result[]`; endpoint and shape from the official SDK `querit-ai/querit-python`.
+  - Success bodies carry `error_code: 200`.
+  - Snippets can contain HTML, which is stripped, with table cells joined by " | ".
+  - `page_age` is passed through as the date (see §8 for the UTC+8 caveat).
+  - The free tier is 1,000 requests/month at 1 request/second. Repeated queries are served from a cache in ~48 ms.
 
 ## 7. Cancellation, retries, timeouts, degradation, errors
 
@@ -301,6 +306,24 @@ Host and settings in [§4](#4-runtime--model-setup); full results in [evaluation
   - The commit message of `6717d6c` rounds these as 15–25% and 5–11%; the numbers in evaluation.md are exact.
 - **Not batch-invariant:** answers repeat exactly at c = 1 (35/35 across passes), but only 19–27/35 at c = 8–16.
 
+### Search API comparison (2026-10-26): provider tie, snippet cap matters
+
+Full tables in [evaluation.md](evaluation.md#search-api-comparison-serpapi-vs-querit-2026-10-26).
+- **Captures:** same-hour SerpAPI and Querit captures (`contexts-2026-10-26-{serpapi,querit}.json`). Document prompts are byte-identical, and they also match the Oct 21 capture.
+- **The 1,500 arm** (`-querit-1500.json`) was rebuilt from the recorded raw Querit bodies with `--rebuild-web` (tooling `f722352`). Rebuilding at 500 reproduces the live capture exactly.
+- **The plan and rules** were committed before any answer existed (`9122cea`). The replay on SGLang is `01625aa`; one blind 105-row sheet was graded by the user, `56843b7`.
+- **Search only:**
+  - web evidence 5/10 vs 6/10;
+  - P50 latency 756 vs 995 ms;
+  - social, forum or video results 38/175 vs 0/175;
+  - Querit snippets have a median of 1,584 chars, and 172 of 175 hit the old 500 cap.
+- **Graded (grounded-correct):** serpapi@500 17, querit@500 18, querit@1500 21 of 35.
+  - Provider: net +1, rule not met.
+  - Cap: +3 / −0, rule met.
+  - Exploratory: querit@1500 vs serpapi@500 is +4.
+- **W04 confirmed the `page_age` timezone issue:** Querit's metadata `2024-03-03` was given as the date of a version posted on March 4, 2024.
+- **Documented default** (`server/.env.example`): `SEARCH_PROVIDER=querit`, `SEARCH_SNIPPET_CHARS=1500`. SerpAPI remains a one-line switch.
+
 ### Step 4: the 2026-10-20 live runs (judge-graded, superseded)
 
 [server/scripts/eval.js](../server/scripts/eval.js) on commit `c239d93`, results `56069a8`: judged pass docs 30/35, web 23/35, hybrid 29/35. **The judge (the same Qwen3-8B) is too lenient**: it passed 12 of 15 abstentions in docs mode and some wrong facts, so these pass rates are not quality numbers. Page-level retrieval from those runs (MRR 0.639, R@1 0.5, R@3 0.767, R@5 0.833) overstates evidence recall; see the chunk-level 17/30 above. In web mode, 7 of 31 completed searches returned pages matching only one word of the question (e.g. "does" → does.dc.gov) and 4 timed out; the one-word results didn't recur on 2026-10-21 except T01's, which SerpAPI's metadata shows Google ranked for the full question. The judge-calibration sheet from `b796421` was never labelled; the replay labels replace it as the calibration set.
@@ -379,7 +402,7 @@ Each of these changes retrieval or answer behaviour, so it should be measured in
 **Update 2026-10-24:** steps 1, 2 (document part only) and 4 below are done; see §8 and §13. Open, in suggested order:
 1. **SGLang follow-ups:** (`max_tokens` 256 done 2026-10-25: see §8) measure what `--enable-deterministic-inference` costs; prompt-layout experiments for the radix cache.
 2. **Retrieval precision fix** (table-aware chunks or a reranker), then re-test the vector + BM25 candidate, T04 especially.
-3. **Search API comparison** (Querit vs SerpAPI on the same questions), once Querit's docs or a key are available.
+3. ~~Search API comparison~~ done 2026-10-26 (§8). Possible follow-up: a third provider (Tavily, Brave or Exa), and timezone-aware handling of Querit's `page_age`.
 4. **Generator fix / GPT-4o** (old step 3 below), unchanged.
 
 **Original plan** (suggested to the user on 2026-10-22; the user approved step 1):
@@ -450,7 +473,7 @@ Remaining baseline experiments from the original plan, not yet done: `SEARCH_TRA
   - The MCP race as an observed bug fix.
   - Any SGLang speedup across environments.
   - SGLang/vLLM support as "verified".
-  - Querit support (no adapter exists).
+  - "Querit is more accurate than SerpAPI": at equal settings the difference was +1 (not significant). The measured win is Querit with a 1,500-char cap.
 
 ## 15. Useful commands
 

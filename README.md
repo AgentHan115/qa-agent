@@ -8,7 +8,7 @@ OpenAI-compatible server (a local Ollama model by default).
 The code is meant to be read as a reference integration as well as run:
 
 - **One retrieval pipeline, three modes:** `docs`, `web`, `hybrid`.
-- **Provider-neutral web search:** a contract, a SerpAPI adapter and an offline fake. Adding a new search API is one file.
+- **Provider-neutral web search:** a contract, SerpAPI and Querit adapters, and an offline fake. Adding a new search API is one file, and the eval compares providers on identical prompts.
 - **Production behaviour:** bounded retries, time budgets that actually cancel work, fallbacks in both directions, and guards against silent context truncation.
 - **Measured, not claimed:** an eval harness records the exact model and runtime configuration with every result.
 
@@ -45,7 +45,7 @@ flowchart TB
     end
     R <--> DB[("Chroma")]
     R <--> E["Embedding model"]
-    S <--> M["mcp-server.js<br/>search_web tool"] <--> SP["SerpAPI<br/>(pluggable provider)"]
+    S <--> M["mcp-server.js<br/>search_web tool"] <--> SP["Querit / SerpAPI<br/>(pluggable provider)"]
     L <--> LLM["OpenAI-compatible model server<br/>(Ollama · OpenAI · SGLang)"]
 ```
 
@@ -76,7 +76,7 @@ Retries can't duplicate vectors. On startup, every `ready` document is checked a
 
 ## Quickstart
 
-**Prerequisites:** Node 20.3+, Docker, [Ollama](https://ollama.com), and a [SerpAPI](https://serpapi.com) key (only needed for web search).
+**Prerequisites:** Node 20.3+, Docker, [Ollama](https://ollama.com), and a [Querit](https://www.querit.ai) or [SerpAPI](https://serpapi.com) key (only needed for web search; `SEARCH_PROVIDER=fake` runs offline).
 
 ```bash
 git clone <this repo> && cd agentai
@@ -97,7 +97,7 @@ ollama create qa-qwen3-8b-32k -f server/models/qwen3-8b-32k.Modelfile
 sh server/scripts/fetch-demo-doc.sh
 ```
 
-**3. Configuration.** Copy the template, then set `SERPAPI_KEY`.
+**3. Configuration.** Copy the template, then set `QUERIT_API_KEY` (the default provider) or switch to `SEARCH_PROVIDER=serpapi` with `SERPAPI_KEY` and `SEARCH_SNIPPET_CHARS=500`.
 
 ```bash
 cp server/.env.example server/.env
@@ -211,7 +211,7 @@ All settings are environment variables in `server/.env`. [server/.env.example](s
 | Model | `LLM_RUNTIME` (`openai`, `ollama`, `sglang`, `vllm`), `LLM_BASE_URL`, `LLM_MODEL`, `LLM_CONTEXT_TOKENS`, `LLM_MAX_OUTPUT_TOKENS`, `LLM_DISABLE_THINKING`, `LLM_TEMPERATURE`, `LLM_SEED`, `LLM_TIMEOUT_MS`, `LLM_MAX_RETRIES`, `LLM_API_KEY` |
 | Embeddings | `EMBEDDING_MODEL`, `EMBEDDING_BASE_URL` (defaults to `LLM_BASE_URL`), `EMBEDDING_QUERY_INSTRUCTION`, `EMBEDDING_BATCH_SIZE`, `EMBEDDING_TIMEOUT_MS` |
 | Retrieval | `RETRIEVAL_TOP_K` (default 5) |
-| Web search | `SEARCH_PROVIDER` (`serpapi`, `fake`), `SEARCH_TRANSPORT` (`mcp`, `direct`), `SEARCH_NUM_RESULTS`, `SEARCH_TIMEOUT_MS`, `SEARCH_ATTEMPT_TIMEOUT_MS`, `SEARCH_RETRIES`, `SERPAPI_KEY` |
+| Web search | `SEARCH_PROVIDER` (`querit`, `serpapi`, `fake`), `SEARCH_TRANSPORT` (`mcp`, `direct`), `SEARCH_NUM_RESULTS`, `SEARCH_SNIPPET_CHARS` (1500 for Querit, 500 suits SerpAPI), `SEARCH_TIMEOUT_MS`, `SEARCH_ATTEMPT_TIMEOUT_MS`, `SEARCH_RETRIES`, `QUERIT_API_KEY`, `SERPAPI_KEY` |
 | Services | `DATABASE_URL`, `CHROMA_URL`, `REDIS_URL`, `PORT`, `SERVER_REQUEST_TIMEOUT_MS` |
 
 Notes:
@@ -259,7 +259,12 @@ Everything after the provider (the MCP tool, context building, citations, the UI
 4. **Register it** in `PROVIDERS` in [search/index.js](server/search/index.js) and set `SEARCH_PROVIDER=<name>`.
 5. **Test it** with a substituted `fetch`. [test/retry.test.js](server/test/retry.test.js) does this for SerpAPI: every status code, timeouts, cancellation, and that the API key never appears in error messages.
 
-[search/serpapi.js](server/search/serpapi.js) is the reference adapter (about 90 lines).
+[search/serpapi.js](server/search/serpapi.js) and [search/querit.js](server/search/querit.js) are the reference adapters, about 90 lines each.
+
+Checks against the live API mattered more than the docs. Three came from the Querit integration:
+- **Success codes:** Querit's success bodies carry `error_code: 200`, which a "non-zero means error" check gets wrong.
+- **HTML in snippets:** some snippets contain raw HTML tables, which the adapter turns into text.
+- **Snippet length:** Querit returns ~1,600-character passages, so `SEARCH_SNIPPET_CHARS` needs setting per provider. The 500 that suits SerpAPI cost Querit 3 grounded-correct answers in the [comparison](docs/evaluation.md#search-api-comparison-serpapi-vs-querit-2026-10-26).
 
 ## Using the search tool from other MCP clients
 
@@ -283,7 +288,7 @@ The server doesn't read `.env` itself, so pass its settings in `env`. Inside thi
 
 | Situation | Behaviour |
 |---|---|
-| Search slow | Each SerpAPI attempt times out after `SEARCH_ATTEMPT_TIMEOUT_MS` (3 s). The whole search, including retries, gets `SEARCH_TIMEOUT_MS` (8 s), after which it's **cancelled**, including inside the MCP server |
+| Search slow | Each search attempt times out after `SEARCH_ATTEMPT_TIMEOUT_MS` (3 s). The whole search, including retries, gets `SEARCH_TIMEOUT_MS` (8 s), after which it's **cancelled**, including inside the MCP server |
 | Search fails | Up to `SEARCH_RETRIES` (2) retries, with exponential backoff and full jitter, for retryable failures only. `hybrid` then answers from the document, and `web.status` (`error`, `timeout`, `empty`) says why |
 | Chroma or embeddings down | `hybrid` answers from the web and `retrieval.status` says why. `docs` returns 503 |
 | Both down | 503, "No sources available" |
@@ -299,7 +304,7 @@ The server doesn't read `.env` itself, so pass its settings in `env`. Inside thi
 npm test
 ```
 
-This runs both suites. The server suite (`npm test --prefix server`) has 84 tests with Node's built-in test runner. It covers retries and backoff, SerpAPI status classification, cancellation, both fallbacks, the time budget, MCP concurrency and cancellation, context building, citations, the truncation guards, reconciliation, and the evaluation scoring helpers. One integration test needs Chroma running and is skipped otherwise.
+This runs both suites. The server suite (`npm test --prefix server`) has 91 tests with Node's built-in test runner. It covers retries and backoff, SerpAPI and Querit status classification, cancellation, both fallbacks, the time budget, MCP concurrency and cancellation, context building, citations, the truncation guards, reconciliation, and the evaluation scoring helpers. One integration test needs Chroma running and is skipped otherwise.
 
 The frontend suite (`CI=true npm test --prefix frontend`) has 4 component tests: citation tags, source list and fallback notices.
 
@@ -322,10 +327,11 @@ SEARCH_PROVIDER=fake FAKE_SEARCH_MODE=transient PORT=5002 node server.js
 | Retrieval: gold evidence chunk in the top 5 | 17/30 document questions; 23/30 with BM25 added (not shipped: it caused a fabricated answer) |
 | SGLang, Qwen3-8B-FP8 on an RTX 4070 Ti SUPER | 15/35, with the same outcome as the Mac on 34/35 questions |
 | SGLang load test | TTFT p50 139 ms alone; 3.24 requests/s at 8 concurrent; 4.02 at 16 with `max_tokens` 256 |
+| Search API, same prompts otherwise (SGLang) | SerpAPI 17/35, Querit 18/35 at the same settings (no measurable difference); **Querit 21/35 with a 1,500-char snippet cap** (+3, no losses). Querit costs $4 per 1,000 searches vs SerpAPI's $10–25 on monthly plans |
 
 The main bottleneck is retrieval, not the model: table questions go from 4/8 to 8/8 when the right chunk is present. One grader, n = 35, one run per setting, so the numbers are directional.
 
-Method, per-category results, the retrieval round, the SGLang runs and every caveat: **[docs/evaluation.md](docs/evaluation.md)**. Development history and decisions: [docs/PROJECT_HANDOFF.md](docs/PROJECT_HANDOFF.md).
+Method, per-category results, the retrieval round, the SGLang runs, the search API comparison and every caveat: **[docs/evaluation.md](docs/evaluation.md)**. Development history and decisions: [docs/PROJECT_HANDOFF.md](docs/PROJECT_HANDOFF.md).
 
 ## Project layout
 
@@ -362,7 +368,8 @@ docker-compose.yml      postgres, redis, chroma, server, prometheus, grafana
 
 ## Known limitations
 
-- **Search query quality.** The raw question is sent as the search query, with no rewriting. "What score and percentile did GPT-4 get on the Uniform Bar Exam?" returned ExamSoft, ExamFX and an IMDb page in two captures; SerpAPI's metadata confirms Google received the full question. Web evidence for the dataset's web and mixed questions was present for only 4 of 10. Query rewriting would cost an extra LLM call and hasn't been measured yet.
+- **Search query quality.** The raw question is sent as the search query, with no rewriting. "What score and percentile did GPT-4 get on the Uniform Bar Exam?" returned ExamSoft, ExamFX and an IMDb page in two SerpAPI captures; SerpAPI's metadata confirms Google received the full question. Web evidence for the 10 web and mixed questions was present for 4–5 of 10 with SerpAPI and 6 of 10 with Querit. Query rewriting would cost an extra LLM call and hasn't been measured yet.
+- **Querit's result dates.** `page_age` is passed through as each result's date. Many values are `T16:00:00Z` (midnight UTC+8), so a UTC calendar date can be a day early, and some are last-modified times. One graded answer took a wrong date from this.
 - **Document retrieval ranks the right chunk too low.** The gold evidence chunk was in the top 5 for 17 of 30 questions that need the report, although every one is stored. Adding BM25 results raises that to 23/30, but brought in a table chunk that led to a fabricated answer, so it isn't shipped (see [the retrieval round](docs/evaluation.md#retrieval-round-2026-10-22)). Chunk size and table handling haven't been tuned yet.
 - **Conflicting sources.** The model sometimes prefers an unofficial or wrong-entity web figure over the document, or picks the wrong one of two dates (see [docs/evaluation.md](docs/evaluation.md)).
 - **Citation validity is not faithfulness.** The checker confirms that labels exist, not that the cited source supports the sentence.

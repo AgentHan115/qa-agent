@@ -133,6 +133,64 @@ Server workarounds needed on this setup:
 
 These numbers come from one GPU, one model and one run per setting: treat them as directional. Don't compare them with the Mac/Ollama latencies above, because hardware, quantization, runtime and batching all differ.
 
+## Search API comparison: SerpAPI vs Querit (2026-10-26)
+
+The same 35 questions with two search APIs behind the same provider contract ([server/search/serpapi.js](../server/search/serpapi.js), [server/search/querit.js](../server/search/querit.js)).
+
+**Setup:**
+- Both providers were captured within the same hour, so day-to-day result drift doesn't favour either.
+- The document part of every prompt is byte-identical across arms (35/35), so only the web results differ.
+- The decision rules were written and committed before any answer existed ([plan](../server/results/search-compare-2026-10-26.plan.md)).
+- Answers were replayed on SGLang (Qwen3-8B-FP8) and graded blind in one 105-row sheet, with the arm only in the key.
+
+The three arms:
+- `serpapi@500`: production settings.
+- `querit@500`: the same settings with Querit.
+- `querit@1500`: Querit with a 1,500-character snippet cap. It was rebuilt from the same recorded responses, with no new searches. Rebuilding at 500 reproduces `querit@500` exactly.
+
+**Search only** ([numbers](../server/results/search-compare-2026-10-26.json)), 5 results per question:
+
+| | SerpAPI | Querit |
+|---|---|---|
+| Searches succeeded on the first attempt | 35/35 | 35/35 |
+| Web evidence present (10 web and mixed questions) | 5/10 | 6/10 (500-char cap) |
+| Latency per search, P50 / P95 | **756 / 1,139 ms** | 995 / 1,210 ms (fresh queries) |
+| Snippet length, median | 145 chars | 1,584 chars (172 of 175 hit the 500 cap) |
+| Results from social, forum or video sites | 38/175 | 0/175 |
+| Results from openai.com or arXiv | 32/175 | 44/175 |
+| Price per 1,000 searches (checked 2026-10-26) | $25 (1k/month plan) to $10 (15k); $3.75 at 1M | **$4** pay-as-you-go |
+
+The two providers return very different pages: only 15 of 175 results appear in both top-5 lists.
+
+**Answers** ([scores](../server/results/arms-score-search-2026-10-26.json), [labels](../server/eval/labels/arms-search-2026-10-26.labels.json)):
+
+| Arm | Grounded-correct | Web + mixed (10) | Ungrounded | Median input tokens | Median generation |
+|---|---|---|---|---|---|
+| `serpapi@500` | 17/35 | 2/10 | 7 | 1,183 | 1,572 ms |
+| `querit@500` | 18/35 | 3/10 | 3 | 1,772 | 1,431 ms |
+| `querit@1500` | **21/35** | **5/10** | 5 | 2,845 | 1,467 ms |
+
+The pre-set rule is net ≥ +2 grounded-correct with ≤ 1 regression.
+
+- **Provider, `querit@500` vs `serpapi@500`: no measurable difference.** Net +1: 6 gained, 5 lost.
+  - Querit won where SerpAPI's pages misled or fell short. On W01, SerpAPI's sources mixed a September 2024 update into the release date. On W02 and T05, Querit's results carried the exact date and both MMLU scores.
+  - It lost on two transfers. U02 presented inference VRAM estimates as training hardware, and W04 gave another arXiv paper's ID.
+- **Snippet cap, `querit@1500` vs `querit@500`: the rule is met.** Net +3, with no losses (M01, U02, W03). In each case the longer passage carried the missing fact or the qualifier that kept the answer grounded.
+  - The cost is +60% input tokens (about 1,070 per question). Generation time on the 4070 was unchanged.
+- **Exploratory, not pre-set:** `querit@1500` vs `serpapi@500` is net +4 (7 gained, 3 lost). This changes the provider and the cap together, so it compares the best measured configuration of each.
+
+What this shows:
+- **At equal settings the two providers answer equally well on this workload.** Querit is cheaper at small and medium volume, has a cleaner source mix, and is about 240 ms slower at the median.
+- **Provider-specific tuning mattered more than the provider.** A snippet cap sized for SerpAPI's short snippets was cutting off Querit's passages.
+- **Querit's `page_age` needs care.** Many timestamps are `T16:00:00Z`, which is midnight in UTC+8, so a UTC calendar date can be a day early. In W04 the answer took `2024-03-03` from page metadata for a version posted on March 4, 2024. Values can also be last-modified times rather than publication dates. The adapter passes them through unchanged.
+- **Integration details found by testing against the live API:**
+  - success bodies carry `error_code: 200`, which the official SDK never checks;
+  - some snippets contain raw HTML, which the adapter turns into text;
+  - repeated queries are served from a cache in about 48 ms, so latency must be measured on fresh queries.
+- **What no search API fixed:** in every arm the model sometimes moved a figure to the wrong model or snapshot (T03, T06), or credited a web figure to the report (M05). These are the generation failures diagnosed in Step 4.
+
+Limits: n = 35 (10 need the web), one capture day, one grader, one run per arm. Blinding hides the arm labels but not the sources, whose style can hint at the arm.
+
 ## Earlier results
 
 [scripts/eval.js](../server/scripts/eval.js) runs the dataset live through `/chat` and grades with an LLM judge. Its 2026-10-20 runs ([docs](../server/results/eval-2026-10-20T00-56-34-170Z.json), [web](../server/results/eval-2026-10-20T01-07-20-397Z.json), [hybrid](../server/results/eval-2026-10-20T01-20-53-949Z.json)) used the same Qwen3-8B as judge, which turned out **too lenient to trust**: it passed most "I don't know" answers and some wrong facts. Their judged pass rates (30/35, 23/35, 29/35) are not quality numbers. The retrieval metrics and latencies in those files are still valid.
